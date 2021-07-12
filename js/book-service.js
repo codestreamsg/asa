@@ -1,3 +1,4 @@
+const TSItem = '.transport-solution-item';
 const arrivalTSItem = '.arrival-transport-solution-item';
 const listItemsSelected = [
     '.meet-greet-service-item',
