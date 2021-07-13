@@ -1,3 +1,4 @@
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
 const TSItem = '.transport-solution-item';
 const arrivalTSItem = '.arrival-transport-solution-item';
 const listItemsSelected = [
@@ -8,7 +9,8 @@ const listItemsSelected = [
     '.arrival-covid-safety-service-item',
     '.arrival-total-care-item',
     TSItem,
-    arrivalTSItem];
+    arrivalTSItem,
+    '.additional-service-item'];
 const serviceItemSelectedClass = 'service-item-selected';
 const serviceItemPrice = '.service-item-price';
 const priceTextReplace = 'IDR';
@@ -93,6 +95,7 @@ function initData() {
     if (Number(travelerValue) > 4) {
         $("#is-vehicles-required").val("true");
     }
+    $("#is-return").val(isreturnValue);
 
     setAirportLocationTitle(departureValue, arrivalValue);
     initBookingSteps(isreturnValue, true);
@@ -107,7 +110,7 @@ function initData() {
 
 function initBookingSteps(isreturnValue, isDocumentReady = false) {
     if (isreturnValue == "true") {
-    $(".book-service-tabs-menu").css("grid-template-columns","1fr 1fr 1fr 1fr 1fr");
+        $(".book-service-tabs-menu").css("grid-template-columns","1fr 1fr 1fr 1fr 1fr");
         $(".return-journey-tab").show();
         $("#additional-services-step").html("03");
         $("#passenger-details-step").html("04");
@@ -193,26 +196,26 @@ function setTravelersSelect(travelerValue) {
 function initBookNowButton() {
     const bookNowButton = document.getElementById("book-now-button");
     bookNowButton.addEventListener("click", event => {
-    var departure = $("#mg-departure option:selected").text();
-    departure = departure == "Departure" ? "" : departure;
-    var arrival = $("#mg-arrival option:selected").text();
-    arrival = arrival == "Arrival" ? "" : arrival;
-    const travelerText = $("#mg-traveler option:selected").text();
-    const travelerAfterSplit = travelerText.split("x");
-    const traveler = Number(travelerAfterSplit && travelerAfterSplit.length > 0 ? travelerAfterSplit[0] : 1);
-    const isReturn = $( "#is-return" ).val();
+        var departure = $("#mg-departure option:selected").text();
+        departure = departure == "Departure" ? "" : departure;
+        var arrival = $("#mg-arrival option:selected").text();
+        arrival = arrival == "Arrival" ? "" : arrival;
+        const travelerText = $("#mg-traveler option:selected").text();
+        const travelerAfterSplit = travelerText.split("x");
+        const traveler = Number(travelerAfterSplit && travelerAfterSplit.length > 0 ? travelerAfterSplit[0] : 1);
+        const isReturn = $( "#is-return" ).val();
 
-    if (departure != "" && arrival != "" &&departure == arrival) {
-        alert("Please choose different between Departure and Arrival");
-        return;
-    }
-    $("#departure-header").html(departure);
-    $("#arrival-header").html(arrival);
-    $("#traveler-header").html('x' + traveler);
-    setAirportLocationTitle(departure, arrival);
-    $(".mg-edit-content").trigger("click");
-    $("#is-vehicles-required").val(traveler > 4 ? "true" : "false");
-    initBookingSteps(isReturn);
+        if (departure != "" && arrival != "" &&departure == arrival) {
+            alert("Please choose different between Departure and Arrival");
+            return;
+        }
+        $("#departure-header").html(departure);
+        $("#arrival-header").html(arrival);
+        $("#traveler-header").html('x' + traveler);
+        setAirportLocationTitle(departure, arrival);
+        $(".mg-edit-content").trigger("click");
+        $("#is-vehicles-required").val(traveler > 4 ? "true" : "false");
+        initBookingSteps(isReturn);
     });
 }
 
