@@ -1,20 +1,3 @@
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
-const TSItem = '.transport-solution-item';
-const arrivalTSItem = '.arrival-transport-solution-item';
-const listItemsSelected = [
-    '.meet-greet-service-item',
-    '.covid-safety-service-item',
-    '.total-care-item',
-    '.arrival-meet-greet-service-item',
-    '.arrival-covid-safety-service-item',
-    '.arrival-total-care-item',
-    TSItem,
-    arrivalTSItem,
-    '.additional-service-item'];
-const serviceItemSelectedClass = 'service-item-selected';
-const serviceItemPrice = '.service-item-price';
-const priceTextReplace = 'IDR';
-
 function getMGObject() {
     return {
         "departure": $("#departure-header").text(),
@@ -225,11 +208,3 @@ function initToggleReturnButton() {
         $("#is-return").val($( "#is-return" ).val() == "false" ? "true" : "false");
     });
 }
-
-$(document).ready(function() {
-    initData();
-    $('select').niceSelect();
-    for(var index = 0; index < listItemsSelected.length; index ++) {
-        initItemSelected(listItemsSelected[index], serviceItemSelectedClass);
-    }
-});
