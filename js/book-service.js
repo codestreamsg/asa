@@ -13,7 +13,12 @@ const listItemsSelected = [
 const serviceItemSelectedClass = 'service-item-selected';
 const serviceItemPrice = '.service-item-price';
 const priceTextReplace = 'IDR';
-
+const tabItemCompleted = '.tab-item-complted';
+const tabNotActive = 'tab-not-active';
+const tabWCurrent = 'w--current';
+const dataWTabAttr = 'data-w-tab';
+const productNameClass = 'product-name';
+var listTabItems = [];
 function getMGObject() {
     return {
         "departure": $("#departure-header").text(),
@@ -23,7 +28,7 @@ function getMGObject() {
 }
 
 function currencyFormat(num) {
-    return 'IDR ' + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') + ' IDR';
+    return 'IDR ' + (num ? num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') : 0) + ' IDR';
 }
 
 function displayVehiclesRequired(itemClass, priceValue) {
@@ -69,7 +74,7 @@ function initItemSelected(itemClass, itemSelectedClass) {
         $(itemClass).each(function() {
             $(this).removeClass(itemSelectedClass);
         });
-    $(this).addClass(itemSelectedClass);
+        $(this).addClass(itemSelectedClass);
         calTotalPrice();
     })
 }
@@ -95,7 +100,6 @@ function initData() {
         $("#is-vehicles-required").val("true");
     }
     $("#is-return").val(isreturnValue);
-
     setAirportLocationTitle(departureValue, arrivalValue);
     initBookingSteps(isreturnValue, true);
     setDeparturesSelect(departureValue);
@@ -105,6 +109,68 @@ function initData() {
     initToggleReturnButton();
     setDepartureTransportSelect(departureValue);
     setArrivalTransportSelect(arrivalValue);
+    initNextPleaseButton();
+
+    $(".book-service-tab-link").each(function() {
+        if ($(this).hasClass(tabWCurrent)) {
+          const tabSelectedElement = $(this);
+          const currentSelectedTab = tabSelectedElement.attr(dataWTabAttr);
+          switch(currentSelectedTab) {
+            case 'outgoing-journey-tab':
+                initOutgoingTab();
+                break;
+            case 'return-journey-tab':
+                initReturnTab();
+                break;
+            case 'additional-services-tab':
+                initAdditionalServicesTab();
+                break;
+            case 'passenger-details-tab':
+                initPassengerDetailsTab();
+                break;
+            case 'checkout-tab':
+                initCheckoutTab();
+                break;
+            }
+        }
+    });
+}
+
+function initNextPleaseButton() {
+    $(".book-service-tab-link").click(function() {
+    	const tabSelectedElement = $(this);
+        const currentTab = tabSelectedElement.attr(dataWTabAttr);
+        var findIndex = listTabItems.indexOf(currentTab);
+        if (findIndex == -1) {
+            return false;
+        }
+        findIndex = findIndex + 1;
+        for(var i = findIndex; i < listTabItems.length; i ++) {
+            const nextTab = $('.' + listTabItems[i]);
+            if (nextTab && !nextTab.hasClass(tabNotActive)) {
+                nextTab.addClass(tabNotActive);
+            }
+        }
+    });
+    $(".next-please-button").click(function() {
+        $(".book-service-tab-link").each(function() {
+            if ($(this).hasClass(tabWCurrent)) {
+              const tabSelectedElement = $(this);
+              const currentTab = tabSelectedElement.attr(dataWTabAttr);
+              const findIndex = listTabItems.indexOf(currentTab);
+              if (findIndex == -1 || findIndex == listTabItems.length - 1) {
+                return false;
+              }
+              tabSelectedElement.addClass(tabItemCompleted);
+              const nextTab = $('.' + listTabItems[findIndex + 1]);
+              if (nextTab) {
+                nextTab.removeClass(tabNotActive);
+                nextTab.trigger("click");
+              }
+              return false;
+            }
+          });
+     })
 }
 
 function initBookingSteps(isreturnValue, isDocumentReady = false) {
@@ -117,12 +183,14 @@ function initBookingSteps(isreturnValue, isDocumentReady = false) {
         if (isDocumentReady) {
             $("#toggle-return-button").trigger("click");
         }
+        listTabItems = ['outgoing-journey-tab', 'return-journey-tab', 'additional-services-tab', 'passenger-details-tab', 'checkout-tab'];
     } else {
         $(".book-service-tabs-menu").css("grid-template-columns","1fr 1fr 1fr 1fr");
         $(".return-journey-tab").hide();
         $("#additional-services-step").html("02");
         $("#passenger-details-step").html("03");
         $("#checkout-step").html("04");
+        listTabItems = ['outgoing-journey-tab', 'additional-services-tab', 'passenger-details-tab', 'checkout-tab'];
     }
 }
 
@@ -223,6 +291,94 @@ function initToggleReturnButton() {
     toggleReturnButton.addEventListener("click", event => {
         $("#is-return").val($( "#is-return" ).val() == "false" ? "true" : "false");
     });
+}
+
+function initOutgoingTab() {
+    var outgoingForm = window.localStorage.getItem("outgoing"); 
+    outgoingForm = outgoingForm ? convertJsonToObject(outgoingForm) : null;
+    if (outgoingForm) {
+        initServices(outgoingForm.departure, "");
+        initServices(outgoingForm.arrival, "arrival-");
+    }
+}
+
+function initReturnTab() {
+    var returnForm = window.localStorage.getItem("return");
+    returnForm = returnForm ? convertJsonToObject(returnForm) : null;
+    if (returnForm) {
+     	initServices(returnForm.departure, "");
+  		initServices(returnForm.arrival, "arrival-");
+    }
+}
+
+function initAdditionalServicesTab() {
+
+}
+
+function initPassengerDetailsTab() {
+
+}
+
+function initCheckoutTab() {
+
+}
+
+function convertJsonToObject(string) {
+    return string ? jQuery.parseJSON(string) : null;
+}
+
+function initServices(data, arrivalClass) {
+    if (!data) {
+    	return;
+    }
+    if (data.meetGreetService) {
+        const meetGreetService = data.meetGreetService;
+        $("." + arrivalClass + "meet-greet-service-item").each(function() {
+            const productNameValue = $(this).find(productNameClass).text();
+            if (productNameValue == meetGreetService.name) {
+                $(this).addClass(serviceItemSelectedClass);
+            }
+        })
+    }
+    if (data.transportSolution) {
+        const transportSolution = data.transportSolution;
+        $("." + arrivalClass + "transport-solution-item").each(function() {
+            const productNameValue = $(this).find(productNameClass).text();
+            if (productNameValue == transportSolution.name) {
+                $(this).addClass(serviceItemSelectedClass);
+                if (transportSolution.isVehiclesRequired == "true") {
+                    displayVehiclesRequired("." + arrivalClass + "transport-solution-item", Number(transportSolution.price.replace(priceTextReplace, "").replace(/[^0-9.-]+/g,"")));
+                }
+            }
+        })
+    }
+    if (data.covidSafetyServices) {
+        const covidSafetyServices = data.covidSafetyServices;
+        $("." + arrivalClass + "covid-safety-service-item").each(function() {
+            const productNameValue = $(this).find(productNameClass).text();
+            const findProduct = covidSafetyServices.find(x => x.name === productNameValue);
+            if (findProduct) {
+                $(this).addClass(serviceItemSelectedClass);
+            }
+        })
+    }
+    if (data.totalCares) {
+        const totalCares = data.totalCares;
+        $("." + arrivalClass + "total-care-item").each(function() {
+            const productNameValue = $(this).find(productNameClass).text();
+            const findProduct = totalCares.find(x => x.name === productNameValue);
+            if (findProduct) {
+                $(this).addClass(serviceItemSelectedClass);
+            }
+        })
+    }
+    if (data.transportLocation) {
+    	const transportLocation = data.transportLocation;
+			const findCurrentLocation = $("." + arrivalClass + "departure-transport-select").find(".current");
+        if (findCurrentLocation) {
+      	    findCurrentLocation.html(transportLocation);
+        }
+    }
 }
 
 $(document).ready(function() {
