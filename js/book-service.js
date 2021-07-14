@@ -20,6 +20,8 @@ const dataWTabAttr = 'data-w-tab';
 const productNameClass = '.product-name';
 var listTabItems = [];
 var currentTotalPrice = 0;
+const defaultDeparture = 'Departure';
+const defaultArrival = 'Arrival';
 function getMGObject() {
     return {
         "departure": $("#departure-header").text(),
@@ -85,13 +87,31 @@ function setAirportLocationTitle(departureValue, arrivalValue) {
     $('#arrival-title').html(arrivalValue + ' - Arrival');
 }
 
+function displayDepartureSection(value) {
+    if (value == defaultDeparture) {
+        $(".departure-service-wrapper").hide();
+    } else {
+        $(".departure-service-wrapper").show();
+    }
+}
+
+function displayArrivalSection(value) {
+    if (value == defaultArrival) {
+        $(".arrival-service-wrapper").hide();
+    } else {
+        $(".arrival-service-wrapper").show();
+    }
+}
+
 function initData() {
     var mgForm = window.localStorage.getItem("meet-greet"); 
     mgForm = mgForm ? convertJsonToObject(mgForm) : {};
-    const departureValue = mgForm && mgForm.departure ? mgForm.departure : 'Departure';
-    const arrivalValue = mgForm && mgForm.arrival ? mgForm.arrival : 'Arrival';
+    const departureValue = mgForm && mgForm.departure ? mgForm.departure : defaultDeparture;
+    const arrivalValue = mgForm && mgForm.arrival ? mgForm.arrival : defaultArrival;
     const travelerValue = mgForm && mgForm.traveler ? Number(mgForm.traveler) : 1;
     const isreturnValue = mgForm && mgForm.isReturn ? mgForm.isReturn : 'false';
+    displayDepartureSection(departureValue);
+    displayArrivalSection(travelerValue);
     $("#departure-header").html(departureValue);
     $("#arrival-header").html(arrivalValue);
     $("#traveler-header").html('x' + travelerValue);
@@ -216,7 +236,7 @@ function setArrivalTransportSelect(arrivalValue) {
 }
 
 function setDeparturesSelect(departureValue) {
-    const departureSelected = 'Departure' == departureValue ? 'selected' : '';
+    const departureSelected = defaultDeparture == departureValue ? 'selected' : '';
     $('.departures-select').append('<option ' + departureSelected + ' value="" disabled>Departure</option>');
     $('.departures-select').append('<option value="" disabled>Domestic</option>');
     $('.domestic-airport-item').each(function() {
@@ -233,7 +253,7 @@ function setDeparturesSelect(departureValue) {
 }
 
 function setArrivalsSelect(arrivalValue) {
-    const arrivalSelected = 'Arrival' == arrivalValue ? 'selected' : '';
+    const arrivalSelected = defaultArrival == arrivalValue ? 'selected' : '';
     $('.arrivals-select').append('<option ' + arrivalSelected + ' value="" disabled>Arrival</option>');
     $('.arrivals-select').append('<option value="" disabled>Domestic</option>');
     $('.domestic-airport-item').each(function() {
@@ -281,6 +301,8 @@ function initBookNowButton() {
         setAirportLocationTitle(departure, arrival);
         $(".mg-edit-content").trigger("click");
         $("#is-vehicles-required").val(traveler > 4 ? "true" : "false");
+        displayDepartureSection(departureValue);
+        displayArrivalSection(travelerValue);
         initBookingSteps(isReturn);
     });
 }
