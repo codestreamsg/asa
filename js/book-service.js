@@ -86,18 +86,16 @@ function setAirportLocationTitle(departureValue, arrivalValue) {
 }
 
 function initData() {
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    var departureValue = urlParams.get('departure');
-    departureValue = departureValue == '' ? 'Departure' : departureValue;
-    var arrivalValue = urlParams.get('arrival');
-    arrivalValue = arrivalValue == '' ? 'Arrival' : arrivalValue;
-    const travelerValue = urlParams.get('traveler');
-    const isreturnValue = urlParams.get('isreturn');
+    var mgForm = window.localStorage.getItem("meet-greet"); 
+    mgForm = mgForm ? convertJsonToObject(mgForm) : {};
+    const departureValue = mgForm && mgForm.departure ? mgForm.departure : 'Departure';
+    const arrivalValue = mgForm && mgForm.arrival ? mgForm.arrival : 'Arrival';
+    const travelerValue = mgForm && mgForm.traveler ? Number(mgForm.traveler) : 1;
+    const isreturnValue = mgForm && mgForm.isReturn ? mgForm.isReturn : 'false';
     $("#departure-header").html(departureValue);
     $("#arrival-header").html(arrivalValue);
     $("#traveler-header").html('x' + travelerValue);
-    if (Number(travelerValue) > 4) {
+    if (travelerValue > 4) {
         $("#is-vehicles-required").val("true");
     }
     $("#is-return").val(isreturnValue);
@@ -134,7 +132,7 @@ function initData() {
             }
         }
     });
-    $("#total-price").html(currencyFormat(currentTotalPrice));
+    $("#total-price").html(currencyFormat(currentTotalPrice*travelerValue));
 }
 
 function initNextPleaseButton() {
@@ -325,7 +323,7 @@ function initCheckoutTab() {
 }
 
 function convertJsonToObject(string) {
-    return string ? jQuery.parseJSON(string) : null;
+    return string ? jQuery.parseJSON(string) : {};
 }
 
 function initServices(data, arrivalClass) {
@@ -338,7 +336,7 @@ function initServices(data, arrivalClass) {
             const productNameValue = $(this).find(productNameClass).text();
             if (productNameValue == meetGreetService.name) {
                 $(this).addClass(serviceItemSelectedClass);
-                currentTotalPrice = currentTotalPrice + convertCurrencyToNumber(meetGreetService.price);
+                currentTotalPrice = currentTotalPrice + convertCurrencyToNumber($(this).find(serviceItemPrice).text());
             }
         })
     }
@@ -350,7 +348,7 @@ function initServices(data, arrivalClass) {
                 $(this).addClass(serviceItemSelectedClass);
                 if (transportSolution.isVehiclesRequired == "true") {
                     displayVehiclesRequired("." + arrivalClass + "transport-solution-item", convertCurrencyToNumber(transportSolution.price));
-                    currentTotalPrice = currentTotalPrice + convertCurrencyToNumber(transportSolution.price)*2;
+                    currentTotalPrice = currentTotalPrice + convertCurrencyToNumber($(this).find(serviceItemPrice).text())*2;
                 }
             }
         })
@@ -362,7 +360,7 @@ function initServices(data, arrivalClass) {
             const findProduct = covidSafetyServices.find(x => x.name === productNameValue);
             if (findProduct) {
                 $(this).addClass(serviceItemSelectedClass);
-                currentTotalPrice = currentTotalPrice + convertCurrencyToNumber(findProduct.price);
+                currentTotalPrice = currentTotalPrice + convertCurrencyToNumber($(this).find(serviceItemPrice).text());
             }
         })
     }
@@ -373,7 +371,7 @@ function initServices(data, arrivalClass) {
             const findProduct = totalCares.find(x => x.name === productNameValue);
             if (findProduct) {
                 $(this).addClass(serviceItemSelectedClass);
-                currentTotalPrice = currentTotalPrice + convertCurrencyToNumber(findProduct.price);
+                currentTotalPrice = currentTotalPrice + convertCurrencyToNumber($(this).find(serviceItemPrice).text());
             }
         })
     }
