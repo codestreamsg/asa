@@ -17,7 +17,7 @@ const tabItemCompleted = '.tab-item-complted';
 const tabNotActive = 'tab-not-active';
 const tabWCurrent = 'w--current';
 const dataWTabAttr = 'data-w-tab';
-const productNameClass = 'product-name';
+const productNameClass = '.product-name';
 var listTabItems = [];
 function getMGObject() {
     return {
