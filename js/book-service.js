@@ -19,6 +19,7 @@ const tabWCurrent = 'w--current';
 const dataWTabAttr = 'data-w-tab';
 const productNameClass = '.product-name';
 var listTabItems = [];
+var currentTotalPrice = 0;
 function getMGObject() {
     return {
         "departure": $("#departure-header").text(),
@@ -110,7 +111,6 @@ function initData() {
     setDepartureTransportSelect(departureValue);
     setArrivalTransportSelect(arrivalValue);
     initNextPleaseButton();
-
     $(".book-service-tab-link").each(function() {
         if ($(this).hasClass(tabWCurrent)) {
           const tabSelectedElement = $(this);
@@ -134,6 +134,7 @@ function initData() {
             }
         }
     });
+    $("#total-price").html(currencyFormat(currentTotalPrice));
 }
 
 function initNextPleaseButton() {
@@ -337,6 +338,7 @@ function initServices(data, arrivalClass) {
             const productNameValue = $(this).find(productNameClass).text();
             if (productNameValue == meetGreetService.name) {
                 $(this).addClass(serviceItemSelectedClass);
+                currentTotalPrice = currentTotalPrice + convertCurrencyToNumber(meetGreetService.price);
             }
         })
     }
@@ -347,7 +349,8 @@ function initServices(data, arrivalClass) {
             if (productNameValue == transportSolution.name) {
                 $(this).addClass(serviceItemSelectedClass);
                 if (transportSolution.isVehiclesRequired == "true") {
-                    displayVehiclesRequired("." + arrivalClass + "transport-solution-item", Number(transportSolution.price.replace(priceTextReplace, "").replace(/[^0-9.-]+/g,"")));
+                    displayVehiclesRequired("." + arrivalClass + "transport-solution-item", convertCurrencyToNumber(transportSolution.price));
+                    currentTotalPrice = currentTotalPrice + convertCurrencyToNumber(transportSolution.price)*2;
                 }
             }
         })
@@ -359,6 +362,7 @@ function initServices(data, arrivalClass) {
             const findProduct = covidSafetyServices.find(x => x.name === productNameValue);
             if (findProduct) {
                 $(this).addClass(serviceItemSelectedClass);
+                currentTotalPrice = currentTotalPrice + convertCurrencyToNumber(findProduct.price);
             }
         })
     }
@@ -369,16 +373,21 @@ function initServices(data, arrivalClass) {
             const findProduct = totalCares.find(x => x.name === productNameValue);
             if (findProduct) {
                 $(this).addClass(serviceItemSelectedClass);
+                currentTotalPrice = currentTotalPrice + convertCurrencyToNumber(findProduct.price);
             }
         })
     }
     if (data.transportLocation) {
     	const transportLocation = data.transportLocation;
-			const findCurrentLocation = $("." + arrivalClass + "departure-transport-select").find(".current");
+        const findCurrentLocation = $("." + arrivalClass + "departure-transport-select").find(".current");
         if (findCurrentLocation) {
       	    findCurrentLocation.html(transportLocation);
         }
     }
+}
+
+function convertCurrencyToNumber(value) {
+    return value ? Number(value.replace(priceTextReplace, "").replace(/[^0-9.-]+/g,"")) : 0;
 }
 
 $(document).ready(function() {
