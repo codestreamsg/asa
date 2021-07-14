@@ -111,7 +111,7 @@ function initData() {
     const travelerValue = mgForm && mgForm.traveler ? Number(mgForm.traveler) : 1;
     const isreturnValue = mgForm && mgForm.isReturn ? mgForm.isReturn : 'false';
     displayDepartureSection(departureValue);
-    displayArrivalSection(travelerValue);
+    displayArrivalSection(arrivalValue);
     $("#departure-header").html(departureValue);
     $("#arrival-header").html(arrivalValue);
     $("#traveler-header").html('x' + travelerValue);
@@ -159,6 +159,29 @@ function initNextPleaseButton() {
     $(".book-service-tab-link").click(function() {
     	const tabSelectedElement = $(this);
         const currentTab = tabSelectedElement.attr(dataWTabAttr);
+       
+        switch(currentTab) {
+            case 'outgoing-journey-tab':
+                var outgoing = {
+                    departure: getSelectedServices(""),
+                    arrival: getSelectedServices("arrival-")
+                }
+                window.localStorage.setItem("outgoing", JSON.stringify(outgoing));
+                break;
+            case 'return-journey-tab':
+                var returnJourney = {
+                    departure: getSelectedServices(""),
+                    arrival: getSelectedServices("arrival-")
+                }
+                window.localStorage.setItem("return", JSON.stringify(returnJourney));
+                break;
+            case 'additional-services-tab':
+                break;
+            case 'passenger-details-tab':
+                break;
+            case 'checkout-tab':
+                break;
+        }
         var findIndex = listTabItems.indexOf(currentTab);
         if (findIndex == -1) {
             return false;
@@ -301,8 +324,8 @@ function initBookNowButton() {
         setAirportLocationTitle(departure, arrival);
         $(".mg-edit-content").trigger("click");
         $("#is-vehicles-required").val(traveler > 4 ? "true" : "false");
-        displayDepartureSection(departureValue);
-        displayArrivalSection(travelerValue);
+        displayDepartureSection(departure);
+        displayArrivalSection(arrival);
         initBookingSteps(isReturn);
     });
 }
@@ -404,6 +427,49 @@ function initServices(data, arrivalClass) {
       	    findCurrentLocation.html(transportLocation);
         }
     }
+}
+
+function getSelectedServices(arrivalClass) {
+    var data = {
+        meetGreetService: null,
+        transportSolution: null,
+        covidSafetyServices: [],
+        totalCares: []
+    };
+    $("." + arrivalClass + "meet-greet-service-item").each(function() {
+        if ($(this).hasClass(serviceItemSelectedClass)) {
+            data.meetGreetService = {
+                name: $(this).find(productNameClass).text(),
+                price: convertCurrencyToNumber($(this).find(serviceItemPrice).text())
+            }
+        }
+    })
+    $("." + arrivalClass + "transport-solution-item").each(function() {
+        if ($(this).hasClass(serviceItemSelectedClass)) {
+            data.transportSolution = {
+                name: $(this).find(productNameClass).text(),
+                price: convertCurrencyToNumber($(this).find(serviceItemPrice).text()),
+                isVehiclesRequired: $("#is-vehicles-required").val()
+            }
+        }
+    })
+    $("." + arrivalClass + "covid-safety-service-item").each(function() {
+        if ($(this).hasClass(serviceItemSelectedClass)) {
+            data.covidSafetyServices.push({
+                name: $(this).find(productNameClass).text(),
+                price: convertCurrencyToNumber($(this).find(serviceItemPrice).text())
+            })
+        }
+    })
+    $("." + arrivalClass + "total-care-item").each(function() {
+        if ($(this).hasClass(serviceItemSelectedClass)) {
+            data.totalCares.push({
+                name: $(this).find(productNameClass).text(),
+                price: convertCurrencyToNumber($(this).find(serviceItemPrice).text())
+            })
+        }
+    })
+    return data;
 }
 
 function convertCurrencyToNumber(value) {
