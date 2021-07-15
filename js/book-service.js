@@ -302,7 +302,8 @@ function initNextPleaseButton() {
                         var outgoing = {
                             departure: getSelectedServices(""),
                             arrival: getSelectedServices("arrival-"),
-                            transfer: getTerminalTransferSelectedServices()
+                            transfer: getTerminalTransferSelectedServices(),
+                            transportLocation: $("#departure-transport-select option:selected").text()
                         }
                         window.localStorage.setItem("outgoing", JSON.stringify(outgoing));
                         break;
@@ -310,7 +311,8 @@ function initNextPleaseButton() {
                         var returnJourney = {
                             departure: getSelectedServices(""),
                             arrival: getSelectedServices("arrival-"),
-                            transfer: getTerminalTransferSelectedServices()
+                            transfer: getTerminalTransferSelectedServices(),
+                            transportLocation: $("#arrival-transport-select option:selected").text()
                         }
                         window.localStorage.setItem("return", JSON.stringify(returnJourney));
                         break;
