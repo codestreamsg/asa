@@ -14,6 +14,7 @@ const serviceItemSelectedClass = 'service-item-selected';
 const serviceItemPrice = '.service-item-price';
 const serviceItemOptional = 'service-item-optional';
 const serviceItemMultiple = 'service-item-multiple';
+const serviceItemRequired = 'service-item-required';
 const priceTextReplace = 'IDR';
 const tabItemCompleted = '.tab-item-complted';
 const tabNotActive = 'tab-not-active';
@@ -85,16 +86,26 @@ function calTotalPrice() {
 
 function initItemSelected(itemClass, itemSelectedClass) {
     $(itemClass).click(function() {
-        if (!$(itemClass).hasClass(serviceItemMultiple)) {
+        if ($(itemClass).hasClass(serviceItemRequired)) {
             $(itemClass).each(function() {
                 $(this).removeClass(itemSelectedClass);
             });
-        }
-        if ($(itemClass).hasClass(serviceItemOptional) && $(itemClass).hasClass(itemSelectedClass)) {
-            $(this).removeClass(itemSelectedClass);
-        } else {
             $(this).addClass(itemSelectedClass);
         }
+
+        if ($(itemClass).hasClass(serviceItemOptional)) {
+            if ($(this).hasClass(itemSelectedClass)) {
+                $(this).removeClass(itemSelectedClass);
+            } else {
+                if (!$(itemClass).hasClass(serviceItemMultiple)) {
+                    $(itemClass).each(function() {
+                        $(this).removeClass(itemSelectedClass);
+                    });
+                }
+                $(this).addClass(itemSelectedClass);
+            }
+        }
+       
         calTotalPrice();
     })
 }
