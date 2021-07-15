@@ -228,12 +228,8 @@ function initNextPleaseButton() {
                 if (findIndex == -1 || findIndex == listTabItems.length - 1) {
                     return false;
                 }
-                tabSelectedElement.addClass(tabItemCompleted);
-                const nextTab = $('.' + listTabItems[findIndex + 1]);
-                if (nextTab) {
-                    nextTab.removeClass(tabNotActive);
-                    nextTab.trigger("click");
-                }
+                const nextTab = listTabItems[findIndex + 1];
+                window.location = nextTab;
                 return false;
             }
         });
@@ -333,6 +329,7 @@ function initBookNowButton() {
             alert("Please choose different between Departure and Arrival");
             return false;
         }
+        window.localStorage.setItem("meet-greet", JSON.stringify(mgData));
         $("#departure-header").html(mgData.departure);
         $("#arrival-header").html(mgData.arrival);
         $("#traveler-header").html('x' + mgData.traveler);
