@@ -9,7 +9,8 @@ const listItemsSelected = [
     '.arrival-total-care-item',
     TSItem,
     arrivalTSItem,
-    '.additional-service-item'];
+    '.additional-service-item',
+    '.terminal-transfer-service-item'];
 const serviceItemSelectedClass = 'service-item-selected';
 const serviceItemPrice = '.service-item-price';
 const serviceItemOptional = 'service-item-optional';
@@ -205,14 +206,16 @@ function initNextPleaseButton() {
                     case 'outgoing-journey-tab':
                         var outgoing = {
                             departure: getSelectedServices(""),
-                            arrival: getSelectedServices("arrival-")
+                            arrival: getSelectedServices("arrival-"),
+                            transfer: getTerminalTransferSelectedServices()
                         }
                         window.localStorage.setItem("outgoing", JSON.stringify(outgoing));
                         break;
                     case 'return-journey-tab':
                         var returnJourney = {
                             departure: getSelectedServices(""),
-                            arrival: getSelectedServices("arrival-")
+                            arrival: getSelectedServices("arrival-"),
+                            transfer: getTerminalTransferSelectedServices()
                         }
                         window.localStorage.setItem("return", JSON.stringify(returnJourney));
                         break;
@@ -357,6 +360,7 @@ function initOutgoingTab() {
     if (outgoingForm) {
         initServices(outgoingForm.departure, "");
         initServices(outgoingForm.arrival, "arrival-");
+        initTerminalTransferServices(outgoingForm.transfer);
     } else {
         initFirstMeetGreetServiceSelected("");
         initFirstMeetGreetServiceSelected("arrival-");
@@ -369,6 +373,7 @@ function initReturnTab() {
     if (returnForm) {
      	initServices(returnForm.departure, "");
   		initServices(returnForm.arrival, "arrival-");
+        initTerminalTransferServices(outgoingForm.transfer);
     } else {
         initFirstMeetGreetServiceSelected("");
         initFirstMeetGreetServiceSelected("arrival-");
@@ -454,6 +459,31 @@ function initServices(data, arrivalClass) {
       	    findCurrentLocation.html(transportLocation);
         }
     }
+}
+
+function initTerminalTransferServices(data) {
+    if (data) {
+        $(".terminal-transfer-service-item").each(function() {
+            const productNameValue = $(this).find(productNameClass).text();
+            if (productNameValue == data.name) {
+                $(this).addClass(serviceItemSelectedClass);
+                currentTotalPrice = currentTotalPrice + convertCurrencyToNumber($(this).find(serviceItemPrice).text());
+            }
+        })
+    }
+}
+
+function getTerminalTransferSelectedServices() {
+    var data = null;
+    $(".terminal-transfer-service-item").each(function() {
+        if ($(this).hasClass(serviceItemSelectedClass)) {
+            data = {
+                name: $(this).find(productNameClass).text(),
+                price: convertCurrencyToNumber($(this).find(serviceItemPrice).text())
+            }
+        }
+    })
+    return data;
 }
 
 function getSelectedServices(arrivalClass) {
