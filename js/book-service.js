@@ -12,6 +12,8 @@ const listItemsSelected = [
     '.additional-service-item'];
 const serviceItemSelectedClass = 'service-item-selected';
 const serviceItemPrice = '.service-item-price';
+const serviceItemOptional = 'service-item-optional';
+const serviceItemMultiple = 'service-item-multiple';
 const priceTextReplace = 'IDR';
 const tabItemCompleted = '.tab-item-complted';
 const tabNotActive = 'tab-not-active';
@@ -83,10 +85,16 @@ function calTotalPrice() {
 
 function initItemSelected(itemClass, itemSelectedClass) {
     $(itemClass).click(function() {
-        $(itemClass).each(function() {
+        if (!$(itemClass).hasClass(serviceItemMultiple)) {
+            $(itemClass).each(function() {
+                $(this).removeClass(itemSelectedClass);
+            });
+        }
+        if ($(itemClass).hasClass(serviceItemOptional) && $(itemClass).hasClass(itemSelectedClass)) {
             $(this).removeClass(itemSelectedClass);
-        });
-        $(this).addClass(itemSelectedClass);
+        } else {
+            $(this).addClass(itemSelectedClass);
+        }
         calTotalPrice();
     })
 }
@@ -138,6 +146,7 @@ function initData() {
     setDepartureTransportSelect(departureValue);
     setArrivalTransportSelect(arrivalValue);
     initNextPleaseButton();
+    initAllServiceItemPrice();
     $(".book-service-tab-link").each(function() {
         if ($(this).hasClass(tabWCurrent)) {
           const tabSelectedElement = $(this);
@@ -162,6 +171,15 @@ function initData() {
         }
     });
     $("#total-price").html(currencyFormat(currentTotalPrice*travelerValue));
+}
+
+function initAllServiceItemPrice() {
+    $(".service-item-price").each(function() {
+    	const text = $(this).text();
+    	var price = text ? convertCurrencyToNumber(text) : 0;
+        price = price*1000;
+        $(this).html(currencyFormat(price));
+    });
 }
 
 function initNextPleaseButton() {
@@ -368,6 +386,11 @@ function initServices(data, arrivalClass) {
                 $(this).addClass(serviceItemSelectedClass);
                 currentTotalPrice = currentTotalPrice + convertCurrencyToNumber($(this).find(serviceItemPrice).text());
             }
+        })
+    } else {
+        $("." + arrivalClass + "meet-greet-service-item").each(function() {
+            $(this).addClass(serviceItemSelectedClass);
+            return false;
         })
     }
     if (data.transportSolution) {
