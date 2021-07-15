@@ -157,6 +157,7 @@ function initData() {
     setArrivalTransportSelect(arrivalValue);
     initNextPleaseButton();
     initAllServiceItemPrice();
+    initSelectedTabs();
     $(".book-service-tab-link").each(function() {
         if ($(this).hasClass(tabWCurrent)) {
           const tabSelectedElement = $(this);
@@ -192,6 +193,12 @@ function initAllServiceItemPrice() {
     });
 }
 
+function initSelectedTabs() {
+    $(".book-service-tab-link").click(function() {
+        window.location = $(this).attr(dataWTabAttr);
+    });
+}
+
 function initNextPleaseButton() {
     $(".next-please-button").click(function() {
         const mgData = getMGObject();
@@ -218,6 +225,7 @@ function initNextPleaseButton() {
                         window.localStorage.setItem("return", JSON.stringify(returnJourney));
                         break;
                     case 'additional-services-tab':
+                        window.localStorage.setItem("additional-services", JSON.stringify(getSelectedAdditionalServices()));
                         break;
                     case 'passenger-details-tab':
                         break;
@@ -476,6 +484,19 @@ function getTerminalTransferSelectedServices() {
                 name: $(this).find(productNameClass).text(),
                 price: convertCurrencyToNumber($(this).find(serviceItemPrice).text())
             }
+        }
+    })
+    return data;
+}
+
+function getSelectedAdditionalServices() {
+    var data = [];
+    $(".additional-service-item").each(function() {
+        if ($(this).hasClass(serviceItemSelectedClass)) {
+            data.push({
+                name: $(this).find(productNameClass).text(),
+                price: convertCurrencyToNumber($(this).find(serviceItemPrice).text())
+            })
         }
     })
     return data;
