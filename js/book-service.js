@@ -357,6 +357,9 @@ function initOutgoingTab() {
     if (outgoingForm) {
         initServices(outgoingForm.departure, "");
         initServices(outgoingForm.arrival, "arrival-");
+    } else {
+        initFirstMeetGreetServiceSelected("");
+        initFirstMeetGreetServiceSelected("arrival-");
     }
 }
 
@@ -366,7 +369,17 @@ function initReturnTab() {
     if (returnForm) {
      	initServices(returnForm.departure, "");
   		initServices(returnForm.arrival, "arrival-");
+    } else {
+        initFirstMeetGreetServiceSelected("");
+        initFirstMeetGreetServiceSelected("arrival-");
     }
+}
+
+function initFirstMeetGreetServiceSelected(arrivalClass) {
+    $("." + arrivalClass + "meet-greet-service-item").each(function() {
+        $(this).addClass(serviceItemSelectedClass);
+        return false;
+    })
 }
 
 function initAdditionalServicesTab() {
@@ -387,10 +400,6 @@ function convertJsonToObject(string) {
 
 function initServices(data, arrivalClass) {
     if (!data) {
-        $("." + arrivalClass + "meet-greet-service-item").each(function() {
-            $(this).addClass(serviceItemSelectedClass);
-            return false;
-        })
     	return;
     }
     if (data.meetGreetService) {
