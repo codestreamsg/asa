@@ -115,8 +115,8 @@ function getTotalPriceFromLocalStorage() {
                 if (currentIndexValue == 'additional-services-tab') {
                     var additionalServicesForm = window.localStorage.getItem("additional-services");
                     additionalServicesForm = additionalServicesForm ? convertJsonToObject(additionalServicesForm) : [];
-                    for(var index = 0; index < additionalServicesForm.length; index ++) {
-                        const item = additionalServicesForm[index];
+                    for(var i = 0; i < additionalServicesForm.length; i ++) {
+                        const item = additionalServicesForm[i];
                         totalPrice = totalPrice + (item.price ? Number(item.price) : 0);
                     }
                 }
@@ -160,16 +160,16 @@ function getPriceForSection(items, serviceItemSelectedClass, isVehiclesRequired,
     for(var index = 0; index < items.length; index ++) {
         $(items[index]).each(function() {
             if ($(this).hasClass(serviceItemSelectedClass)) {
-            var priceValue = convertCurrencyToNumber($(this).find(serviceItemPrice).text());
-            if (isVehiclesRequired == "true") {
-                displayVehiclesRequired(items[index], priceValue);
-            }
-            if (items[index] == TSItem || items[index] == arrivalTSItem) {
-                priceValue = isVehiclesRequired == "true" ? (priceValue*2) : priceValue;
-            } else {
-                priceValue = priceValue*numberOfPassengers;
-            }
-            totalPrice = totalPrice + priceValue;
+                var priceValue = convertCurrencyToNumber($(this).find(serviceItemPrice).text());
+                if (isVehiclesRequired == "true") {
+                    displayVehiclesRequired(items[index], priceValue);
+                }
+                if (items[index] == TSItem || items[index] == arrivalTSItem) {
+                    priceValue = isVehiclesRequired == "true" ? (priceValue*2) : priceValue;
+                } else {
+                    priceValue = priceValue*numberOfPassengers;
+                }
+                totalPrice = totalPrice + priceValue;
             }
         });
     }
