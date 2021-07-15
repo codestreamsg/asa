@@ -11,6 +11,19 @@ const listItemsSelected = [
     arrivalTSItem,
     '.additional-service-item',
     '.terminal-transfer-service-item'];
+const departureServicesPrice = [
+    '.meet-greet-service-item',
+    '.covid-safety-service-item',
+    '.total-care-item',
+    TSItem];
+const arrivalServicesPrice = [
+    '.arrival-meet-greet-service-item',
+    '.arrival-covid-safety-service-item',
+    '.arrival-total-care-item',
+    arrivalTSItem];
+const otherServicesPrice = [
+    '.additional-service-item',
+    '.terminal-transfer-service-item'];
 const serviceItemSelectedClass = 'service-item-selected';
 const serviceItemPrice = '.service-item-price';
 const serviceItemOptional = 'service-item-optional';
@@ -63,15 +76,92 @@ function calTotalPrice() {
     var totalPrice = 0;
     const numberOfPassengers = getMGObject().traveler;
     const isVehiclesRequired = $("#is-vehicles-required").val();
-    for(var index = 0; index < listItemsSelected.length; index ++) {
-        $(listItemsSelected[index]).each(function() {
-            if ($(this).hasClass(serviceItemSelectedClass)) {
-            const priceText = $(this).find(serviceItemPrice).text();
-            var priceValue = Number(priceText.replace(priceTextReplace, "").replace(/[^0-9.-]+/g,""));
-            if (isVehiclesRequired == "true") {
-                displayVehiclesRequired(listItemsSelected[index], priceValue);
+    if ($(".departure-service-wrapper").is(":visible")) {
+        totalPrice = totalPrice + getPriceForSection(departureServicesPrice, serviceItemSelectedClass, isVehiclesRequired, numberOfPassengers);
+    }
+    if ($(".arrival-service-wrapper").is(":visible")) {
+        totalPrice = totalPrice + getPriceForSection(arrivalServicesPrice, serviceItemSelectedClass, isVehiclesRequired, numberOfPassengers);
+    }
+    totalPrice = totalPrice + getPriceForSection(otherServicesPrice, serviceItemSelectedClass, isVehiclesRequired, numberOfPassengers) + getTotalPriceFromLocalStorage();
+
+    $("#total-price").html(currencyFormat(totalPrice));
+}
+
+function getTotalPriceFromLocalStorage() {
+    const totalPrice = 0;
+    $(".book-service-tab-link").each(function() {
+        if ($(this).hasClass(tabWCurrent)) {
+            const tabSelectedElement = $(this);
+            const currentSelectedTab = tabSelectedElement.attr(dataWTabAttr);
+            for(var index = 0; index < listTabItems.length; index ++) {
+                const currentIndexValue = listTabItems[index];
+                if (currentIndexValue == currentSelectedTab) {
+                    continue;
+                }
+                if (currentIndexValue == 'outgoing-journey-tab') {
+                    var outgoingForm = window.localStorage.getItem("outgoing");
+                    outgoingForm = outgoingForm ? convertJsonToObject(outgoingForm) : null;
+                    if (outgoingForm) {
+                        totalPrice = totalPrice + getTotalPriceServices(outgoingForm);
+                    }
+                }
+                if (currentIndexValue == 'return-journey-tab') {
+                    var returnForm = window.localStorage.getItem("return");
+                    returnForm = returnForm ? convertJsonToObject(returnForm) : null;
+                    if (returnForm) {
+                        totalPrice = totalPrice + getTotalPriceServices(returnForm);
+                    }
+                }
+                if (currentIndexValue == 'additional-services-tab') {
+                    var additionalServicesForm = window.localStorage.getItem("additional-services");
+                    additionalServicesForm = additionalServicesForm ? convertJsonToObject(additionalServicesForm) : [];
+                    additionalServicesForm.each(function(item) {
+                        totalPrice = totalPrice + (item.price ? Number(item.price) : 0);
+                    })
+                }
             }
-            if (listItemsSelected[index] == TSItem || listItemsSelected[index] == arrivalTSItem) {
+            return false;
+        }
+    });
+    return totalPrice;
+}
+
+function getTotalPriceServices(data) {
+    var totalPrice = 0;
+    const meetGreetService = data.meetGreetService;
+    totalPrice = totalPrice + (meetGreetService && meetGreetService.price ? Number(meetGreetService.price) : 0);
+
+    const transportSolution = data.transportSolution;
+    const priceVehiclesRequired = transportSolution && transportSolution.isVehiclesRequired == "true" ? 2 : 1;
+    totalPrice = totalPrice + (transportSolution && transportSolution.price ? Number(transportSolution.price*priceVehiclesRequired) : 0);
+
+    const covidSafetyServices = data.covidSafetyServices ? data.covidSafetyServices : [];
+    covidSafetyServices.forEach(function(item) {
+        totalPrice = totalPrice + (item.price ? Number(item.price) : 0);
+    });
+
+    const totalCares = data.totalCares ? data.totalCares : [];
+    totalCares.forEach(function(item) {
+        totalPrice = totalPrice + (item.price ? Number(item.price) : 0);
+    });
+
+    var transferService = window.localStorage.getItem("transfer");
+    transferService = transferService ? convertJsonToObject(transferService) : null;
+    totalPrice = totalPrice + (transferService && transferService.price ? Number(transferService.price) : 0);
+
+    return totalPrice;
+}
+
+function getPriceForSection(items, serviceItemSelectedClass, isVehiclesRequired, numberOfPassengers) {
+    var totalPrice = 0;
+    for(var index = 0; index < items.length; index ++) {
+        $(items[index]).each(function() {
+            if ($(this).hasClass(serviceItemSelectedClass)) {
+            var priceValue = convertCurrencyToNumber($(this).find(serviceItemPrice).text());
+            if (isVehiclesRequired == "true") {
+                displayVehiclesRequired(items[index], priceValue);
+            }
+            if (items[index] == TSItem || items[index] == arrivalTSItem) {
                 priceValue = isVehiclesRequired == "true" ? (priceValue*2) : priceValue;
             } else {
                 priceValue = priceValue*numberOfPassengers;
@@ -80,7 +170,7 @@ function calTotalPrice() {
             }
         });
     }
-    $("#total-price").html(currencyFormat(totalPrice));
+    return totalPrice;
 }
 
 function initItemSelected(itemClass, itemSelectedClass) {
@@ -181,7 +271,7 @@ function initData() {
             }
         }
     });
-    $("#total-price").html(currencyFormat(currentTotalPrice*travelerValue));
+    calTotalPrice();
 }
 
 function initAllServiceItemPrice() {
@@ -358,7 +448,7 @@ function initToggleReturnButton() {
 }
 
 function initOutgoingTab() {
-    var outgoingForm = window.localStorage.getItem("outgoing"); 
+    var outgoingForm = window.localStorage.getItem("outgoing");
     outgoingForm = outgoingForm ? convertJsonToObject(outgoingForm) : null;
     if (outgoingForm) {
         initServices(outgoingForm.departure, "");
@@ -391,7 +481,16 @@ function initFirstMeetGreetServiceSelected(arrivalClass) {
 }
 
 function initAdditionalServicesTab() {
-
+    var additionalServicesForm = window.localStorage.getItem("additional-services");
+    additionalServicesForm = additionalServicesForm ? convertJsonToObject(additionalServicesForm) : null;
+    $(".additional-service-item").each(function() {
+        const productNameValue = $(this).find(productNameClass).text();
+        const findProduct = additionalServicesForm.find(x => x.name === productNameValue);
+        if (findProduct) {
+            $(this).addClass(serviceItemSelectedClass);
+            currentTotalPrice = currentTotalPrice + convertCurrencyToNumber($(this).find(serviceItemPrice).text());
+        }
+    })
 }
 
 function initPassengerDetailsTab() {
