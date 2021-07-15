@@ -376,6 +376,10 @@ function convertJsonToObject(string) {
 
 function initServices(data, arrivalClass) {
     if (!data) {
+        $("." + arrivalClass + "meet-greet-service-item").each(function() {
+            $(this).addClass(serviceItemSelectedClass);
+            return false;
+        })
     	return;
     }
     if (data.meetGreetService) {
@@ -386,11 +390,6 @@ function initServices(data, arrivalClass) {
                 $(this).addClass(serviceItemSelectedClass);
                 currentTotalPrice = currentTotalPrice + convertCurrencyToNumber($(this).find(serviceItemPrice).text());
             }
-        })
-    } else {
-        $("." + arrivalClass + "meet-greet-service-item").each(function() {
-            $(this).addClass(serviceItemSelectedClass);
-            return false;
         })
     }
     if (data.transportSolution) {
