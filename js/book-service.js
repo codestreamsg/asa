@@ -102,15 +102,23 @@ function getTotalPriceFromLocalStorage() {
                     var outgoingForm = window.localStorage.getItem("outgoing");
                     outgoingForm = outgoingForm ? convertJsonToObject(outgoingForm) : null;
                     if (outgoingForm) {
-                        totalPrice = totalPrice + getTotalPriceServices(outgoingForm);
+                        totalPrice = totalPrice + getTotalPriceServices(outgoingForm.departure);
+                        totalPrice = totalPrice + getTotalPriceServices(outgoingForm.arrival);
                     }
+                    var transferService = window.localStorage.getItem("transfer");
+                    transferService = transferService ? convertJsonToObject(transferService) : null;
+                    totalPrice = totalPrice + (transferService && transferService.price ? Number(transferService.price) : 0);
                 }
                 if (currentIndexValue == 'return-journey-tab') {
                     var returnForm = window.localStorage.getItem("return");
                     returnForm = returnForm ? convertJsonToObject(returnForm) : null;
                     if (returnForm) {
-                        totalPrice = totalPrice + getTotalPriceServices(returnForm);
+                        totalPrice = totalPrice + getTotalPriceServices(returnForm.departure);
+                        totalPrice = totalPrice + getTotalPriceServices(returnForm.arrival);
                     }
+                    var transferService = window.localStorage.getItem("transfer");
+                    transferService = transferService ? convertJsonToObject(transferService) : null;
+                    totalPrice = totalPrice + (transferService && transferService.price ? Number(transferService.price) : 0);
                 }
                 if (currentIndexValue == 'additional-services-tab') {
                     var additionalServicesForm = window.localStorage.getItem("additional-services");
@@ -129,6 +137,9 @@ function getTotalPriceFromLocalStorage() {
 
 function getTotalPriceServices(data) {
     var totalPrice = 0;
+    if (!data) {
+        return totalPrice;
+    }
     const meetGreetService = data.meetGreetService;
     totalPrice = totalPrice + (meetGreetService && meetGreetService.price ? Number(meetGreetService.price) : 0);
 
@@ -147,10 +158,6 @@ function getTotalPriceServices(data) {
         const item = totalCares[index];
         totalPrice = totalPrice + (item.price ? Number(item.price) : 0);
     }
-
-    var transferService = window.localStorage.getItem("transfer");
-    transferService = transferService ? convertJsonToObject(transferService) : null;
-    totalPrice = totalPrice + (transferService && transferService.price ? Number(transferService.price) : 0);
 
     return totalPrice;
 }
@@ -487,7 +494,7 @@ function initFirstMeetGreetServiceSelected(arrivalClass) {
 
 function initAdditionalServicesTab() {
     var additionalServicesForm = window.localStorage.getItem("additional-services");
-    additionalServicesForm = additionalServicesForm ? convertJsonToObject(additionalServicesForm) : null;
+    additionalServicesForm = additionalServicesForm ? convertJsonToObject(additionalServicesForm) : [];
     $(".additional-service-item").each(function() {
         const productNameValue = $(this).find(productNameClass).text();
         const findProduct = additionalServicesForm.find(x => x.name === productNameValue);
