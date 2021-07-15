@@ -88,7 +88,7 @@ function calTotalPrice() {
 }
 
 function getTotalPriceFromLocalStorage() {
-    const totalPrice = 0;
+    var totalPrice = 0;
     $(".book-service-tab-link").each(function() {
         if ($(this).hasClass(tabWCurrent)) {
             const tabSelectedElement = $(this);
