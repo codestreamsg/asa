@@ -23,10 +23,19 @@ var currentTotalPrice = 0;
 const defaultDeparture = 'Departure';
 const defaultArrival = 'Arrival';
 function getMGObject() {
+    var departure = $("#mg-departure option:selected").text();
+    departure = departure == "Departure" ? "" : departure;
+    var arrival = $("#mg-arrival option:selected").text();
+    arrival = arrival == "Arrival" ? "" : arrival;
+    const travelerText = $("#mg-traveler option:selected").text();
+    const travelerAfterSplit = travelerText.split("x");
+    const traveler = Number(travelerAfterSplit && travelerAfterSplit.length > 0 ? travelerAfterSplit[0] : 1);
+    const isReturn = $( "#is-return" ).val();
     return {
-        "departure": $("#departure-header").text(),
-        "arrival": $("#arrival-header").text(),
-        "traveler": Number($("#traveler-header").text().replace("x", ""))
+        "departure": departure,
+        "arrival": arrival,
+        "traveler": traveler,
+        "isReturn": isReturn
     }
 }
 
@@ -157,6 +166,8 @@ function initData() {
 
 function initNextPleaseButton() {
     $(".next-please-button").click(function() {
+        const mgData = getMGObject();
+        window.localStorage.setItem("meet-greet", JSON.stringify(mgData));
         $(".book-service-tab-link").each(function() {
             if ($(this).hasClass(tabWCurrent)) {
                 const tabSelectedElement = $(this);
@@ -287,28 +298,20 @@ function setTravelersSelect(travelerValue) {
 function initBookNowButton() {
     const bookNowButton = document.getElementById("book-now-button");
     bookNowButton.addEventListener("click", event => {
-        var departure = $("#mg-departure option:selected").text();
-        departure = departure == "Departure" ? "" : departure;
-        var arrival = $("#mg-arrival option:selected").text();
-        arrival = arrival == "Arrival" ? "" : arrival;
-        const travelerText = $("#mg-traveler option:selected").text();
-        const travelerAfterSplit = travelerText.split("x");
-        const traveler = Number(travelerAfterSplit && travelerAfterSplit.length > 0 ? travelerAfterSplit[0] : 1);
-        const isReturn = $( "#is-return" ).val();
-
-        if (departure != "" && arrival != "" &&departure == arrival) {
+        const mgData = getMGObject();
+        if (mgData.departure != "" && mgData.arrival != "" && mgData.departure == mgData.arrival) {
             alert("Please choose different between Departure and Arrival");
-            return;
+            return false;
         }
-        $("#departure-header").html(departure);
-        $("#arrival-header").html(arrival);
-        $("#traveler-header").html('x' + traveler);
-        setAirportLocationTitle(departure, arrival);
+        $("#departure-header").html(mgData.departure);
+        $("#arrival-header").html(mgData.arrival);
+        $("#traveler-header").html('x' + mgData.traveler);
+        setAirportLocationTitle(mgData.departure, mgData.arrival);
         $(".mg-edit-content").trigger("click");
-        $("#is-vehicles-required").val(traveler > 4 ? "true" : "false");
-        displayDepartureSection(departure);
-        displayArrivalSection(arrival);
-        initBookingSteps(isReturn);
+        $("#is-vehicles-required").val(mgData.traveler > 4 ? "true" : "false");
+        displayDepartureSection(mgData.departure);
+        displayArrivalSection(mgData.arrival);
+        initBookingSteps(mgData.isReturn);
     });
 }
 
