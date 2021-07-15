@@ -478,7 +478,7 @@ function initReturnTab() {
     if (returnForm) {
      	initServices(returnForm.departure, "");
   		initServices(returnForm.arrival, "arrival-");
-        initTerminalTransferServices(outgoingForm.transfer);
+        initTerminalTransferServices(returnForm.transfer);
     } else {
         initFirstMeetGreetServiceSelected("");
         initFirstMeetGreetServiceSelected("arrival-");
