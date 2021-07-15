@@ -115,9 +115,10 @@ function getTotalPriceFromLocalStorage() {
                 if (currentIndexValue == 'additional-services-tab') {
                     var additionalServicesForm = window.localStorage.getItem("additional-services");
                     additionalServicesForm = additionalServicesForm ? convertJsonToObject(additionalServicesForm) : [];
-                    additionalServicesForm.each(function(item) {
+                    for(var index = 0; index < additionalServicesForm.length; index ++) {
+                        const item = additionalServicesForm[index];
                         totalPrice = totalPrice + (item.price ? Number(item.price) : 0);
-                    })
+                    }
                 }
             }
             return false;
@@ -136,14 +137,16 @@ function getTotalPriceServices(data) {
     totalPrice = totalPrice + (transportSolution && transportSolution.price ? Number(transportSolution.price*priceVehiclesRequired) : 0);
 
     const covidSafetyServices = data.covidSafetyServices ? data.covidSafetyServices : [];
-    covidSafetyServices.forEach(function(item) {
+    for(var index = 0; index < covidSafetyServices.length; index ++) {
+        const item = covidSafetyServices[index];
         totalPrice = totalPrice + (item.price ? Number(item.price) : 0);
-    });
+    }
 
     const totalCares = data.totalCares ? data.totalCares : [];
-    totalCares.forEach(function(item) {
+    for(var index = 0; index < totalCares.length; index ++) {
+        const item = totalCares[index];
         totalPrice = totalPrice + (item.price ? Number(item.price) : 0);
-    });
+    }
 
     var transferService = window.localStorage.getItem("transfer");
     transferService = transferService ? convertJsonToObject(transferService) : null;
