@@ -28,9 +28,7 @@ const defaultDeparture = 'Departure';
 const defaultArrival = 'Arrival';
 function getMGObject() {
     var departure = $("#mg-departure option:selected").text();
-    departure = departure == "Departure" ? "" : departure;
     var arrival = $("#mg-arrival option:selected").text();
-    arrival = arrival == "Arrival" ? "" : arrival;
     const travelerText = $("#mg-traveler option:selected").text();
     const travelerAfterSplit = travelerText.split("x");
     const traveler = Number(travelerAfterSplit && travelerAfterSplit.length > 0 ? travelerAfterSplit[0] : 1);
