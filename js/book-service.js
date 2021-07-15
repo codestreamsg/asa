@@ -156,68 +156,51 @@ function initData() {
 }
 
 function initNextPleaseButton() {
-    $(".book-service-tab-link").click(function() {
-    	const tabSelectedElement = $(this);
-        const currentTab = tabSelectedElement.attr(dataWTabAttr);
-       
-        switch(currentTab) {
-            case 'outgoing-journey-tab':
-                var outgoing = {
-                    departure: getSelectedServices(""),
-                    arrival: getSelectedServices("arrival-")
-                }
-                window.localStorage.setItem("outgoing", JSON.stringify(outgoing));
-                break;
-            case 'return-journey-tab':
-                var returnJourney = {
-                    departure: getSelectedServices(""),
-                    arrival: getSelectedServices("arrival-")
-                }
-                window.localStorage.setItem("return", JSON.stringify(returnJourney));
-                break;
-            case 'additional-services-tab':
-                break;
-            case 'passenger-details-tab':
-                break;
-            case 'checkout-tab':
-                break;
-        }
-        var findIndex = listTabItems.indexOf(currentTab);
-        if (findIndex == -1) {
-            return false;
-        }
-        findIndex = findIndex + 1;
-        for(var i = findIndex; i < listTabItems.length; i ++) {
-            const nextTab = $('.' + listTabItems[i]);
-            if (nextTab && !nextTab.hasClass(tabNotActive)) {
-                nextTab.addClass(tabNotActive);
-            }
-        }
-    });
     $(".next-please-button").click(function() {
         $(".book-service-tab-link").each(function() {
             if ($(this).hasClass(tabWCurrent)) {
-              const tabSelectedElement = $(this);
-              const currentTab = tabSelectedElement.attr(dataWTabAttr);
-              const findIndex = listTabItems.indexOf(currentTab);
-              if (findIndex == -1 || findIndex == listTabItems.length - 1) {
+                const tabSelectedElement = $(this);
+                const currentTab = tabSelectedElement.attr(dataWTabAttr);
+                switch(currentTab) {
+                    case 'outgoing-journey-tab':
+                        var outgoing = {
+                            departure: getSelectedServices(""),
+                            arrival: getSelectedServices("arrival-")
+                        }
+                        window.localStorage.setItem("outgoing", JSON.stringify(outgoing));
+                        break;
+                    case 'return-journey-tab':
+                        var returnJourney = {
+                            departure: getSelectedServices(""),
+                            arrival: getSelectedServices("arrival-")
+                        }
+                        window.localStorage.setItem("return", JSON.stringify(returnJourney));
+                        break;
+                    case 'additional-services-tab':
+                        break;
+                    case 'passenger-details-tab':
+                        break;
+                    case 'checkout-tab':
+                        break;
+                }
+                const findIndex = listTabItems.indexOf(currentTab);
+                if (findIndex == -1 || findIndex == listTabItems.length - 1) {
+                    return false;
+                }
+                tabSelectedElement.addClass(tabItemCompleted);
+                const nextTab = $('.' + listTabItems[findIndex + 1]);
+                if (nextTab) {
+                    nextTab.removeClass(tabNotActive);
+                    nextTab.trigger("click");
+                }
                 return false;
-              }
-              tabSelectedElement.addClass(tabItemCompleted);
-              const nextTab = $('.' + listTabItems[findIndex + 1]);
-              if (nextTab) {
-                nextTab.removeClass(tabNotActive);
-                nextTab.trigger("click");
-              }
-              return false;
             }
-          });
+        });
      })
 }
 
 function initBookingSteps(isreturnValue, isDocumentReady = false) {
     if (isreturnValue == "true") {
-        $(".book-service-tabs-menu").css("grid-template-columns","1fr 1fr 1fr 1fr 1fr");
         $(".return-journey-tab").show();
         $("#additional-services-step").html("03");
         $("#passenger-details-step").html("04");
@@ -227,7 +210,6 @@ function initBookingSteps(isreturnValue, isDocumentReady = false) {
         }
         listTabItems = ['outgoing-journey-tab', 'return-journey-tab', 'additional-services-tab', 'passenger-details-tab', 'checkout-tab'];
     } else {
-        $(".book-service-tabs-menu").css("grid-template-columns","1fr 1fr 1fr 1fr");
         $(".return-journey-tab").hide();
         $("#additional-services-step").html("02");
         $("#passenger-details-step").html("03");
