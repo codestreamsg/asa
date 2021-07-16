@@ -313,8 +313,7 @@ function initNextPleaseButton() {
                         var outgoing = {
                             departure: $(".departure-service-wrapper").is(":visible") ? getSelectedServices("") : null,
                             arrival: $(".arrival-service-wrapper").is(":visible") ? getSelectedServices("arrival-") : null,
-                            transfer: getTerminalTransferSelectedServices(),
-                            transportLocation: $("#departure-transport-select option:selected").text()
+                            transfer: getTerminalTransferSelectedServices()
                         }
                         window.localStorage.setItem("outgoing", JSON.stringify(outgoing));
                         break;
@@ -322,8 +321,7 @@ function initNextPleaseButton() {
                         var returnJourney = {
                             departure: $(".departure-service-wrapper").is(":visible") ? getSelectedServices("") : null,
                             arrival: $(".arrival-service-wrapper").is(":visible") ? getSelectedServices("arrival-") : null,
-                            transfer: getTerminalTransferSelectedServices(),
-                            transportLocation: $("#arrival-transport-select option:selected").text()
+                            transfer: getTerminalTransferSelectedServices()
                         }
                         window.localStorage.setItem("return", JSON.stringify(returnJourney));
                         break;
@@ -367,23 +365,23 @@ function initBookingSteps(isreturnValue, isDocumentReady = false) {
 }
 
 function setDepartureTransportSelect(departureValue) {
-    $('.departure-transport-select').append('<option selected value="" disabled>Pick-up location</option>');
+    $('.transport-location-select').append('<option selected value="" disabled>Pick-up location</option>');
     $('.transport-airport-item').each(function() {
         var transportAirportName = $(this).find('.transport-airport-name').text();
         if (transportAirportName == departureValue) {
             var transportSolutionName = $(this).find('.transport-solution-name').text();
-            $('.departure-transport-select').append('<option value="' + transportSolutionName + '">' + transportSolutionName + '</option>');
+            $('.transport-location-select').append('<option value="' + transportSolutionName + '">' + transportSolutionName + '</option>');
         }
     })
 }
 
 function setArrivalTransportSelect(arrivalValue) {
-    $('.arrival-transport-select').append('<option selected value="" disabled>Drop-off Location</option>');
+    $('.arrival-transport-location-select').append('<option selected value="" disabled>Drop-off Location</option>');
     $('.transport-airport-item').each(function() {
         var transportAirportName = $(this).find('.transport-airport-name').text();
         if (transportAirportName == arrivalValue) {
             var transportSolutionName = $(this).find('.transport-solution-name').text();
-            $('.arrival-transport-select').append('<option value="' + transportSolutionName + '">' + transportSolutionName + '</option>');
+            $('.arrival-transport-location-select').append('<option value="' + transportSolutionName + '">' + transportSolutionName + '</option>');
         }
     })
 }
@@ -569,7 +567,7 @@ function initServices(data, arrivalClass) {
     }
     if (data.transportLocation) {
     	const transportLocation = data.transportLocation;
-        $("." + arrivalClass + "departure-transport-select" + " option[value=" + transportLocation + "]").attr('selected', 'selected');
+        $("." + arrivalClass + "transport-location-select" + " option[value=" + transportLocation + "]").attr('selected', 'selected');
     }
 }
 
@@ -616,7 +614,8 @@ function getSelectedServices(arrivalClass) {
         meetGreetService: null,
         transportSolution: null,
         covidSafetyServices: [],
-        totalCares: []
+        totalCares: [],
+        transportLocation: ""
     };
     $("." + arrivalClass + "meet-greet-service-item").each(function() {
         if ($(this).hasClass(serviceItemSelectedClass)) {
@@ -651,6 +650,7 @@ function getSelectedServices(arrivalClass) {
             })
         }
     })
+    data.transportLocation = $("." + arrivalClass + "transport-location-select option:selected").text();
     return data;
 }
 
