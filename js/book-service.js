@@ -105,10 +105,8 @@ function getTotalPriceFromLocalStorage() {
                     if (outgoingForm) {
                         totalPrice = totalPrice + getTotalPriceServices(outgoingForm.departure);
                         totalPrice = totalPrice + getTotalPriceServices(outgoingForm.arrival);
+                        totalPrice = totalPrice + (outgoingForm.transfer && outgoingForm.transfer.price ? Number(outgoingForm.transfer.price) : 0);
                     }
-                    var transferService = window.localStorage.getItem("transfer");
-                    transferService = transferService ? convertJsonToObject(transferService) : null;
-                    totalPrice = totalPrice + (transferService && transferService.price ? Number(transferService.price) : 0);
                 }
                 if (currentIndexValue == 'return-journey-tab') {
                     var returnForm = window.localStorage.getItem("return");
@@ -116,10 +114,8 @@ function getTotalPriceFromLocalStorage() {
                     if (returnForm) {
                         totalPrice = totalPrice + getTotalPriceServices(returnForm.departure);
                         totalPrice = totalPrice + getTotalPriceServices(returnForm.arrival);
+                        totalPrice = totalPrice + (returnForm.transfer && returnForm.transfer.price ? Number(returnForm.transfer.price) : 0);
                     }
-                    var transferService = window.localStorage.getItem("transfer");
-                    transferService = transferService ? convertJsonToObject(transferService) : null;
-                    totalPrice = totalPrice + (transferService && transferService.price ? Number(transferService.price) : 0);
                 }
                 if (currentIndexValue == 'additional-services-tab') {
                     var additionalServicesForm = window.localStorage.getItem("additional-services");
