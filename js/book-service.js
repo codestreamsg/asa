@@ -440,6 +440,49 @@ function setTravelersSelect(travelerValue) {
     })
 }
 
+function initBookNowButton() {
+    const bookNowButton = document.getElementById("book-now-button");
+    bookNowButton.addEventListener("click", event => {
+        const mgData = getMGObject();
+        if (mgData.departure != "" && mgData.arrival != "" && mgData.departure == mgData.arrival) {
+            alert("Please choose different between Departure and Arrival");
+            return false;
+        }
+      	$(".mg-edit-content").trigger("click");
+        var mgForm = window.localStorage.getItem("meet-greet"); 
+    		mgForm = mgForm ? convertJsonToObject(mgForm) : null;
+        window.localStorage.setItem("meet-greet", JSON.stringify(mgData));
+        if (mgForm && mgForm.departure != mgData.departure) {
+            this.resetForm();
+          	window.location = "outgoing-journey";
+            return false;
+        }
+      	if (mgForm && mgForm.arrival != mgData.arrival) {
+            this.resetForm();
+          	window.location = "outgoing-journey";
+            return false;
+        }
+        $("#departure-header").html(mgData.departure);
+        $("#arrival-header").html(mgData.arrival);
+        $("#traveler-header").html('x' + mgData.traveler);
+        setAirportLocationTitle(mgData.departure, mgData.arrival);
+        $("#is-vehicles-required").val(mgData.traveler > 4 ? "true" : "false");
+        displayDepartureSection(mgData.departure);
+        displayArrivalSection(mgData.arrival);
+        initBookingSteps(mgData.isReturn);
+        calTotalPrice();
+    });
+}
+
+function resetForm() {
+    window.localStorage.removeItem("outgoing");
+    window.localStorage.removeItem("return");
+    window.localStorage.removeItem("additional-services");
+    window.localStorage.removeItem("bookers-detail");
+    window.localStorage.removeItem("passengers-detail");
+    window.localStorage.removeItem("add-on-services");
+}
+
 function initToggleReturnButton() {
     const toggleReturnButton = document.getElementById("toggle-return-button");
     toggleReturnButton.addEventListener("click", event => {
