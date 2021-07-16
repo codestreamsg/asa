@@ -74,6 +74,14 @@ function displayVehiclesRequired(itemClass, priceValue) {
     }
 }
 
+function hideVehiclesRequired(itemClass) {
+    if (itemClass == TSItem) {
+        $(".departure-vehicles-required-container").hide();
+    } else if (itemClass == arrivalTSItem) {
+        $(".arrival-vehicles-required-container").hide();
+    }
+}
+
 function calTotalPrice() {
     var totalPrice = 0;
     const numberOfPassengers = getMGObject().traveler;
@@ -171,6 +179,8 @@ function getPriceForSection(items, serviceItemSelectedClass, isVehiclesRequired,
                 var priceValue = convertCurrencyToNumber($(this).find(serviceItemPrice).text());
                 if (isVehiclesRequired == "true") {
                     displayVehiclesRequired(items[index], priceValue);
+                } else {
+                    hideVehiclesRequired(items[index]);
                 }
                 if (items[index] == TSItem || items[index] == arrivalTSItem) {
                     priceValue = isVehiclesRequired == "true" ? (priceValue*2) : priceValue;
