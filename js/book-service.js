@@ -40,6 +40,8 @@ var listTabItems = [];
 var currentTotalPrice = 0;
 const defaultDeparture = 'Departure';
 const defaultArrival = 'Arrival';
+const defaultPickUpLocation = 'Pick-up location';
+const defaultDropOffLocation = 'Drop-off Location';
 function getMGObject() {
     var departure = $("#mg-departure option:selected").text();
     var arrival = $("#mg-arrival option:selected").text();
@@ -361,7 +363,7 @@ function initBookingSteps(isreturnValue, isDocumentReady = false) {
 }
 
 function setDepartureTransportSelect(departureValue) {
-    $('.transport-location-select').append('<option selected value="" disabled>Pick-up location</option>');
+    $('.transport-location-select').append('<option selected value="" disabled>' + defaultPickUpLocation + '</option>');
     $('.transport-airport-item').each(function() {
         var transportAirportName = $(this).find('.transport-airport-name').text();
         if (transportAirportName == departureValue) {
@@ -372,7 +374,7 @@ function setDepartureTransportSelect(departureValue) {
 }
 
 function setArrivalTransportSelect(arrivalValue) {
-    $('.arrival-transport-location-select').append('<option selected value="" disabled>Drop-off Location</option>');
+    $('.arrival-transport-location-select').append('<option selected value="" disabled>' + defaultDropOffLocation + '</option>');
     $('.transport-airport-item').each(function() {
         var transportAirportName = $(this).find('.transport-airport-name').text();
         if (transportAirportName == arrivalValue) {
@@ -561,9 +563,9 @@ function initServices(data, arrivalClass) {
             }
         })
     }
-    if (data.transportLocation) {
-    	const transportLocation = data.transportLocation;
-        $("." + arrivalClass + "transport-location-select" + " option[value=" + transportLocation + "]").attr('selected', 'selected');
+    const transportLocation = data.transportLocation;
+    if (transportLocation && transportLocation != defaultPickUpLocation && transportLocation !=  defaultDropOffLocation) {
+        $("." + arrivalClass + "transport-location-select option[value=" + transportLocation + "]").attr('selected', 'selected');
     }
 }
 
@@ -646,7 +648,8 @@ function getSelectedServices(arrivalClass) {
             })
         }
     })
-    data.transportLocation = $("." + arrivalClass + "transport-location-select option:selected").text();
+    const transportLocationText = $("." + arrivalClass + "transport-location-select option:selected").text();
+    data.transportLocation = transportLocationText != defaultPickUpLocation && transportLocationText != defaultDropOffLocation ? transportLocationText : '';
     return data;
 }
 
