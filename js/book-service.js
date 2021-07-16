@@ -87,12 +87,12 @@ function calTotalPrice() {
     if ($(".terminal-transfer-service-item").is(":visible")) {
         totalPrice = totalPrice + getPriceForSection(terminalTransferServicePrice, serviceItemSelectedClass, isVehiclesRequired, numberOfPassengers);
     }
-    totalPrice = totalPrice + getPriceForSection(otherServicesPrice, serviceItemSelectedClass, isVehiclesRequired, numberOfPassengers) + getTotalPriceFromLocalStorage();
+    totalPrice = totalPrice + getPriceForSection(otherServicesPrice, serviceItemSelectedClass, isVehiclesRequired, numberOfPassengers) + getTotalPriceFromLocalStorage(numberOfPassengers);
 
     $("#total-price").html(currencyFormat(totalPrice));
 }
 
-function getTotalPriceFromLocalStorage() {
+function getTotalPriceFromLocalStorage(numberOfPassengers) {
     var totalPrice = 0;
     $(".book-service-tab-link").each(function() {
         if ($(this).hasClass(tabWCurrent)) {
@@ -107,18 +107,18 @@ function getTotalPriceFromLocalStorage() {
                     var outgoingForm = window.localStorage.getItem("outgoing");
                     outgoingForm = outgoingForm ? convertJsonToObject(outgoingForm) : null;
                     if (outgoingForm) {
-                        totalPrice = totalPrice + getTotalPriceServices(outgoingForm.departure);
-                        totalPrice = totalPrice + getTotalPriceServices(outgoingForm.arrival);
-                        totalPrice = totalPrice + (outgoingForm.transfer && outgoingForm.transfer.price ? Number(outgoingForm.transfer.price) : 0);
+                        totalPrice = totalPrice + getTotalPriceServices(outgoingForm.departure, numberOfPassengers);
+                        totalPrice = totalPrice + getTotalPriceServices(outgoingForm.arrival, numberOfPassengers);
+                        totalPrice = totalPrice + (outgoingForm.transfer && outgoingForm.transfer.price ? Number(outgoingForm.transfer.price)*numberOfPassengers : 0);
                     }
                 }
                 if (currentIndexValue == 'return-journey-tab') {
                     var returnForm = window.localStorage.getItem("return");
                     returnForm = returnForm ? convertJsonToObject(returnForm) : null;
                     if (returnForm) {
-                        totalPrice = totalPrice + getTotalPriceServices(returnForm.departure);
-                        totalPrice = totalPrice + getTotalPriceServices(returnForm.arrival);
-                        totalPrice = totalPrice + (returnForm.transfer && returnForm.transfer.price ? Number(returnForm.transfer.price) : 0);
+                        totalPrice = totalPrice + getTotalPriceServices(returnForm.departure, numberOfPassengers);
+                        totalPrice = totalPrice + getTotalPriceServices(returnForm.arrival, numberOfPassengers);
+                        totalPrice = totalPrice + (returnForm.transfer && returnForm.transfer.price ? Number(returnForm.transfer.price)*numberOfPassengers : 0);
                     }
                 }
                 if (currentIndexValue == 'additional-services-tab') {
@@ -126,7 +126,7 @@ function getTotalPriceFromLocalStorage() {
                     additionalServicesForm = additionalServicesForm ? convertJsonToObject(additionalServicesForm) : [];
                     for(var i = 0; i < additionalServicesForm.length; i ++) {
                         const item = additionalServicesForm[i];
-                        totalPrice = totalPrice + (item.price ? Number(item.price) : 0);
+                        totalPrice = totalPrice + (item.price ? Number(item.price)*numberOfPassengers : 0);
                     }
                 }
             }
@@ -136,13 +136,13 @@ function getTotalPriceFromLocalStorage() {
     return totalPrice;
 }
 
-function getTotalPriceServices(data) {
+function getTotalPriceServices(data, numberOfPassengers) {
     var totalPrice = 0;
     if (!data) {
         return totalPrice;
     }
     const meetGreetService = data.meetGreetService;
-    totalPrice = totalPrice + (meetGreetService && meetGreetService.price ? Number(meetGreetService.price) : 0);
+    totalPrice = totalPrice + (meetGreetService && meetGreetService.price ? Number(meetGreetService.price)*numberOfPassengers : 0);
 
     const transportSolution = data.transportSolution;
     const priceVehiclesRequired = transportSolution && transportSolution.isVehiclesRequired == "true" ? 2 : 1;
@@ -151,13 +151,13 @@ function getTotalPriceServices(data) {
     const covidSafetyServices = data.covidSafetyServices ? data.covidSafetyServices : [];
     for(var index = 0; index < covidSafetyServices.length; index ++) {
         const item = covidSafetyServices[index];
-        totalPrice = totalPrice + (item.price ? Number(item.price) : 0);
+        totalPrice = totalPrice + (item.price ? Number(item.price)*numberOfPassengers : 0);
     }
 
     const totalCares = data.totalCares ? data.totalCares : [];
     for(var index = 0; index < totalCares.length; index ++) {
         const item = totalCares[index];
-        totalPrice = totalPrice + (item.price ? Number(item.price) : 0);
+        totalPrice = totalPrice + (item.price ? Number(item.price)*numberOfPassengers : 0);
     }
 
     return totalPrice;
