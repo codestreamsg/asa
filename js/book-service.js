@@ -15,14 +15,13 @@ const departureServicesPrice = [
     '.meet-greet-service-item',
     '.covid-safety-service-item',
     '.total-care-item',
-    TSItem,
-    '.terminal-transfer-service-item'];
+    TSItem];
 const arrivalServicesPrice = [
     '.arrival-meet-greet-service-item',
     '.arrival-covid-safety-service-item',
     '.arrival-total-care-item',
-    arrivalTSItem,
-    '.terminal-transfer-service-item'];
+    arrivalTSItem];
+const terminalTransferServicePrice = ['.terminal-transfer-service-item'];    
 const otherServicesPrice = [
     '.additional-service-item'];
 const serviceItemSelectedClass = 'service-item-selected';
@@ -84,6 +83,9 @@ function calTotalPrice() {
     }
     if ($(".arrival-service-wrapper").is(":visible")) {
         totalPrice = totalPrice + getPriceForSection(arrivalServicesPrice, serviceItemSelectedClass, isVehiclesRequired, numberOfPassengers);
+    }
+    if ($(".terminal-transfer-service-item").is(":visible")) {
+        totalPrice = totalPrice + getPriceForSection(terminalTransferServicePrice, serviceItemSelectedClass, isVehiclesRequired, numberOfPassengers);
     }
     totalPrice = totalPrice + getPriceForSection(otherServicesPrice, serviceItemSelectedClass, isVehiclesRequired, numberOfPassengers) + getTotalPriceFromLocalStorage();
 
