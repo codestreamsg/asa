@@ -310,8 +310,8 @@ function initNextPleaseButton() {
                 switch(currentTab) {
                     case 'outgoing-journey-tab':
                         var outgoing = {
-                            departure: getSelectedServices(""),
-                            arrival: getSelectedServices("arrival-"),
+                            departure: $(".departure-service-wrapper").is(":visible") ? getSelectedServices("") : null,
+                            arrival: $(".arrival-service-wrapper").is(":visible") ? getSelectedServices("arrival-") : null,
                             transfer: getTerminalTransferSelectedServices(),
                             transportLocation: $("#departure-transport-select option:selected").text()
                         }
@@ -319,8 +319,8 @@ function initNextPleaseButton() {
                         break;
                     case 'return-journey-tab':
                         var returnJourney = {
-                            departure: getSelectedServices(""),
-                            arrival: getSelectedServices("arrival-"),
+                            departure: $(".departure-service-wrapper").is(":visible") ? getSelectedServices("") : null,
+                            arrival: $(".arrival-service-wrapper").is(":visible") ? getSelectedServices("arrival-") : null,
                             transfer: getTerminalTransferSelectedServices(),
                             transportLocation: $("#arrival-transport-select option:selected").text()
                         }
