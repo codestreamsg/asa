@@ -656,7 +656,7 @@ function getSelectedServices(arrivalClass) {
 }
 
 function convertCurrencyToNumber(value) {
-    return value ? Number(value.replace(priceTextReplace, "").replace(/[^0-9.-]+/g,"")) : 0;
+    return value ? Number(value.toString().replace(priceTextReplace, "").replace(/[^0-9.-]+/g,"")) : 0;
 }
 
 $(document).ready(function() {
