@@ -568,10 +568,7 @@ function initServices(data, arrivalClass) {
     }
     if (data.transportLocation) {
     	const transportLocation = data.transportLocation;
-        const findCurrentLocation = $("." + arrivalClass + "departure-transport-select").find(".current");
-        if (findCurrentLocation) {
-      	    findCurrentLocation.html(transportLocation);
-        }
+        $("." + arrivalClass + "departure-transport-select" + " option[value=" + transportLocation + "]").attr('selected', 'selected');
     }
 }
 
