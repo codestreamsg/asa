@@ -15,15 +15,16 @@ const departureServicesPrice = [
     '.meet-greet-service-item',
     '.covid-safety-service-item',
     '.total-care-item',
-    TSItem];
+    TSItem,
+    '.terminal-transfer-service-item'];
 const arrivalServicesPrice = [
     '.arrival-meet-greet-service-item',
     '.arrival-covid-safety-service-item',
     '.arrival-total-care-item',
-    arrivalTSItem];
-const otherServicesPrice = [
-    '.additional-service-item',
+    arrivalTSItem,
     '.terminal-transfer-service-item'];
+const otherServicesPrice = [
+    '.additional-service-item'];
 const serviceItemSelectedClass = 'service-item-selected';
 const serviceItemPrice = '.service-item-price';
 const serviceItemOptional = 'service-item-optional';
