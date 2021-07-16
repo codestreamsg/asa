@@ -430,27 +430,6 @@ function setTravelersSelect(travelerValue) {
     })
 }
 
-function initBookNowButton() {
-    const bookNowButton = document.getElementById("book-now-button");
-    bookNowButton.addEventListener("click", event => {
-        const mgData = getMGObject();
-        if (mgData.departure != "" && mgData.arrival != "" && mgData.departure == mgData.arrival) {
-            alert("Please choose different between Departure and Arrival");
-            return false;
-        }
-        window.localStorage.setItem("meet-greet", JSON.stringify(mgData));
-        $("#departure-header").html(mgData.departure);
-        $("#arrival-header").html(mgData.arrival);
-        $("#traveler-header").html('x' + mgData.traveler);
-        setAirportLocationTitle(mgData.departure, mgData.arrival);
-        $(".mg-edit-content").trigger("click");
-        $("#is-vehicles-required").val(mgData.traveler > 4 ? "true" : "false");
-        displayDepartureSection(mgData.departure);
-        displayArrivalSection(mgData.arrival);
-        initBookingSteps(mgData.isReturn);
-    });
-}
-
 function initToggleReturnButton() {
     const toggleReturnButton = document.getElementById("toggle-return-button");
     toggleReturnButton.addEventListener("click", event => {
