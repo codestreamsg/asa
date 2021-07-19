@@ -567,10 +567,6 @@ function initAdditionalServicesTab() {
     })
 }
 
-function initPassengerDetailsTab() {
-
-}
-
 function initCheckoutTab() {
 
 }
