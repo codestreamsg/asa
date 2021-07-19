@@ -56,6 +56,25 @@ function getMGObject() {
     }
 }
 
+function setMGObject() {
+    var mgForm = window.localStorage.getItem("meet-greet"); 
+    mgForm = mgForm ? convertJsonToObject(mgForm) : {};
+    var mgObject = getMGObject();
+    if (mgForm.departure != mgObject.departure) {
+        $('#mg-departure').val(mgForm.departure).niceSelect('update');
+    }
+    if (mgForm.arrival != mgObject.arrival) {
+        $('#mg-arrival').val(mgForm.arrival).niceSelect('update');
+    }
+    if (mgForm.traveler != mgObject.traveler) {
+        $('#mg-traveler').val(mgForm.traveler + "x Traveler").niceSelect('update');
+    }
+    if (mgForm.isReturn != mgObject.isReturn) {
+        $("#toggle-return-button").trigger("click");
+        $("#is-return" ).val(mgForm.isReturn);
+    }
+}
+
 function currencyFormat(num) {
     return 'IDR ' + (num ? num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') : 0) + ' IDR';
 }
@@ -269,6 +288,7 @@ function initData() {
     initNextPleaseButton();
     initAllServiceItemPrice();
     initSelectedTabs();
+    initEditMgForm();
     $(".book-service-tab-link").each(function() {
         if ($(this).hasClass(tabWCurrent)) {
           const tabSelectedElement = $(this);
@@ -296,6 +316,14 @@ function initData() {
         }
     });
     calTotalPrice();
+}
+
+function initEditMgForm() {
+    $(".mg-edit-content").click(function() {
+        if (!$(".meet-greet-form-container").is(":visible")) {
+        	setMGObject();
+        }
+    });
 }
 
 function initAllServiceItemPrice() {
