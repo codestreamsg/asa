@@ -400,35 +400,35 @@ function setArrivalTransportSelect(arrivalValue) {
 }
 
 function setDeparturesSelect(departureValue) {
-    const departureSelected = defaultDeparture == departureValue ? 'selected' : '';
+    const departureSelected = defaultDeparture == departureValue ? 'selected="selected"' : '';
     $('.departures-select').append('<option ' + departureSelected + ' value="" disabled>Departure</option>');
     $('.departures-select').append('<option value="" disabled>Domestic</option>');
     $('.domestic-airport-item').each(function() {
         var s = $(this).text();
-        const addSelected = s == departureValue ? 'selected' : '';
+        const addSelected = s == departureValue ? 'selected="selected"' : '';
         $('.departures-select').append('<option ' + addSelected + ' value="' + s + '">' + s + '</option>');
     })
     $('.departures-select').append('<option value="" disabled>International</option>');
     $('.international-airport-item').each(function() {
         var s = $(this).text();
-        const addSelected = s == departureValue ? 'selected' : '';
+        const addSelected = s == departureValue ? 'selected="selected"' : '';
         $('.departures-select').append('<option ' + addSelected + ' value="' + s + '">' + s + '</option>');
     })
 }
 
 function setArrivalsSelect(arrivalValue) {
-    const arrivalSelected = defaultArrival == arrivalValue ? 'selected' : '';
+    const arrivalSelected = defaultArrival == arrivalValue ? 'selected="selected"' : '';
     $('.arrivals-select').append('<option ' + arrivalSelected + ' value="" disabled>Arrival</option>');
     $('.arrivals-select').append('<option value="" disabled>Domestic</option>');
     $('.domestic-airport-item').each(function() {
         var s = $(this).text();
-        const addSelected = s == arrivalValue ? 'selected' : '';
+        const addSelected = s == arrivalValue ? 'selected="selected"' : '';
         $('.arrivals-select').append('<option ' + addSelected + ' value="' + s + '">' + s + '</option>');
     })
     $('.arrivals-select').append('<option value="" disabled>International</option>');
     $('.international-airport-item').each(function() {
         var s = $(this).text();
-        const addSelected = s == arrivalValue ? 'selected' : '';
+        const addSelected = s == arrivalValue ? 'selected="selected"' : '';
         $('.arrivals-select').append('<option ' + addSelected + ' value="' + s + '">' + s + '</option>');
     })
 }
@@ -438,7 +438,7 @@ function setTravelersSelect(travelerValue) {
         var s = $(this).text();
         const travelerAfterSplit = s.split("x");
         const traveler = travelerAfterSplit && travelerAfterSplit.length > 0 ? travelerAfterSplit[0] : 1;
-        const addSelected = traveler == travelerValue ? 'selected' : '';
+        const addSelected = traveler == travelerValue ? 'selected="selected"' : '';
         $('.travelers-select').append('<option ' + addSelected + ' value="' + s + '">' + s + '</option>');
     })
 }
