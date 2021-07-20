@@ -406,25 +406,39 @@ function initBookingSteps(isreturnValue, isDocumentReady = false) {
 }
 
 function setDepartureTransportSelect(departureValue) {
+    var isDisplay = false;
     $('.transport-location-select').append('<option selected value="" disabled>' + defaultPickUpLocation + '</option>');
     $('.transport-airport-item').each(function() {
         var transportAirportName = $(this).find('.transport-airport-name').text();
         if (transportAirportName == departureValue) {
             var transportSolutionName = $(this).find('.transport-solution-name').text();
             $('.transport-location-select').append('<option value="' + transportSolutionName + '">' + transportSolutionName + '</option>');
+            isDisplay = true;
         }
     })
+    if (isDisplay) {
+        $(".transport-solutions-container").show();
+    } else {
+        $(".transport-solutions-container").hide();
+    }
 }
 
 function setArrivalTransportSelect(arrivalValue) {
+    var isDisplay = false;
     $('.arrival-transport-location-select').append('<option selected value="" disabled>' + defaultDropOffLocation + '</option>');
     $('.transport-airport-item').each(function() {
         var transportAirportName = $(this).find('.transport-airport-name').text();
         if (transportAirportName == arrivalValue) {
             var transportSolutionName = $(this).find('.transport-solution-name').text();
             $('.arrival-transport-location-select').append('<option value="' + transportSolutionName + '">' + transportSolutionName + '</option>');
+            isDisplay = true;
         }
     })
+    if (isDisplay) {
+        $(".arrival-transport-solutions-container").show();
+    } else {
+        $(".arrival-transport-solutions-container").hide();
+    }
 }
 
 function setDeparturesSelect(departureValue) {
