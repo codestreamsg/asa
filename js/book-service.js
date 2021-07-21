@@ -276,15 +276,12 @@ function initData() {
         $("#is-vehicles-required").val("true");
     }
     $("#is-return").val(isreturnValue);
-    setAirportLocationTitle(departureValue, arrivalValue);
     initBookingSteps(isreturnValue, true);
     setDeparturesSelect(departureValue);
     setArrivalsSelect(arrivalValue);
     setTravelersSelect(travelerValue);
     initBookNowButton();
     initToggleReturnButton();
-    setDepartureTransportSelect(departureValue);
-    setArrivalTransportSelect(arrivalValue);
     initNextPleaseButton();
     initAllServiceItemPrice();
     initSelectedTabs();
@@ -299,9 +296,6 @@ function initData() {
                 break;
             case 'return-journey-tab':
                 initReturnTab();
-                if (arrivalValue != defaultArrival) {
-                    setAirportLocationTitle(arrivalValue, departureValue);
-                }
                 break;
             case 'additional-services-tab':
                 initAdditionalServicesTab();
@@ -535,37 +529,32 @@ function initToggleReturnButton() {
     });
 }
 
-function initOutgoingTab() {
-    var outgoingForm = window.localStorage.getItem("outgoing");
-    outgoingForm = outgoingForm ? convertJsonToObject(outgoingForm) : null;
-    if (outgoingForm) {
-        initServices(outgoingForm.departure, "");
-        initServices(outgoingForm.arrival, "arrival-");
-        initTerminalTransferServices(outgoingForm.transfer);
-    } else {
-        initFirstMeetGreetServiceSelected("");
-        initFirstMeetGreetServiceSelected("arrival-");
-    }
-}
-
-function initReturnTab() {
-    var returnForm = window.localStorage.getItem("return");
-    returnForm = returnForm ? convertJsonToObject(returnForm) : null;
-    if (returnForm) {
-     	initServices(returnForm.departure, "");
-  		initServices(returnForm.arrival, "arrival-");
-        initTerminalTransferServices(returnForm.transfer);
-    } else {
-        initFirstMeetGreetServiceSelected("");
-        initFirstMeetGreetServiceSelected("arrival-");
-    }
-}
-
 function initFirstMeetGreetServiceSelected(arrivalClass) {
     $("." + arrivalClass + "meet-greet-service-item").each(function() {
         $(this).addClass(serviceItemSelectedClass);
         return false;
     })
+}
+
+function initTransportLocationChange(arrivalClass) {
+    $("#" + arrivalClass + "transport-location-select").change(function() {
+        setTimeout(function(){
+            $("." + arrivalClass + "product-button-option").each(function() {
+                if ($(this).text() == "CGK" || $(this).text() == $("#" + arrivalClass + "transport-location-select option:selected").text()) {
+                    $(this).trigger("click");
+                }
+            });
+            setTimeout(function() {
+                $(".service-item-price." + arrivalClass + "transport-solution-product-price").each(function() {
+                    const text = $(this).text();
+                    var price = text ? convertCurrencyToNumber(text) : 0;
+                    price = price*1000;
+                    $(this).html(currencyFormat(price));
+                });
+                calTotalPrice();
+                }, 100);
+        }, 500);
+    });
 }
 
 function initAdditionalServicesTab() {
@@ -640,7 +629,7 @@ function initServices(data, arrivalClass) {
     }
     const transportLocation = data.transportLocation;
     if (transportLocation && transportLocation != defaultPickUpLocation && transportLocation !=  defaultDropOffLocation) {
-        $("." + arrivalClass + "transport-location-select option[value=" + transportLocation + "]").attr('selected', 'selected');
+        $("#" + arrivalClass + "transport-location-select").val(transportLocation).niceSelect('update');
     }
 }
 
