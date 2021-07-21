@@ -292,10 +292,10 @@ function initData() {
           const currentSelectedTab = tabSelectedElement.attr(dataWTabAttr);
           switch(currentSelectedTab) {
             case 'outgoing-journey-tab':
-                initOutgoingTab();
+                initOutgoingTab(departureValue, arrivalValue);
                 break;
             case 'return-journey-tab':
-                initReturnTab();
+                initReturnTab(departureValue, arrivalValue);
                 break;
             case 'additional-services-tab':
                 initAdditionalServicesTab();
