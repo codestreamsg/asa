@@ -76,7 +76,7 @@ function setMGObject() {
 }
 
 function currencyFormat(num) {
-    return 'IDR ' + (num ? num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') : 0) + ' IDR';
+    return 'IDR ' + (num ? num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') : 0) + ' IDR';
 }
 
 function displayVehiclesRequired(itemClass, priceValue) {
