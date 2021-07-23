@@ -804,18 +804,6 @@ function getInputsForProduct(index, productName, productPrice) {
     return result;
 }
 
-function initCheckoutButton() {
-    $("#checkout-button").click(function() {
-        if ($("#meet-greet-service-form").valid() ) {
-            addAllProductsToCart();
-            removePassengerDetails();
-            $("#add-mg-form-button").trigger("click");
-            $("#empty-cart").trigger("click");
-            $("#add-cart-button").trigger("click");
-        }
-    });
-}
-
 function displayPassengerDetails() {
     for (var i = 1; i <= getMGObject().traveler; i ++) {
         $(".passenger-details-" + i).show();
