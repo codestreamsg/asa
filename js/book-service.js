@@ -821,6 +821,7 @@ function displayAddOnServices() {
     outgoingForm = outgoingForm ? convertJsonToObject(outgoingForm) : null;
     var returnForm = window.localStorage.getItem("return");
     returnForm = returnForm ? convertJsonToObject(returnForm) : null;
+    $(".add-on-services-container").hide();
     displayAddOnTransportSolutions(outgoingForm, ".transport-outgoing");
     displayAddOnTransportSolutions(returnForm, ".transport-return");
     displayAddOnLuggageDeliveries(outgoingForm, ".luggage-delivery-outgoing");
@@ -829,6 +830,7 @@ function displayAddOnServices() {
     additionalServicesForm = additionalServicesForm ? convertJsonToObject(additionalServicesForm) : [];
     const isShowLLTAService = additionalServicesForm.find(item => item.name == "Lost Luggage Tracing Assistance");
     if (isShowLLTAService) {
+        $(".add-on-services-container").show();
         $(".add-on-llta-service").show();
     }
 }
@@ -837,6 +839,7 @@ function displayAddOnTransportSolutions(data, transportClass) {
     const isDepartureTransportSolution = data && data.departure && data.departure.transportSolution ? true : false;
     const isArrivalTransportSolution = data && data.arrival && data.arrival.transportSolution ? true : false;
     if (isDepartureTransportSolution || isArrivalTransportSolution) {
+        $(".add-on-services-container").show();
         $(".add-on-transport-service").show();
         if (isDepartureTransportSolution) {
             $(transportClass + "-departure").show();
@@ -857,6 +860,7 @@ function displayAddOnLuggageDeliveries(data, transportClass) {
     const isDepartureTransportSolution = data && data.departure && data.departure.totalCares && data.departure.totalCares.find(x => x.name === 'Luggage Delivery') ? true : false;
     const isArrivalTransportSolution = data && data.arrival && data.arrival.totalCares && data.arrival.totalCares.find(x => x.name === 'Luggage Delivery') ? true : false;
     if (isDepartureTransportSolution || isArrivalTransportSolution) {
+        $(".add-on-services-container").show();
         $(".add-on-luggage-delivery-service").show();
         if (isDepartureTransportSolution) {
             $(transportClass + "-departure").show();
