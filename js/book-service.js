@@ -809,6 +809,7 @@ function initCheckoutButton() {
         if ("#meet-greet-service-form".valid()) {
             addAllProductsToCart();
             removePassengerDetails();
+            $("#add-mg-form-button").trigger("click");
             $("#empty-cart").trigger("click");
             $("#add-cart-button").trigger("click");
         }
