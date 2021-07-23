@@ -508,15 +508,15 @@ function initBookNowButton() {
         displayArrivalSection(mgData.arrival);
         initBookingSteps(mgData.isReturn);
         calTotalPrice();
-        if (currentSelectedTab == "passenger-details-tab") {
-            initPassengerDetailsTab();
-        }
         if (mgData.isReturn == "false") {
             window.localStorage.removeItem("return");
             if (currentSelectedTab == "return-journey-tab") {
                 window.location = "outgoing-journey-tab";
                 return false;
             }
+        }
+        if (currentSelectedTab == "passenger-details-tab") {
+            initPassengerDetailsTab();
         }
         var returnForm = window.localStorage.getItem("return");
         returnForm = returnForm ? convertJsonToObject(returnForm) : null;
@@ -917,7 +917,7 @@ function initTheCart() {
             const service = returnForm.transfer;
             $(".return-transfer-cart-service-list").append(generateServiceItem(service.name, service.price*getMGObject().traveler));
         } else {
-            $(".return-transfer-cart-service").show();
+            $(".return-transfer-cart-service").hide();
         }
     }
 }
