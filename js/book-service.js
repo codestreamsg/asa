@@ -806,10 +806,12 @@ function getInputsForProduct(index, productName, productPrice) {
 
 function initCheckoutButton() {
     $("#checkout-button").click(function() {
-        addAllProductsToCart();
-        removePassengerDetails();
-        $("#empty-cart").trigger("click");
-        $("#add-cart-button").trigger("click");
+        if ("#meet-greet-service-form".valid()) {
+            addAllProductsToCart();
+            removePassengerDetails();
+            $("#empty-cart").trigger("click");
+            $("#add-cart-button").trigger("click");
+        }
     });
 }
 
