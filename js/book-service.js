@@ -41,6 +41,8 @@ const defaultDeparture = 'Departure';
 const defaultArrival = 'Arrival';
 const defaultPickUpLocation = 'Pick-up location';
 const defaultDropOffLocation = 'Drop-off Location';
+var countInputIndex = 0;
+var currentSelectedTab = '';
 function getMGObject() {
     var departure = $("#mg-departure option:selected").text();
     var arrival = $("#mg-arrival option:selected").text();
@@ -117,6 +119,7 @@ function calTotalPrice() {
     totalPrice = totalPrice + getPriceForSection(otherServicesPrice, serviceItemSelectedClass, isVehiclesRequired, numberOfPassengers) + getTotalPriceFromLocalStorage(numberOfPassengers);
 
     $("#total-price").html(currencyFormat(totalPrice));
+    return totalPrice;
 }
 
 function getTotalPriceFromLocalStorage(numberOfPassengers) {
@@ -124,10 +127,10 @@ function getTotalPriceFromLocalStorage(numberOfPassengers) {
     $(".book-service-tab-link").each(function() {
         if ($(this).hasClass(tabWCurrent)) {
             const tabSelectedElement = $(this);
-            const currentSelectedTab = tabSelectedElement.attr(dataWTabAttr);
+            const selectedTab = tabSelectedElement.attr(dataWTabAttr);
             for(var index = 0; index < listTabItems.length; index ++) {
                 const currentIndexValue = listTabItems[index];
-                if (currentIndexValue == currentSelectedTab) {
+                if (currentIndexValue == selectedTab) {
                     continue;
                 }
                 if (currentIndexValue == 'outgoing-journey-tab') {
@@ -289,7 +292,7 @@ function initData() {
     $(".book-service-tab-link").each(function() {
         if ($(this).hasClass(tabWCurrent)) {
           const tabSelectedElement = $(this);
-          const currentSelectedTab = tabSelectedElement.attr(dataWTabAttr);
+          currentSelectedTab = tabSelectedElement.attr(dataWTabAttr);
           switch(currentSelectedTab) {
             case 'outgoing-journey-tab':
                 initOutgoingTab(departureValue, arrivalValue);
@@ -489,16 +492,11 @@ function initBookNowButton() {
         }
       	$(".mg-edit-content").trigger("click");
         var mgForm = window.localStorage.getItem("meet-greet"); 
-    		mgForm = mgForm ? convertJsonToObject(mgForm) : null;
+        mgForm = mgForm ? convertJsonToObject(mgForm) : null;
         window.localStorage.setItem("meet-greet", JSON.stringify(mgData));
-        if (mgForm && mgForm.departure != mgData.departure) {
+        if (mgForm && (mgForm.departure != mgData.departure || mgForm.arrival != mgData.arrival)) {
             this.resetForm();
-          	window.location = "outgoing-journey";
-            return false;
-        }
-      	if (mgForm && mgForm.arrival != mgData.arrival) {
-            this.resetForm();
-          	window.location = "outgoing-journey";
+            window.location = "outgoing-journey-tab";
             return false;
         }
         $("#departure-header").html(mgData.departure);
@@ -510,6 +508,21 @@ function initBookNowButton() {
         displayArrivalSection(mgData.arrival);
         initBookingSteps(mgData.isReturn);
         calTotalPrice();
+        if (currentSelectedTab == "passenger-details-tab") {
+            initPassengerDetailsTab();
+        }
+        if (mgData.isReturn == "false") {
+            window.localStorage.removeItem("return");
+            if (currentSelectedTab == "return-journey-tab") {
+                window.location = "outgoing-journey-tab";
+                return false;
+            }
+        }
+        var returnForm = window.localStorage.getItem("return");
+        returnForm = returnForm ? convertJsonToObject(returnForm) : null;
+        if (mgData.isReturn == "true" && !returnForm) {
+            window.location = "return-journey-tab";
+        }
     });
 }
 
@@ -552,7 +565,7 @@ function initTransportLocationChange(arrivalClass) {
                     $(this).html(currencyFormat(price));
                 });
                 calTotalPrice();
-                }, 100);
+            }, 100);
         }, 500);
     });
 }
@@ -719,6 +732,233 @@ function getSelectedServices(arrivalClass) {
 
 function convertCurrencyToNumber(value) {
     return value ? Number(value.toString().replace(priceTextReplace, "").replace(/[^0-9.-]+/g,"")) : 0;
+}
+
+function addAllProductsToCart() {
+    countInputIndex = 0;
+    var mgObject = getMGObject();
+    const numberOfPassengers = mgObject.traveler;
+    var outgoingForm = window.localStorage.getItem("outgoing");
+    outgoingForm = outgoingForm ? convertJsonToObject(outgoingForm) : {};
+    addProductsForSection(outgoingForm.departure, numberOfPassengers);
+    addProductsForSection(outgoingForm.arrival, numberOfPassengers);
+    if (outgoingForm.transfer) {
+        countInputIndex ++;
+        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, outgoingForm.transfer.name, outgoingForm.transfer.price*numberOfPassengers));
+    }
+    
+    var returnForm = window.localStorage.getItem("return");
+    returnForm = returnForm ? convertJsonToObject(returnForm) : {};
+    addProductsForSection(returnForm.departure, numberOfPassengers);
+    addProductsForSection(returnForm.arrival, numberOfPassengers);
+    if (returnForm.transfer) {
+        countInputIndex ++;
+        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, returnForm.transfer.name, returnForm.transfer.price*numberOfPassengers));
+    }
+
+    var additionalServicesForm = window.localStorage.getItem("additional-services");
+    additionalServicesForm = additionalServicesForm ? convertJsonToObject(additionalServicesForm) : [];
+    if (additionalServicesForm) {
+        for(var index = 0; index < additionalServicesForm.length; index ++) {
+            countInputIndex ++;
+            const additionalService = additionalServicesForm[index];
+            $("#embed-input-fields").append(getInputsForProduct(countInputIndex, additionalService.name, additionalService.price*numberOfPassengers));
+        }
+    }
+}
+
+function addProductsForSection(data, numberOfPassengers) {
+    if (!data) {
+        return;
+    }
+    if (data.meetGreetService) {
+        countInputIndex ++;
+        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, data.meetGreetService.name, data.meetGreetService.price*numberOfPassengers));
+    }
+    if (data.transportSolution) {
+        countInputIndex ++;
+        const transportSolution = data.transportSolution;
+        const priceVehiclesRequired = transportSolution && transportSolution.isVehiclesRequired == "true" ? 2 : 1;
+        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, transportSolution.name, transportSolution.price*priceVehiclesRequired));
+    }
+    if (data.covidSafetyServices) {
+        for(var index = 0; index < data.covidSafetyServices.length; index ++) {
+            countInputIndex ++;
+            const covidSafetyService = data.covidSafetyServices[index];
+            $("#embed-input-fields").append(getInputsForProduct(countInputIndex, covidSafetyService.name, covidSafetyService.price*numberOfPassengers));
+        }
+    }
+    if (data.totalCares) {
+        for(var index = 0; index < data.totalCares.length; index ++) {
+            countInputIndex ++;
+            const totalCare = data.totalCares[index];
+            $("#embed-input-fields").append(getInputsForProduct(countInputIndex, totalCare.name, totalCare.price*numberOfPassengers));
+        }
+    }
+}
+
+function getInputsForProduct(index, productName, productPrice) {
+    const result = '<input type="hidden" name="' + index + ':name" value="' + productName + '" />'
+                + '<input type="hidden" name="' + index + ':price" value="' + productPrice+ '" />';
+    return result;
+}
+
+function initCheckoutButton() {
+    $("#checkout-button").click(function() {
+        $("#empty-cart").trigger("click");
+        $("#add-cart-button").trigger("click");
+    });
+}
+
+function displayPassengerDetails() {
+    for (var i = 1; i <= getMGObject().traveler; i ++) {
+        $(".passenger-details-" + i).show();
+    }
+}
+
+function displayAddOnServices() {
+    var outgoingForm = window.localStorage.getItem("outgoing");
+    outgoingForm = outgoingForm ? convertJsonToObject(outgoingForm) : null;
+    var returnForm = window.localStorage.getItem("return");
+    returnForm = returnForm ? convertJsonToObject(returnForm) : null;
+    displayAddOnTransportSolutions(outgoingForm, ".transport-outgoing");
+    displayAddOnTransportSolutions(returnForm, ".transport-return");
+    displayAddOnLuggageDeliveries(outgoingForm, ".luggage-delivery-outgoing");
+    displayAddOnLuggageDeliveries(returnForm, ".luggage-delivery-return");
+    var additionalServicesForm = window.localStorage.getItem("additional-services");
+    additionalServicesForm = additionalServicesForm ? convertJsonToObject(additionalServicesForm) : [];
+    const isShowLLTAService = additionalServicesForm.find(item => item.name == "Lost Luggage Tracing Assistance");
+    if (isShowLLTAService) {
+        $(".add-on-llta-service").show();
+    }
+}
+
+function displayAddOnTransportSolutions(data, transportClass) {
+    const isDepartureTransportSolution = data && data.departure && data.departure.transportSolution ? true : false;
+    const isArrivalTransportSolution = data && data.arrival && data.arrival.transportSolution ? true : false;
+    if (isDepartureTransportSolution || isArrivalTransportSolution) {
+        $(".add-on-transport-service").show();
+        if (isDepartureTransportSolution) {
+            $(transportClass + "-departure").show();
+        } else {
+            $(transportClass + "-departure").hide();
+        }
+        if (isArrivalTransportSolution) {
+            $(transportClass + "-arrival").show();
+        } else {
+            $(transportClass + "-arrival").hide();
+        }
+    } else {
+        $(transportClass).hide();
+    }
+}
+
+function displayAddOnLuggageDeliveries(data, transportClass) {
+    const isDepartureTransportSolution = data && data.departure && data.departure.totalCares && data.departure.totalCares.find(x => x.name === 'Luggage Delivery') ? true : false;
+    const isArrivalTransportSolution = data && data.arrival && data.arrival.totalCares && data.arrival.totalCares.find(x => x.name === 'Luggage Delivery') ? true : false;
+    if (isDepartureTransportSolution || isArrivalTransportSolution) {
+        $(".add-on-luggage-delivery-service").show();
+        if (isDepartureTransportSolution) {
+            $(transportClass + "-departure").show();
+        } else {
+            $(transportClass + "-departure").hide();
+        }
+        if (isArrivalTransportSolution) {
+            $(transportClass + "-arrival").show();
+        } else {
+            $(transportClass + "-arrival").hide();
+        }
+    } else {
+        $(transportClass).hide();
+    }
+}
+
+function initTheCart() {
+    const mgObject = getMGObject();
+    $(".cart-service-section").hide();
+    $(".cart-service-list").empty();
+    $(".outgoing-cart-journey").hide();
+  	$(".return-cart-journey").hide();
+    var outgoingForm = window.localStorage.getItem("outgoing");
+    outgoingForm = outgoingForm ? convertJsonToObject(outgoingForm) : null;
+    if (outgoingForm) {
+        $(".outgoing-cart-journey").show();
+        if (outgoingForm.departure) {
+    			$(".outgoing-departure-cart-airport-title").html(mgObject.departure + " - Departure");
+    		}
+        if (outgoingForm.arrival) {
+            $(".outgoing-arrival-cart-airport-title").html(mgObject.arrival + " - Arrival");
+        }
+        displayJourneyServices(outgoingForm.departure, ".outgoing-departure-cart-service", ".outgoing-departure-cart-service-list");
+        displayJourneyServices(outgoingForm.arrival, ".outgoing-arrival-cart-service", ".outgoing-arrival-cart-service-list");
+        if (outgoingForm.transfer) {
+        	$(".outgoing-transfer-cart-service").show();
+        	const service = outgoingForm.transfer;
+        	$(".outgoing-transfer-cart-service-list").append(generateServiceItem(service.name, service.price));
+        } else {
+          $(".outgoing-transfer-cart-service").hide();
+        }
+    }
+    
+    var returnForm = window.localStorage.getItem("return");
+    returnForm = returnForm ? convertJsonToObject(returnForm) : null;
+    if (returnForm) {
+        $(".return-cart-journey").show();
+        if (returnForm.departure) {
+    			$(".return-departure-cart-airport-title").html(mgObject.arrival + " - Departure");
+    		}
+        if (returnForm.arrival) {
+            $(".return-arrival-cart-airport-title").html(mgObject.departure + " - Arrival");
+        }
+        displayJourneyServices(returnForm.departure, ".return-departure-cart-service", ".return-departure-cart-service-list");
+        displayJourneyServices(returnForm.arrival, ".return-arrival-cart-service", ".return-arrival-cart-service-list");
+        if (returnForm.transfer) {
+            $(".return-transfer-cart-service").show();
+            const service = returnForm.transfer;
+            $(".return-transfer-cart-service-list").append(generateServiceItem(service.name, service.price*getMGObject().traveler));
+        } else {
+            $(".return-transfer-cart-service").show();
+        }
+    }
+}
+
+function displayJourneyServices(data, journeyClass, servicesClass) {
+    if (data) {
+        $(journeyClass).show();
+        if (data.meetGreetService) {
+            const service = data.meetGreetService;
+            $(servicesClass).append(generateServiceItem(service.name, service.price*getMGObject().traveler));
+        }
+        if (data.transportSolution) {
+            const service = data.transportSolution;
+            const priceVehiclesRequired = getMGObject().traveler > 4 ? 2 : 1;
+            $(servicesClass).append(generateServiceItem(service.name, service.price*priceVehiclesRequired));
+        }
+        if (data.covidSafetyServices) {
+            const services = data.covidSafetyServices;
+            for(var i = 0; i < services.length; i ++) {
+                const service = services[i];
+                $(servicesClass).append(generateServiceItem(service.name, service.price*getMGObject().traveler));
+            }
+        }
+        if (data.totalCares) {
+            const services = data.totalCares;
+            for(var i = 0; i < services.length; i ++) {
+                const service = services[i];
+                $(servicesClass).append(generateServiceItem(service.name, service.price*getMGObject().traveler));
+            }
+        }
+    } else {
+        $(journeyClass).hide();
+    }
+}
+
+function generateServiceItem(name, price) {
+    const result = '<div class="cart-service">'
+                + '<div>' + name + '</div>'
+                + '<div>' + currencyFormat(price) + '</div>'
+                + '</div>'
+    return result;
 }
 
 $(document).ready(function() {
