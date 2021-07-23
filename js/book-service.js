@@ -904,11 +904,12 @@ function initTheCart() {
     returnForm = returnForm ? convertJsonToObject(returnForm) : null;
     if (returnForm) {
         $(".return-cart-journey").show();
-        if (returnForm.departure) {
-    			$(".return-departure-cart-airport-title").html(mgObject.arrival + " - Departure");
-    		}
-        if (returnForm.arrival) {
+        if (returnForm.departure && returnForm.arrival) {
+            $(".return-departure-cart-airport-title").html(mgObject.arrival + " - Departure");
             $(".return-arrival-cart-airport-title").html(mgObject.departure + " - Arrival");
+        } else {
+            $(".return-departure-cart-airport-title").html(mgObject.departure + " - Departure");
+            $(".return-arrival-cart-airport-title").html(mgObject.arrival + " - Arrival");
         }
         displayJourneyServices(returnForm.departure, ".return-departure-cart-service", ".return-departure-cart-service-list");
         displayJourneyServices(returnForm.arrival, ".return-arrival-cart-service", ".return-arrival-cart-service-list");
