@@ -921,6 +921,18 @@ function initTheCart() {
             $(".return-transfer-cart-service").hide();
         }
     }
+    var additionalServicesForm = window.localStorage.getItem("additional-services");
+    additionalServicesForm = additionalServicesForm ? convertJsonToObject(additionalServicesForm) : [];
+    if (additionalServicesForm && additionalServicesForm.length > 0) {
+        $(".additional-services-cart-journey").show();
+        $(".additional-services-cart").show();
+    } else {
+        $(".additional-services-cart-journey").hide();
+    }
+    for(var i = 0; i < additionalServicesForm.length; i ++) {
+        const service = additionalServicesForm[i];
+        $(".additional-services-cart-list").append(generateServiceItem(service.name, service.price*getMGObject().traveler));
+    }
 }
 
 function displayJourneyServices(data, journeyClass, servicesClass) {
