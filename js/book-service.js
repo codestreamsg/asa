@@ -43,6 +43,7 @@ const defaultPickUpLocation = 'Pick-up location';
 const defaultDropOffLocation = 'Drop-off Location';
 var countInputIndex = 0;
 var currentSelectedTab = '';
+const maxNumberOfPassengers = 8;
 function getMGObject() {
     var departure = $("#mg-departure option:selected").text();
     var arrival = $("#mg-arrival option:selected").text();
@@ -805,6 +806,8 @@ function getInputsForProduct(index, productName, productPrice) {
 
 function initCheckoutButton() {
     $("#checkout-button").click(function() {
+        addAllProductsToCart();
+        removePassengerDetails();
         $("#empty-cart").trigger("click");
         $("#add-cart-button").trigger("click");
     });
@@ -813,6 +816,15 @@ function initCheckoutButton() {
 function displayPassengerDetails() {
     for (var i = 1; i <= getMGObject().traveler; i ++) {
         $(".passenger-details-" + i).show();
+    }
+}
+
+function removePassengerDetails() {
+    if (getMGObject().traveler == maxNumberOfPassengers) {
+        return;
+    }
+    for (var i = getMGObject().traveler + 1; i <= maxNumberOfPassengers; i ++) {
+        $(".passenger-details-" + i).remove();
     }
 }
 
