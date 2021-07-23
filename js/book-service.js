@@ -807,6 +807,7 @@ function getInputsForProduct(index, productName, productPrice) {
 function displayPassengerDetails() {
     for (var i = 1; i <= getMGObject().traveler; i ++) {
         $(".passenger-details-" + i).show();
+        $(".passenger-details-" + i + " :input").prop('type', 'text');;
     }
 }
 
