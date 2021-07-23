@@ -807,7 +807,7 @@ function getInputsForProduct(index, productName, productPrice) {
 function displayPassengerDetails() {
     for (var i = 1; i <= getMGObject().traveler; i ++) {
         $(".passenger-details-" + i).show();
-        $(".passenger-details-" + i + " :input").prop('type', 'text');;
+        $(".passenger-details-" + i + " :input").prop('required', true);;
     }
 }
 
@@ -827,7 +827,7 @@ function displayAddOnServices() {
     if (isShowLLTAService) {
         $(".add-on-services-container").show();
         $(".add-on-llta-service").show();
-        $(".add-on-llta-service :input").prop('type', 'text');
+        $(".add-on-llta-service :input").prop('required', true);
     }
 }
 
@@ -839,15 +839,15 @@ function displayAddOnTransportSolutions(data, transportClass) {
         $(".add-on-transport-service").show();
         if (isDepartureTransportSolution) {
             $(transportClass + "-departure").show();
-            $(transportClass + "-departure :input").prop('type', 'text');
+            $(transportClass + "-departure :input").prop('required', true);
         }
         if (isArrivalTransportSolution) {
             $(transportClass + "-arrival").show();
-            $(transportClass + "-arrival :input").prop('type', 'text');
+            $(transportClass + "-arrival :input").prop('required', true);
         }
     } else {
         $(transportClass).hide();
-        $(transportClass + " :input").prop('type', 'hidden');
+        $(transportClass + " :input").prop('required', false);
     }
 }
 
@@ -857,19 +857,19 @@ function displayAddOnLuggageDeliveries(data, transportClass) {
     if (isDepartureTransportSolution || isArrivalTransportSolution) {
         $(".add-on-services-container").show();
         $(".add-on-luggage-delivery-service").show();
-        $(".input-luggage-details :input").prop('type', 'text');
+        $(".input-luggage-details :input").prop('required', true);
         if (isDepartureTransportSolution) {
             $(transportClass + "-departure").show();
-            $(transportClass + "-departure :input").prop('type', 'text');
+            $(transportClass + "-departure :input").prop('required', true);
         }
         if (isArrivalTransportSolution) {
             $(transportClass + "-arrival").show();
-            $(transportClass + "-arrival :input").prop('type', 'text');
+            $(transportClass + "-arrival :input").prop('required', true);
         }
     } else {
         $(transportClass).hide();
-        $(transportClass + " :input").prop('type', 'hidden');
-        $(".input-luggage-details :input").prop('type', 'hidden');
+        $(transportClass + " :input").prop('required', false);
+        $(".input-luggage-details :input").prop('required', false);
     }
 }
 
