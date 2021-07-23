@@ -806,7 +806,7 @@ function getInputsForProduct(index, productName, productPrice) {
 
 function initCheckoutButton() {
     $("#checkout-button").click(function() {
-        if ("#meet-greet-service-form".valid()) {
+        if (("#meet-greet-service-form").valid()) {
             addAllProductsToCart();
             removePassengerDetails();
             $("#add-mg-form-button").trigger("click");
