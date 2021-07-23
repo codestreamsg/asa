@@ -520,7 +520,7 @@ function initBookNowButton() {
         }
         var returnForm = window.localStorage.getItem("return");
         returnForm = returnForm ? convertJsonToObject(returnForm) : null;
-        if (mgData.isReturn == "true" && !returnForm) {
+        if (currentSelectedTab != "outgoing-journey-tab" && mgData.isReturn == "true" && !returnForm) {
             window.location = "return-journey-tab";
         }
     });
@@ -959,6 +959,26 @@ function generateServiceItem(name, price) {
                 + '<div>' + currencyFormat(price) + '</div>'
                 + '</div>'
     return result;
+}
+
+function setTransportLocationPrice(arrivalClass) {
+    const transportLocationSelect = $("#" + arrivalClass + "transport-location-select option:selected").text();
+    if ((!arrivalClass && transportLocationSelect != defaultPickUpLocation) || (arrivalClass && transportLocationSelect != defaultDropOffLocation)) {
+        $("." + arrivalClass + "product-button-option").each(function() {
+            if ($(this).text() == "CGK" || $(this).text() == $("#" + arrivalClass + "transport-location-select option:selected").text()) {
+                $(this).trigger("click");
+            }
+        });
+        setTimeout(function() {
+            $(".service-item-price." + arrivalClass + "transport-solution-product-price").each(function() {
+                const text = $(this).text();
+                var price = text ? convertCurrencyToNumber(text) : 0;
+                price = price*1000;
+                $(this).html(currencyFormat(price));
+            });
+            calTotalPrice();
+    }, 1000);
+    }
 }
 
 $(document).ready(function() {
