@@ -171,7 +171,7 @@
                 setTimeout(function(){ 
                 displayProductPrice();
                 $(".product-price").show();
-                }, 200);
+                }, 500);
             }
         });
         $('.traveler-item').each(function() {
