@@ -155,3 +155,27 @@
         $(this).addClass($.trim(currentSelect.toLowerCase()).replace(" ", "-") + "-luggage-delievery-select");
         });
     }
+    
+    function initTransportSolutionsPage() {
+        initClickEventsToProductItem();
+        $(".transport-solutions-airport-select").change(function() {
+            const currentSelectedText = $(".transport-solutions-airport-select option:selected").text();
+            const currentSelectedValue = $(".transport-solutions-airport-select option:selected").val();
+            if (currentSelectedValue) {
+                $(".product-price").hide();
+                $(".transport-solutions-button").each(function() {
+                if ($(this).text() == currentSelectedText) {
+                    $(this).trigger("click");
+                }
+                });
+                setTimeout(function(){ 
+                    displayProductPrice();
+                    $(".product-price").show();
+                }, 200);
+            }
+        });
+        $('.traveler-item').each(function() {
+            var s = $(this).text();
+            $('.transport-solutions-traveler-select').append('<option value="' + s + '">' + s + '</option>');
+        });
+    }
