@@ -57,89 +57,6 @@
         }
         displayProductPrice();
     })();
-    
-    function submit() {
-        const currentPage = $("#current-page").val();
-        window.localStorage.removeItem("single-service");
-        var singleService = null;
-        var airport = null;
-        switch(currentPage) {
-            case "Hotel Quarantine":
-                airport = $(".hotel-airport-select option:selected").text();
-                singleService = {
-                    "airport": airport,
-                    "traveler": getCurrentTraveler(".hotel-traveler-select"),
-                    "services": [{
-                        "name": "{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}",
-                        "price": convertCurrencyToNumber("{{wf {&quot;path&quot;:&quot;default-sku:price&quot;,&quot;type&quot;:&quot;CommercePrice&quot;\} }}")
-                    }]
-                }
-                break;
-            case "PCR/Swab Antigen Test":
-                airport = $(".pcr-airport-select option:selected").text();
-                singleService = {
-                    "airport": airport,
-                    "traveler": getCurrentTraveler(".pcr-traveler-select"),
-                    "services": []
-                }
-                $(".pcr-product-item").each(function() {
-                    if ($(this).hasClass(itemSelectedClass)) {
-                    const serviceItem = {
-                        "name": $(this).find(productNameItemClass).text(),
-                        "price": convertCurrencyToNumber($(this).find(productPriceItemClass).text())
-                    }
-                    singleService.services.push(serviceItem);
-                }
-                });
-                break;
-                case "LLTA":
-                singleService = {
-                "traveler": getCurrentTraveler(".llta-traveler-select"),
-                "services": [{
-                    "name": "{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}",
-                    "price": convertCurrencyToNumber("{{wf {&quot;path&quot;:&quot;default-sku:price&quot;,&quot;type&quot;:&quot;CommercePrice&quot;\} }}")
-                }]
-                }
-                break;
-            case "Terminal Transfer":
-                singleService = {
-                "traveler": getCurrentTraveler(".terminal-transfer-traveler-select"),
-                "services": [{
-                    "name": "{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}",
-                    "price": convertCurrencyToNumber("{{wf {&quot;path&quot;:&quot;default-sku:price&quot;,&quot;type&quot;:&quot;CommercePrice&quot;\} }}")
-                }],
-                pickUp: $(".pickup-terminal-select").val(),
-                dropOff: $(".dropoff-terminal-select").val()
-                }
-                break;
-            case "Airport Delight":
-                airport = $(".airport-delight-select option:selected").text();
-                singleService = {
-                    "airport": airport,
-                    "traveler": getCurrentTraveler(".airport-delight-traveler-select"),
-                    "services": [{
-                        "name": "{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}",
-                        "price": convertCurrencyToNumber("{{wf {&quot;path&quot;:&quot;default-sku:price&quot;,&quot;type&quot;:&quot;CommercePrice&quot;\} }}")
-                    }]
-                }
-                break;
-                case "Luggage Delivery":
-                singleService = {
-                    "airport": $(".airport-luggage-delievery-select option:selected").text(), 
-                "traveler": getCurrentTraveler(".luggage-delivery-traveler-select"),
-                "services": [{
-                    "name": "{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}",
-                    "price": convertCurrencyToNumber("{{wf {&quot;path&quot;:&quot;default-sku:price&quot;,&quot;type&quot;:&quot;CommercePrice&quot;\} }}")
-                }],
-                pickUp: $(".drop-off-luggage-select option:selected").text(),
-                dropOff: $(".pick-up-luggage-select option:selected").text(),
-                terminal: $(".terminal-luggage-delievery-select option:selected").text()
-                }
-                break;
-        }
-        window.localStorage.setItem("single-service", JSON.stringify(singleService));
-        window.location = "/passenger-details-other-services";
-    }
 
     function getCurrentTraveler(travelerClass) {
         const travelerText = $(travelerClass + " option:selected").text();
@@ -233,19 +150,32 @@
         var s = $(this).text();
         $('.luggage-delivery-traveler-select').append('<option value="' + s + '">' + s + '</option>');
         });
-        /*
-        $(".luggage-delivery-select").each(function() {
-            const findLocationSelect = $(this).html().toLowerCase().indexOf("location");
-        if (findLocationSelect >= 0) {
-            $(".luggage-delivery-option-list").append(
-            "<div role='group'><select data-node-type='commerce-add-to-cart-option-select' class='luggage-delivery-select w-select' required=''>" + $(this).html().replace("Location", "Pick-up Location") +"</select></div>");
-                $(this).parent().find('option[value=""]').text('Drop-off Location');
-            return false;
-        }
-        });
-        */
         $(".luggage-delivery-select").each(function() {
         const currentSelect = $(this).parent().find('option[value=""]').text();
         $(this).addClass($.trim(currentSelect.toLowerCase()).replace(" ", "-") + "-luggage-delievery-select");
+        });
+    }
+    
+    function initTransportSolutionsPage() {
+        initClickEventsToProductItem();
+        $(".transport-solutions-airport-select").change(function() {
+            const currentSelectedText = $(".transport-solutions-airport-select option:selected").text();
+            const currentSelectedValue = $(".transport-solutions-airport-select option:selected").val();
+            if (currentSelectedValue) {
+                $(".product-price").hide();
+                $(".transport-solutions-button").each(function() {
+                if ($(this).text() == currentSelectedText) {
+                    $(this).trigger("click");
+                }
+                });
+                setTimeout(function(){ 
+                displayProductPrice();
+                $(".product-price").show();
+                }, 200);
+            }
+        });
+        $('.traveler-item').each(function() {
+            var s = $(this).text();
+            $('.transport-solutions-traveler-select').append('<option value="' + s + '">' + s + '</option>');
         });
     }
