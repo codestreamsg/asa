@@ -74,7 +74,7 @@
             var s = $(this).text();
             $('.hotel-traveler-select').append('<option value="' + s + '">' + s + '</option>');
         });
-        initAirportsSelect(".hotel-airports-select");
+        initAirportsSelect(".hotel-airport-select");
     }
 
     function airportChange(selectClass) {
