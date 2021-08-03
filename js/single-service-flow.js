@@ -4,6 +4,10 @@
     const serviceItemMultiple = 'product-multiple-select';
     const productNameItemClass = '.product-name';
     const productPriceItemClass = '.product-price';
+    const singleAirportItemClass = '.single-airport-item';
+    const singleAirportNameClass = '.single-airport-name';
+    const singleAirportCodeClass = '.single-airport-code';
+    const cartAiportOptionButtonClass = '.cart-airport-option-button';
     function convertCurrencyToNumber(value) {
         return value ? Number(value.toString().replace(priceTextReplace, "").replace(/[^0-9.-]+/g,""))*1000 : 0;
     }
@@ -67,17 +71,26 @@
     function initHotelQuarantinePage() {
         airportChange(".hotel-airport-select");
         $('.traveler-item').each(function() {
-        var s = $(this).text();
-        $('.hotel-traveler-select').append('<option value="' + s + '">' + s + '</option>');
+            var s = $(this).text();
+            $('.hotel-traveler-select').append('<option value="' + s + '">' + s + '</option>');
         });
+        initAirportsSelect(".hotel-airports-select");
     }
-    
-    function airportChange(airportSelectClass) {
-        $(airportSelectClass).change(function() {
-                if ($(this).val()) {
+
+    function airportChange(selectClass) {
+        $(selectClass).change(function() {
+            const currentSelectedValue = $(selectClass + " option:selected").val();
+            if (currentSelectedValue) {
                 $(productPriceItemClass).hide();
-                displayProductPrice();
-            $(productPriceItemClass).show();
+                $(cartAiportOptionButtonClass).each(function() {
+                    if ($(this).text() == currentSelectedValue) {
+                        $(this).trigger("click");
+                    }
+                });
+                setTimeout(function(){ 
+                    displayProductPrice();
+                    $(productPriceItemClass).show();
+                }, 200);
             }
         });
     }
@@ -177,5 +190,13 @@
         $('.traveler-item').each(function() {
             var s = $(this).text();
             $('.transport-solutions-traveler-select').append('<option value="' + s + '">' + s + '</option>');
+        });
+    }
+
+    function initAirportsSelect(itemClass) {
+        $(singleAirportItemClass).each(function() {
+            var text = $(this).find(singleAirportNameClass).text();
+            var value = $(this).find(singleAirportCodeClass).text();
+            $(itemClass).append('<option value="' + value + '">' + text + '</option>');
         });
     }
