@@ -20,7 +20,7 @@ function convertCurrencyToNumber(value) {
 }
 
 function currencyFormat(num) {
-  num = convertCurrencyToNumber(num)*1000;
+  num = convertCurrencyToNumber(num) * 1000;
   return (
     "IDR " +
     (num ? num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,") : 0)
@@ -96,6 +96,8 @@ function initTerminalTransferPage() {
     cartAiportOptionButtonClass
   );
   initTravelerSelect(".terminal-transfer-traveler-select");
+  initLocationSelect(".cart-option", "Drop-off", ".dropoff-terminal-select");
+  initLocationSelect(".cart-option", "Pick-up", ".pickup-terminal-select");
 }
 
 function initAirportDelightPage() {
@@ -118,6 +120,8 @@ function initLuggageDeliveryPage() {
     cartAiportOptionButtonClass
   );
   initTravelerSelect(".luggage-delivery-traveler-select");
+  initLocationSelect(".cart-option", "Drop-off", ".dropoff-luggage-select");
+  initLocationSelect(".cart-option", "Pick-up", ".pickup-luggage-select");
 }
 
 function initTransportSolutionsPage() {
@@ -128,6 +132,8 @@ function initTransportSolutionsPage() {
     ".transport-solutions-button"
   );
   initTravelerSelect(".transport-solutions-traveler-select");
+  initLocationSelect(".cart-option", "Drop-off", ".dropoff-transport-solutions-select");
+  initLocationSelect(".cart-option", "Pick-up", ".pickup-transport-solutions-select");
 }
 
 function initTravelerSelect(travelerSelectClass) {
@@ -153,7 +159,10 @@ function airportChange(selectClass, cartAiportOptionButton) {
     if (currentSelectedValue) {
       var isMatchedValue = false;
       $(cartAiportOptionButton).each(function () {
-        if ($(this).text() == currentSelectedValue && $(this).attr("aria-checked") != "true") {
+        if (
+          $(this).text() == currentSelectedValue &&
+          $(this).attr("aria-checked") != "true"
+        ) {
           $(productPriceItemClass).hide();
           isMatchedValue = true;
           $(this).trigger("click");
@@ -189,5 +198,25 @@ function initAirportsSelect(itemClass) {
     var text = $(this).find(singleAirportNameClass).text();
     var value = $(this).find(singleAirportCodeClass).text();
     $(itemClass).append('<option value="' + value + '">' + text + "</option>");
+  });
+}
+
+function initLocationSelect(
+  cartOptionClass,
+  compareAttrClass,
+  insertSelectClass
+) {
+  $(cartOptionClass).each(function () {
+    const children = $(this).children();
+    const childrenAttr = children.attr("aria-label");
+    if (childrenAttr == compareAttrClass) {
+      children.children().each(function () {
+        const text = $(this).children().text();
+        const value = $(this).children().text();
+        $(insertSelectClass).append(
+          '<option value="' + value + '">' + text + "</option>"
+        );
+      });
+    }
   });
 }
