@@ -29,7 +29,7 @@ function currencyFormat(num) {
 }
 
 function displayProductPrice() {
-  $(productPriceItemClass).each(function () {
+  $(".product-price").each(function () {
     const priceText = $(this).text();
     $(this).html(currencyFormat(priceText));
   });
@@ -71,7 +71,6 @@ function displayProductPrice() {
       break;
   }
   displayProductPrice();
-  productPriceOnChange();
 })();
 
 function initHotelQuarantinePage() {
@@ -167,24 +166,26 @@ function airportChange(selectClass, cartAiportOptionButton) {
   $(selectClass).change(function () {
     const currentSelectedValue = $(selectClass + " option:selected").val();
     if (currentSelectedValue) {
+      var isMatchedValue = false;
       $(cartAiportOptionButton).each(function () {
         if (
           $(this).text() == currentSelectedValue &&
           $(this).attr("aria-checked") != "true" &&
           $(this).parent().attr("aria-label") == airportAttrValue
         ) {
+          $(productPriceItemClass).hide();
+          isMatchedValue = true;
           $(this).trigger("click");
         }
       });
+      if (isMatchedValue) {
+        setTimeout(function () {
+          displayProductPrice();
+          $(productPriceItemClass).show();
+        }, 200);
+      }
     }
   });
-}
-
-function productPriceOnChange() {
-    $(productPriceItemClass).change(function() {
-        const priceText = $(this).text();
-        $(this).html(currencyFormat(priceText));
-    });
 }
 
 function initClickEventsToProductItem() {
