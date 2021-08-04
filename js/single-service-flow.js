@@ -8,6 +8,7 @@ const singleAirportItemClass = ".single-airport-item";
 const singleAirportNameClass = ".single-airport-name";
 const singleAirportCodeClass = ".single-airport-code";
 const cartAiportOptionButtonClass = ".cart-airport-option-button";
+const airportAttrValue = "Airport";
 function convertCurrencyToNumber(value) {
   return value
     ? Number(
@@ -132,8 +133,16 @@ function initTransportSolutionsPage() {
     ".transport-solutions-button"
   );
   initTravelerSelect(".transport-solutions-traveler-select");
-  initLocationSelect(".cart-option", "Drop-off", ".dropoff-transport-solutions-select");
-  initLocationSelect(".cart-option", "Pick-up", ".pickup-transport-solutions-select");
+  initLocationSelect(
+    ".cart-option",
+    "Drop-off",
+    ".dropoff-transport-solutions-select"
+  );
+  initLocationSelect(
+    ".cart-option",
+    "Pick-up",
+    ".pickup-transport-solutions-select"
+  );
 }
 
 function initTravelerSelect(travelerSelectClass) {
@@ -161,7 +170,8 @@ function airportChange(selectClass, cartAiportOptionButton) {
       $(cartAiportOptionButton).each(function () {
         if (
           $(this).text() == currentSelectedValue &&
-          $(this).attr("aria-checked") != "true"
+          $(this).attr("aria-checked") != "true" &&
+          $(this).parent().attr("aria-label") == airportAttrValue
         ) {
           $(productPriceItemClass).hide();
           isMatchedValue = true;
@@ -172,7 +182,7 @@ function airportChange(selectClass, cartAiportOptionButton) {
         setTimeout(function () {
           displayProductPrice();
           $(productPriceItemClass).show();
-        }, 500);
+        }, 200);
       }
     }
   });
