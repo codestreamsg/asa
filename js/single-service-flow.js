@@ -29,7 +29,7 @@ function currencyFormat(num) {
 }
 
 function displayProductPrice() {
-  $(".product-price").each(function () {
+  $(productPriceItemClass).each(function () {
     const priceText = $(this).text();
     $(this).html(currencyFormat(priceText));
   });
@@ -70,7 +70,6 @@ function displayProductPrice() {
       initTransportSolutionsPage();
       break;
   }
-  displayProductPrice();
 })();
 
 function initHotelQuarantinePage() {
