@@ -163,7 +163,7 @@ function airportChange(selectClass, cartAiportOptionButton) {
         setTimeout(function () {
           displayProductPrice();
           $(productPriceItemClass).show();
-        }, 200);
+        }, 500);
       }
     }
   });
