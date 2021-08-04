@@ -15,12 +15,12 @@ function convertCurrencyToNumber(value) {
           .toString()
           .replace(priceTextReplace, "")
           .replace(/[^0-9.-]+/g, "")
-      ) * 1000
+      )
     : 0;
 }
 
 function currencyFormat(num) {
-  num = convertCurrencyToNumber(num);
+  num = convertCurrencyToNumber(num)*1000;
   return (
     "IDR " +
     (num ? num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,") : 0)
