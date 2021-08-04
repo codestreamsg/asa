@@ -153,7 +153,7 @@ function airportChange(selectClass, cartAiportOptionButton) {
     if (currentSelectedValue) {
       var isMatchedValue = false;
       $(cartAiportOptionButton).each(function () {
-        if ($(this).text() == currentSelectedValue) {
+        if ($(this).text() == currentSelectedValue && $(this).attr("aria-checked") != "true") {
           $(productPriceItemClass).hide();
           isMatchedValue = true;
           $(this).trigger("click");
