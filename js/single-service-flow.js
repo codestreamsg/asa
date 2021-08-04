@@ -81,16 +81,20 @@
         $(selectClass).change(function() {
             const currentSelectedValue = $(selectClass + " option:selected").val();
             if (currentSelectedValue) {
+                var isMatchedValue = false;
                 $(productPriceItemClass).hide();
                 $(cartAiportOptionButtonClass).each(function() {
                     if ($(this).text() == currentSelectedValue) {
+                        isMatchedValue = true;
                         $(this).trigger("click");
                     }
                 });
-                setTimeout(function(){ 
-                    displayProductPrice();
-                    $(productPriceItemClass).show();
-                }, 200);
+                if (isMatchedValue) {
+                    setTimeout(function(){ 
+                        displayProductPrice();
+                        $(productPriceItemClass).show();
+                    }, 200);
+                }
             }
         });
     }
