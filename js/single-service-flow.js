@@ -73,14 +73,14 @@ function displayProductPrice() {
 })();
 
 function initHotelQuarantinePage() {
-  initAirportsSelect(".hotel-airport-select");
+  initAirportsSelect(".hotel-airport-select", cartAiportOptionButtonClass);
   airportChange(".hotel-airport-select", cartAiportOptionButtonClass);
   initTravelerSelect(".hotel-traveler-select");
 }
 
 function initPCRTestPage() {
   initClickEventsToProductItem();
-  initAirportsSelect(".pcr-airport-select");
+  initAirportsSelect(".pcr-airport-select", ".pcr-airport-button");
   airportChange(".pcr-airport-select", ".pcr-airport-button");
   initTravelerSelect(".pcr-traveler-select");
 }
@@ -90,7 +90,7 @@ function initLLTAPage() {
 }
 
 function initTerminalTransferPage() {
-  initAirportsSelect(".terminal-transfer-airport-select");
+  initAirportsSelect(".terminal-transfer-airport-select", cartAiportOptionButtonClass);
   airportChange(
     ".terminal-transfer-airport-select",
     cartAiportOptionButtonClass
@@ -101,7 +101,7 @@ function initTerminalTransferPage() {
 }
 
 function initAirportDelightPage() {
-  initAirportsSelect(".airport-delight-select");
+  initAirportsSelect(".airport-delight-select", cartAiportOptionButtonClass);
   airportChange(".airport-delight-select", cartAiportOptionButtonClass);
   initTravelerSelect(".airport-delight-traveler-select");
 }
@@ -114,7 +114,7 @@ function initLuggageDeliveryPage() {
         "-luggage-delievery-select"
     );
   });
-  initAirportsSelect(".luggage-delivery-airport-select");
+  initAirportsSelect(".luggage-delivery-airport-select", cartAiportOptionButtonClass);
   airportChange(
     ".luggage-delivery-airport-select",
     cartAiportOptionButtonClass
@@ -126,7 +126,7 @@ function initLuggageDeliveryPage() {
 
 function initTransportSolutionsPage() {
   initClickEventsToProductItem();
-  initAirportsSelect(".transport-solutions-airport-select");
+  initAirportsSelect(".transport-solutions-airport-select", ".transport-solutions-button");
   airportChange(
     ".transport-solutions-airport-select",
     ".transport-solutions-button"
@@ -202,11 +202,21 @@ function initClickEventsToProductItem() {
   });
 }
 
-function initAirportsSelect(itemClass) {
+function initAirportsSelect(itemClass, cartAiportOptionButton) {
+  var productAirports = [];
+  $(cartAiportOptionButton).each(function () {
+    if ($(this).parent().attr("aria-label") == airportAttrValue) {
+      productAirports.push($(this).text());
+    }
+  });
   $(singleAirportItemClass).each(function () {
     var text = $(this).find(singleAirportNameClass).text();
     var value = $(this).find(singleAirportCodeClass).text();
-    $(itemClass).append('<option value="' + value + '">' + text + "</option>");
+    if (productAirports.includes(value)) {
+      $(itemClass).append(
+        '<option value="' + value + '">' + text + "</option>"
+      );
+    }
   });
 }
 
