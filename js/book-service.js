@@ -801,7 +801,7 @@ function addProductsForSection(data, numberOfPassengers, categoryName) {
 function getInputsForProduct(index, productName, productPrice, category) {
     const result = '<input type="hidden" name="' + index + ':name" value="' + productName + '" />'
                 + '<input type="hidden" name="' + index + ':price" value="' + productPrice+ '" />'
-                + '<input type="hidden" name="' + index + ':cart_type__c" value="' + category+ '" />';
+                + '<input type="hidden" name="' + index + ':category" value="' + category+ '" />';
     return result;
 }
 
