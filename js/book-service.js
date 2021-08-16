@@ -44,6 +44,7 @@ const defaultDropOffLocation = 'Drop-off Location';
 var countInputIndex = 0;
 var currentSelectedTab = '';
 const maxNumberOfPassengers = 8;
+const productLoyaltyPointClass = '.product-loyalty-point';
 function getMGObject() {
     var departure = $("#mg-departure option:selected").text();
     var arrival = $("#mg-arrival option:selected").text();
@@ -665,7 +666,8 @@ function getTerminalTransferSelectedServices() {
         if ($(this).hasClass(serviceItemSelectedClass)) {
             data = {
                 name: $(this).find(productNameClass).text(),
-                price: convertCurrencyToNumber($(this).find(serviceItemPrice).text())
+                price: convertCurrencyToNumber($(this).find(serviceItemPrice).text()),
+                loyaltyPoint: $(this).find(productLoyaltyPointClass).text()
             }
         }
     })
@@ -678,7 +680,8 @@ function getSelectedAdditionalServices() {
         if ($(this).hasClass(serviceItemSelectedClass)) {
             data.push({
                 name: $(this).find(productNameClass).text(),
-                price: convertCurrencyToNumber($(this).find(serviceItemPrice).text())
+                price: convertCurrencyToNumber($(this).find(serviceItemPrice).text()),
+                loyaltyPoint: $(this).find(productLoyaltyPointClass).text()
             })
         }
     })
@@ -697,7 +700,8 @@ function getSelectedServices(arrivalClass) {
         if ($(this).hasClass(serviceItemSelectedClass)) {
             data.meetGreetService = {
                 name: $(this).find(productNameClass).text(),
-                price: convertCurrencyToNumber($(this).find(serviceItemPrice).text())
+                price: convertCurrencyToNumber($(this).find(serviceItemPrice).text()),
+                loyaltyPoint: $(this).find(productLoyaltyPointClass).text()
             }
         }
     })
@@ -706,7 +710,8 @@ function getSelectedServices(arrivalClass) {
             data.transportSolution = {
                 name: $(this).find(productNameClass).text(),
                 price: convertCurrencyToNumber($(this).find(serviceItemPrice).text()),
-                isVehiclesRequired: $("#is-vehicles-required").val()
+                isVehiclesRequired: $("#is-vehicles-required").val(),
+                loyaltyPoint: $(this).find(productLoyaltyPointClass).text()
             }
         }
     })
@@ -714,7 +719,8 @@ function getSelectedServices(arrivalClass) {
         if ($(this).hasClass(serviceItemSelectedClass)) {
             data.covidSafetyServices.push({
                 name: $(this).find(productNameClass).text(),
-                price: convertCurrencyToNumber($(this).find(serviceItemPrice).text())
+                price: convertCurrencyToNumber($(this).find(serviceItemPrice).text()),
+                loyaltyPoint: $(this).find(productLoyaltyPointClass).text()
             })
         }
     })
@@ -722,7 +728,8 @@ function getSelectedServices(arrivalClass) {
         if ($(this).hasClass(serviceItemSelectedClass)) {
             data.totalCares.push({
                 name: $(this).find(productNameClass).text(),
-                price: convertCurrencyToNumber($(this).find(serviceItemPrice).text())
+                price: convertCurrencyToNumber($(this).find(serviceItemPrice).text()),
+                loyaltyPoint: $(this).find(productLoyaltyPointClass).text()
             })
         }
     })
@@ -745,7 +752,7 @@ function addAllProductsToCart() {
     addProductsForSection(outgoingForm.arrival, numberOfPassengers, 'Outgoing Arrival');
     if (outgoingForm.transfer) {
         countInputIndex ++;
-        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, outgoingForm.transfer.name, outgoingForm.transfer.price*numberOfPassengers, 'Outgoing Transfer'));
+        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, outgoingForm.transfer.name, outgoingForm.transfer.price*numberOfPassengers, 'Outgoing Transfer', outgoingForm.transfer.loyaltyPoint));
     }
     
     var returnForm = window.localStorage.getItem("return");
@@ -754,7 +761,7 @@ function addAllProductsToCart() {
     addProductsForSection(returnForm.arrival, numberOfPassengers, 'Return Arrival');
     if (returnForm.transfer) {
         countInputIndex ++;
-        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, returnForm.transfer.name, returnForm.transfer.price*numberOfPassengers, 'Return Transfer'));
+        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, returnForm.transfer.name, returnForm.transfer.price*numberOfPassengers, 'Return Transfer', returnForm.transfer.loyaltyPoint));
     }
 
     var additionalServicesForm = window.localStorage.getItem("additional-services");
@@ -763,7 +770,7 @@ function addAllProductsToCart() {
         for(var index = 0; index < additionalServicesForm.length; index ++) {
             countInputIndex ++;
             const additionalService = additionalServicesForm[index];
-            $("#embed-input-fields").append(getInputsForProduct(countInputIndex, additionalService.name, additionalService.price*numberOfPassengers, 'Additional Service'));
+            $("#embed-input-fields").append(getInputsForProduct(countInputIndex, additionalService.name, additionalService.price*numberOfPassengers, 'Additional Service', additionalService.loyaltyPoint));
         }
     }
 }
@@ -774,34 +781,35 @@ function addProductsForSection(data, numberOfPassengers, categoryName) {
     }
     if (data.meetGreetService) {
         countInputIndex ++;
-        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, data.meetGreetService.name, data.meetGreetService.price*numberOfPassengers, categoryName));
+        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, data.meetGreetService.name, data.meetGreetService.price*numberOfPassengers, categoryName, data.meetGreetService.loyaltyPoint));
     }
     if (data.transportSolution) {
         countInputIndex ++;
         const transportSolution = data.transportSolution;
         const priceVehiclesRequired = transportSolution && transportSolution.isVehiclesRequired == "true" ? 2 : 1;
-        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, transportSolution.name, transportSolution.price*priceVehiclesRequired, categoryName));
+        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, transportSolution.name, transportSolution.price*priceVehiclesRequired, categoryName, transportSolution.loyaltyPoint));
     }
     if (data.covidSafetyServices) {
         for(var index = 0; index < data.covidSafetyServices.length; index ++) {
             countInputIndex ++;
             const covidSafetyService = data.covidSafetyServices[index];
-            $("#embed-input-fields").append(getInputsForProduct(countInputIndex, covidSafetyService.name, covidSafetyService.price*numberOfPassengers, categoryName));
+            $("#embed-input-fields").append(getInputsForProduct(countInputIndex, covidSafetyService.name, covidSafetyService.price*numberOfPassengers, categoryName, covidSafetyService.loyaltyPoint));
         }
     }
     if (data.totalCares) {
         for(var index = 0; index < data.totalCares.length; index ++) {
             countInputIndex ++;
             const totalCare = data.totalCares[index];
-            $("#embed-input-fields").append(getInputsForProduct(countInputIndex, totalCare.name, totalCare.price*numberOfPassengers, categoryName));
+            $("#embed-input-fields").append(getInputsForProduct(countInputIndex, totalCare.name, totalCare.price*numberOfPassengers, categoryName, totalCare.loyaltyPoint));
         }
     }
 }
 
-function getInputsForProduct(index, productName, productPrice, category) {
+function getInputsForProduct(index, productName, productPrice, category, loyaltyPoint) {
     const result = '<input type="hidden" name="' + index + ':name" value="' + productName + '" />'
                 + '<input type="hidden" name="' + index + ':price" value="' + productPrice+ '" />'
-                + '<input type="hidden" name="' + index + ':journey" value="' + category+ '" />';
+                + '<input type="hidden" name="' + index + ':Journey" value="' + category+ '" />'
+                + '<input type="hidden" name="' + index + ':Loyalty Point" value="' + loyaltyPoint + '" />';
     return result;
 }
 
