@@ -748,20 +748,20 @@ function addAllProductsToCart() {
     const numberOfPassengers = mgObject.traveler;
     var outgoingForm = window.localStorage.getItem("outgoing");
     outgoingForm = outgoingForm ? convertJsonToObject(outgoingForm) : {};
-    addProductsForSection(outgoingForm.departure, numberOfPassengers, 'Outgoing Departure');
-    addProductsForSection(outgoingForm.arrival, numberOfPassengers, 'Outgoing Arrival');
+    addProductsForSection(outgoingForm.departure, numberOfPassengers, 'Outgoing Departure', mgObject.departure);
+    addProductsForSection(outgoingForm.arrival, numberOfPassengers, 'Outgoing Arrival', mgObject.arrival);
     if (outgoingForm.transfer) {
         countInputIndex ++;
-        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, outgoingForm.transfer.name, outgoingForm.transfer.price*numberOfPassengers, 'Outgoing Transfer', outgoingForm.transfer.loyaltyPoint));
+        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, outgoingForm.transfer.name, outgoingForm.transfer.price*numberOfPassengers, 'Outgoing Transfer', outgoingForm.transfer.loyaltyPoint, mgObject.departure));
     }
     
     var returnForm = window.localStorage.getItem("return");
     returnForm = returnForm ? convertJsonToObject(returnForm) : {};
-    addProductsForSection(returnForm.departure, numberOfPassengers, 'Return Departure');
-    addProductsForSection(returnForm.arrival, numberOfPassengers, 'Return Arrival');
+    addProductsForSection(returnForm.departure, numberOfPassengers, 'Return Departure', mgObject.arrival);
+    addProductsForSection(returnForm.arrival, numberOfPassengers, 'Return Arrival', mgObject.departure);
     if (returnForm.transfer) {
         countInputIndex ++;
-        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, returnForm.transfer.name, returnForm.transfer.price*numberOfPassengers, 'Return Transfer', returnForm.transfer.loyaltyPoint));
+        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, returnForm.transfer.name, returnForm.transfer.price*numberOfPassengers, 'Return Transfer', returnForm.transfer.loyaltyPoint, mgObject.arrival));
     }
 
     var additionalServicesForm = window.localStorage.getItem("additional-services");
@@ -775,41 +775,42 @@ function addAllProductsToCart() {
     }
 }
 
-function addProductsForSection(data, numberOfPassengers, categoryName) {
+function addProductsForSection(data, numberOfPassengers, categoryName, airport) {
     if (!data) {
         return;
     }
     if (data.meetGreetService) {
         countInputIndex ++;
-        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, data.meetGreetService.name, data.meetGreetService.price*numberOfPassengers, categoryName, data.meetGreetService.loyaltyPoint));
+        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, data.meetGreetService.name, data.meetGreetService.price*numberOfPassengers, categoryName, data.meetGreetService.loyaltyPoint, airport));
     }
     if (data.transportSolution) {
         countInputIndex ++;
         const transportSolution = data.transportSolution;
         const priceVehiclesRequired = transportSolution && transportSolution.isVehiclesRequired == "true" ? 2 : 1;
-        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, transportSolution.name, transportSolution.price*priceVehiclesRequired, categoryName, transportSolution.loyaltyPoint));
+        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, transportSolution.name, transportSolution.price*priceVehiclesRequired, categoryName, transportSolution.loyaltyPoint, airport));
     }
     if (data.covidSafetyServices) {
         for(var index = 0; index < data.covidSafetyServices.length; index ++) {
             countInputIndex ++;
             const covidSafetyService = data.covidSafetyServices[index];
-            $("#embed-input-fields").append(getInputsForProduct(countInputIndex, covidSafetyService.name, covidSafetyService.price*numberOfPassengers, categoryName, covidSafetyService.loyaltyPoint));
+            $("#embed-input-fields").append(getInputsForProduct(countInputIndex, covidSafetyService.name, covidSafetyService.price*numberOfPassengers, categoryName, covidSafetyService.loyaltyPoint, airport));
         }
     }
     if (data.totalCares) {
         for(var index = 0; index < data.totalCares.length; index ++) {
             countInputIndex ++;
             const totalCare = data.totalCares[index];
-            $("#embed-input-fields").append(getInputsForProduct(countInputIndex, totalCare.name, totalCare.price*numberOfPassengers, categoryName, totalCare.loyaltyPoint));
+            $("#embed-input-fields").append(getInputsForProduct(countInputIndex, totalCare.name, totalCare.price*numberOfPassengers, categoryName, totalCare.loyaltyPoint, airport));
         }
     }
 }
 
-function getInputsForProduct(index, productName, productPrice, category, loyaltyPoint) {
+function getInputsForProduct(index, productName, productPrice, category, loyaltyPoint, airport = '') {
     const result = '<input type="hidden" name="' + index + ':name" value="' + productName + '" />'
                 + '<input type="hidden" name="' + index + ':price" value="' + productPrice+ '" />'
                 + '<input type="hidden" name="' + index + ':Journey" value="' + category+ '" />'
-                + '<input type="hidden" name="' + index + ':Loyalty Point" value="' + loyaltyPoint + '" />';
+                + '<input type="hidden" name="' + index + ':Loyalty Point" value="' + loyaltyPoint + '" />'
+                + '<input type="hidden" name="' + index + ':Airport" value="' + airport + '" />';
     return result;
 }
 
