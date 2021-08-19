@@ -250,7 +250,7 @@ function initLocationSelect(
 function transportAirportLocationChange() {
   const aiportSelectClass = ".transport-solutions-airport-select";
   const locationSelectClass = ".pickup-transport-solutions-select";
-  const productPriceItemClass = ".transport-solutions-button";
+  const cartAiportOptionButton = ".transport-solutions-button";
   $(aiportSelectClass).change(function () {
     const currentSelectedValue = $(aiportSelectClass + " option:selected").val();
     if (currentSelectedValue) {
