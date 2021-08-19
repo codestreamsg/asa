@@ -251,9 +251,12 @@ function transportAirportLocationChange() {
   const aiportSelectClass = ".transport-solutions-airport-select";
   const locationSelectClass = ".pickup-transport-solutions-select";
   const cartAiportOptionButton = ".transport-solutions-button";
+  $(aiportSelectClass + ' option[value=""]').attr('disabled','disabled');
+  $(locationSelectClass + ' option[value=""]').attr('disabled','disabled');
   $(aiportSelectClass).change(function () {
     const currentSelectedValue = $(aiportSelectClass + " option:selected").val();
     if (currentSelectedValue) {
+      var isMatchedValue = false;
       $(cartAiportOptionButton).each(function () {
         if (
           $(this).text() == currentSelectedValue &&
