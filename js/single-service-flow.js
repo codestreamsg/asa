@@ -261,8 +261,18 @@ function transportAirportLocationChange() {
           $(this).parent().attr("aria-label") == airportAttrValue
         ) {
           $(this).trigger("click");
+          if ($(locationSelectClass).val()) {
+            $(productPriceItemClass).hide();
+            isMatchedValue = true;
+          }
         }
       });
+      if (isMatchedValue) {
+        setTimeout(function () {
+          displayProductPrice();
+          $(productPriceItemClass).show();
+        }, 200);
+      }
     }
   });
 
@@ -276,9 +286,11 @@ function transportAirportLocationChange() {
           $(this).attr("aria-checked") != "true" &&
           $(this).parent().attr("aria-label") == locationAttrValue
         ) {
-          $(productPriceItemClass).hide();
-          isMatchedValue = true;
           $(this).trigger("click");
+          if ($(aiportSelectClass).val()) {
+            $(productPriceItemClass).hide();
+            isMatchedValue = true;
+          }
         }
       });
       if (isMatchedValue) {
