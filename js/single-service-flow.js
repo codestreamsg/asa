@@ -90,7 +90,10 @@ function initLLTAPage() {
 }
 
 function initTerminalTransferPage() {
-  initAirportsSelect(".terminal-transfer-airport-select", cartAiportOptionButtonClass);
+  initAirportsSelect(
+    ".terminal-transfer-airport-select",
+    cartAiportOptionButtonClass
+  );
   airportChange(
     ".terminal-transfer-airport-select",
     cartAiportOptionButtonClass
@@ -114,7 +117,10 @@ function initLuggageDeliveryPage() {
         "-luggage-delievery-select"
     );
   });
-  initAirportsSelect(".luggage-delivery-airport-select", cartAiportOptionButtonClass);
+  initAirportsSelect(
+    ".luggage-delivery-airport-select",
+    cartAiportOptionButtonClass
+  );
   airportChange(
     ".luggage-delivery-airport-select",
     cartAiportOptionButtonClass
@@ -126,8 +132,7 @@ function initLuggageDeliveryPage() {
 
 function initTransportSolutionsPage() {
   initClickEventsToProductItem();
-  initAirportsSelect(".transport-solutions-airport-select", ".transport-solutions-button");
-  airportChange(
+  initAirportsSelect(
     ".transport-solutions-airport-select",
     ".transport-solutions-button"
   );
@@ -142,6 +147,7 @@ function initTransportSolutionsPage() {
     "Pick-up",
     ".pickup-transport-solutions-select"
   );
+  transportAirportLocationChange();
 }
 
 function initTravelerSelect(travelerSelectClass) {
