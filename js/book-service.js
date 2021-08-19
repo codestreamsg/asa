@@ -798,7 +798,7 @@ function addProductsForSection(data, numberOfPassengers, categoryName) {
         countInputIndex ++;
         const transportSolution = data.transportSolution;
         const priceVehiclesRequired = transportSolution && transportSolution.isVehiclesRequired == "true" ? 2 : 1;
-        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, transportSolution.name, transportSolution.price*priceVehiclesRequired, categoryName, transportSolution.loyaltyPoint, transportSolution.aiportCode, transportSolution.sku));
+        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, transportSolution.name, transportSolution.price*priceVehiclesRequired, categoryName, transportSolution.loyaltyPoint, transportSolution.aiportCode, transportSolution.sku, data.transportLocation ? data.transportLocation : ""));
     }
     if (data.covidSafetyServices) {
         for(var index = 0; index < data.covidSafetyServices.length; index ++) {
