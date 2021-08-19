@@ -9,6 +9,7 @@ const singleAirportNameClass = ".single-airport-name";
 const singleAirportCodeClass = ".single-airport-code";
 const cartAiportOptionButtonClass = ".cart-airport-option-button";
 const airportAttrValue = "Airport";
+const locationAttrValue = "Location";
 function convertCurrencyToNumber(value) {
   return value
     ? Number(
@@ -242,6 +243,50 @@ function initLocationSelect(
           '<option value="' + value + '">' + text + "</option>"
         );
       });
+    }
+  });
+}
+
+function transportAirportLocationChange() {
+  const aiportSelectClass = ".transport-solutions-airport-select";
+  const locationSelectClass = ".pickup-transport-solutions-select";
+  const productPriceItemClass = ".transport-solutions-button";
+  $(aiportSelectClass).change(function () {
+    const currentSelectedValue = $(aiportSelectClass + " option:selected").val();
+    if (currentSelectedValue) {
+      $(cartAiportOptionButton).each(function () {
+        if (
+          $(this).text() == currentSelectedValue &&
+          $(this).attr("aria-checked") != "true" &&
+          $(this).parent().attr("aria-label") == airportAttrValue
+        ) {
+          $(this).trigger("click");
+        }
+      });
+    }
+  });
+
+  $(locationSelectClass).change(function () {
+    const currentSelectedValue = $(locationSelectClass + " option:selected").val();
+    if (currentSelectedValue) {
+      var isMatchedValue = false;
+      $(cartAiportOptionButton).each(function () {
+        if (
+          $(this).text() == currentSelectedValue &&
+          $(this).attr("aria-checked") != "true" &&
+          $(this).parent().attr("aria-label") == locationAttrValue
+        ) {
+          $(productPriceItemClass).hide();
+          isMatchedValue = true;
+          $(this).trigger("click");
+        }
+      });
+      if (isMatchedValue) {
+        setTimeout(function () {
+          displayProductPrice();
+          $(productPriceItemClass).show();
+        }, 200);
+      }
     }
   });
 }
