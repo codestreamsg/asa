@@ -412,7 +412,8 @@ function setDepartureTransportSelect(departureValue) {
         var transportAirportName = $(this).find('.transport-airport-name').text();
         if (transportAirportName == departureValue) {
             var transportSolutionName = $(this).find('.transport-solution-name').text();
-            $('.transport-location-select').append('<option value="' + transportSolutionName + '">' + transportSolutionName + '</option>');
+            var transportAirportCode = $(this).find('.transport-airport-code').text();
+            $('.transport-location-select').append('<option value="' + transportAirportCode + '">' + transportSolutionName + '</option>');
             isDisplay = true;
         }
     })
@@ -430,7 +431,8 @@ function setArrivalTransportSelect(arrivalValue) {
         var transportAirportName = $(this).find('.transport-airport-name').text();
         if (transportAirportName == arrivalValue) {
             var transportSolutionName = $(this).find('.transport-solution-name').text();
-            $('.arrival-transport-location-select').append('<option value="' + transportSolutionName + '">' + transportSolutionName + '</option>');
+            var transportAirportCode = $(this).find('.transport-airport-code').text();
+            $('.arrival-transport-location-select').append('<option value="' + transportAirportCode + '">' + transportSolutionName + '</option>');
             isDisplay = true;
         }
     })
@@ -709,6 +711,9 @@ function getSelectedServices(arrivalClass) {
             }
         }
     })
+    const transportLocationText = $("." + arrivalClass + "transport-location-select option:selected").text();
+    const transportLocationVal = $("." + arrivalClass + "transport-location-select option:selected").val();
+    data.transportLocation = transportLocationText != defaultPickUpLocation && transportLocationText != defaultDropOffLocation ? transportLocationText : '';
     $("." + arrivalClass + "transport-solution-item").each(function() {
         if ($(this).hasClass(serviceItemSelectedClass)) {
             data.transportSolution = {
@@ -716,6 +721,7 @@ function getSelectedServices(arrivalClass) {
                 price: convertCurrencyToNumber($(this).find(serviceItemPrice).text()),
                 isVehiclesRequired: $("#is-vehicles-required").val(),
                 loyaltyPoint: $(this).find(productLoyaltyPointClass).text(),
+                aiportCode: transportLocationVal,
                 sku: $(this).find(productSkuClass).text()
             }
         }
@@ -740,8 +746,6 @@ function getSelectedServices(arrivalClass) {
             })
         }
     })
-    const transportLocationText = $("." + arrivalClass + "transport-location-select option:selected").text();
-    data.transportLocation = transportLocationText != defaultPickUpLocation && transportLocationText != defaultDropOffLocation ? transportLocationText : '';
     return data;
 }
 
@@ -794,7 +798,7 @@ function addProductsForSection(data, numberOfPassengers, categoryName) {
         countInputIndex ++;
         const transportSolution = data.transportSolution;
         const priceVehiclesRequired = transportSolution && transportSolution.isVehiclesRequired == "true" ? 2 : 1;
-        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, transportSolution.name, transportSolution.price*priceVehiclesRequired, categoryName, transportSolution.loyaltyPoint, '', transportSolution.sku));
+        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, transportSolution.name, transportSolution.price*priceVehiclesRequired, categoryName, transportSolution.loyaltyPoint, transportSolution.aiportCode, transportSolution.sku));
     }
     if (data.covidSafetyServices) {
         for(var index = 0; index < data.covidSafetyServices.length; index ++) {
