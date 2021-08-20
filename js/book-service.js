@@ -451,14 +451,14 @@ function setDeparturesSelect(departureValue) {
     $('.departures-select').append('<option value="" disabled>Domestic</option>');
     $('.domestic-airport-item').each(function() {
         var text = $(this).find(airportItemClass).text();
-        var value = $(this).find(airportCodeItemClass).val();
+        var value = $(this).find(airportCodeItemClass).text();
         const addSelected = text == departureValue ? 'selected="selected"' : '';
         $('.departures-select').append('<option ' + addSelected + ' value="' + value + '">' + text + '</option>');
     })
     $('.departures-select').append('<option value="" disabled>International</option>');
     $('.international-airport-item').each(function() {
         var text = $(this).find(airportItemClass).text();
-        var value = $(this).find(airportCodeItemClass).val();
+        var value = $(this).find(airportCodeItemClass).text();
         const addSelected = text == departureValue ? 'selected="selected"' : '';
         $('.departures-select').append('<option ' + addSelected + ' value="' + value + '">' + text + '</option>');
     })
@@ -470,14 +470,14 @@ function setArrivalsSelect(arrivalValue) {
     $('.arrivals-select').append('<option value="" disabled>Domestic</option>');
     $('.domestic-airport-item').each(function() {
         var text = $(this).find(airportItemClass).text();
-        var value = $(this).find(airportCodeItemClass).val();
+        var value = $(this).find(airportCodeItemClass).text();
         const addSelected = text == arrivalValue ? 'selected="selected"' : '';
         $('.arrivals-select').append('<option ' + addSelected + ' value="' + value + '">' + text + '</option>');
     })
     $('.arrivals-select').append('<option value="" disabled>International</option>');
     $('.international-airport-item').each(function() {
         var text = $(this).find(airportItemClass).text();
-        var value = $(this).find(airportCodeItemClass).val();
+        var value = $(this).find(airportCodeItemClass).text();
         const addSelected = text == arrivalValue ? 'selected="selected"' : '';
         $('.arrivals-select').append('<option ' + addSelected + ' value="' + value + '">' + text + '</option>');
     })
