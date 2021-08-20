@@ -46,6 +46,8 @@ var currentSelectedTab = '';
 const maxNumberOfPassengers = 8;
 const productLoyaltyPointClass = '.product-loyalty-point';
 const productSkuClass = '.product-sku';
+const airportItemClass = '.airport-item';
+const airportCodeItemClass = '.airport-code-item';
 function getMGObject() {
     var departure = $("#mg-departure option:selected").text();
     var arrival = $("#mg-arrival option:selected").text();
@@ -448,15 +450,17 @@ function setDeparturesSelect(departureValue) {
     $('.departures-select').append('<option ' + departureSelected + ' value="" disabled>Departure</option>');
     $('.departures-select').append('<option value="" disabled>Domestic</option>');
     $('.domestic-airport-item').each(function() {
-        var s = $(this).text();
-        const addSelected = s == departureValue ? 'selected="selected"' : '';
-        $('.departures-select').append('<option ' + addSelected + ' value="' + s + '">' + s + '</option>');
+        var text = $(this).find(airportItemClass).text();
+        var value = $(this).find(airportCodeItemClass).val();
+        const addSelected = text == departureValue ? 'selected="selected"' : '';
+        $('.departures-select').append('<option ' + addSelected + ' value="' + value + '">' + text + '</option>');
     })
     $('.departures-select').append('<option value="" disabled>International</option>');
     $('.international-airport-item').each(function() {
-        var s = $(this).text();
-        const addSelected = s == departureValue ? 'selected="selected"' : '';
-        $('.departures-select').append('<option ' + addSelected + ' value="' + s + '">' + s + '</option>');
+        var text = $(this).find(airportItemClass).text();
+        var value = $(this).find(airportCodeItemClass).val();
+        const addSelected = text == departureValue ? 'selected="selected"' : '';
+        $('.departures-select').append('<option ' + addSelected + ' value="' + value + '">' + text + '</option>');
     })
 }
 
@@ -465,15 +469,17 @@ function setArrivalsSelect(arrivalValue) {
     $('.arrivals-select').append('<option ' + arrivalSelected + ' value="" disabled>Arrival</option>');
     $('.arrivals-select').append('<option value="" disabled>Domestic</option>');
     $('.domestic-airport-item').each(function() {
-        var s = $(this).text();
-        const addSelected = s == arrivalValue ? 'selected="selected"' : '';
-        $('.arrivals-select').append('<option ' + addSelected + ' value="' + s + '">' + s + '</option>');
+        var text = $(this).find(airportItemClass).text();
+        var value = $(this).find(airportCodeItemClass).val();
+        const addSelected = text == arrivalValue ? 'selected="selected"' : '';
+        $('.arrivals-select').append('<option ' + addSelected + ' value="' + value + '">' + text + '</option>');
     })
     $('.arrivals-select').append('<option value="" disabled>International</option>');
     $('.international-airport-item').each(function() {
-        var s = $(this).text();
-        const addSelected = s == arrivalValue ? 'selected="selected"' : '';
-        $('.arrivals-select').append('<option ' + addSelected + ' value="' + s + '">' + s + '</option>');
+        var text = $(this).find(airportItemClass).text();
+        var value = $(this).find(airportCodeItemClass).val();
+        const addSelected = text == arrivalValue ? 'selected="selected"' : '';
+        $('.arrivals-select').append('<option ' + addSelected + ' value="' + value + '">' + text + '</option>');
     })
 }
 
