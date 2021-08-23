@@ -140,11 +140,6 @@ function initTransportSolutionsPage() {
   initTravelerSelect(".transport-solutions-traveler-select");
   initLocationSelect(
     ".cart-option",
-    "Drop-off",
-    ".dropoff-transport-solutions-select"
-  );
-  initLocationSelect(
-    ".cart-option",
     "Pick-up",
     ".pickup-transport-solutions-select"
   );
