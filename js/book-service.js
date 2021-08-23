@@ -769,7 +769,7 @@ function addAllProductsToCart() {
     addProductsForSection(outgoingForm.arrival, numberOfPassengers, 'Outgoing Arrival', 'arr');
     if (outgoingForm.transfer) {
         countInputIndex ++;
-        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, outgoingForm.transfer.name, outgoingForm.transfer.price, numberOfPassengers, 'Outgoing Transfer', outgoingForm.transfer.loyaltyPoint, '', outgoingForm.transfer.sku));
+        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, outgoingForm.transfer.name, outgoingForm.transfer.price, numberOfPassengers, 'Outgoing Transfer', outgoingForm.transfer.loyaltyPoint, '', outgoingForm.transfer.sku, '', 'arr'));
     }
     
     var returnForm = window.localStorage.getItem("return");
@@ -778,7 +778,7 @@ function addAllProductsToCart() {
     addProductsForSection(returnForm.arrival, numberOfPassengers, 'Return Arrival', 'arr');
     if (returnForm.transfer) {
         countInputIndex ++;
-        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, returnForm.transfer.name, returnForm.transfer.price, numberOfPassengers, 'Return Transfer', returnForm.transfer.loyaltyPoint, '', returnForm.transfer.sku));
+        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, returnForm.transfer.name, returnForm.transfer.price, numberOfPassengers, 'Return Transfer', returnForm.transfer.loyaltyPoint, '', returnForm.transfer.sku, '', 'arr'));
     }
 
     var additionalServicesForm = window.localStorage.getItem("additional-services");
