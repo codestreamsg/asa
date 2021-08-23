@@ -10,6 +10,10 @@ const singleAirportCodeClass = ".single-airport-code";
 const cartAiportOptionButtonClass = ".cart-airport-option-button";
 const airportAttrValue = "Airport";
 const locationAttrValue = "Location";
+const requiredSelectAirportMessage = "Please select an Airport";
+const requiredSelectServiceMessage = "Please select a service";
+const loyaltyPointClass = ".product-loyalty-point";
+const skuClass = ".product-sku";
 function convertCurrencyToNumber(value) {
   return value
     ? Number(
