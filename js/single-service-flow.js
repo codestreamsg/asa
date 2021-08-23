@@ -145,7 +145,7 @@ function initTransportSolutionsPage() {
   initLocationSelect(
     ".cart-option",
     "Location",
-    ".pickup-transport-solutions-select"
+    ".location-transport-solutions-select"
   );
   transportAirportLocationChange();
 }
@@ -248,7 +248,7 @@ function initLocationSelect(
 
 function transportAirportLocationChange() {
   const aiportSelectClass = ".transport-solutions-airport-select";
-  const locationSelectClass = ".pickup-transport-solutions-select";
+  const locationSelectClass = ".location-transport-solutions-select";
   const cartAiportOptionButton = ".transport-solutions-button";
   $(aiportSelectClass + ' option[value=""]').attr('disabled','disabled');
   $(locationSelectClass + ' option[value=""]').attr('disabled','disabled');
