@@ -140,7 +140,7 @@ function initTransportSolutionsPage() {
   initTravelerSelect(".transport-solutions-traveler-select");
   initLocationSelect(
     ".cart-option",
-    "Pick-up",
+    "Location",
     ".pickup-transport-solutions-select"
   );
   transportAirportLocationChange();
