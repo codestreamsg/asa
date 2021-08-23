@@ -831,7 +831,7 @@ function getInputsForProduct(index, productName, productPrice, quantity, categor
                 + '<input type="hidden" name="' + index + ':Loyalty Point" value="' + loyaltyPoint + '" />'
                 + '<input type="hidden" name="' + index + ':Airport" value="' + airport + '" />'
                 + '<input type="hidden" name="' + index + ':Terminal" value="' + terminal + '" />'
-                + '<input type="hidden" name="' + index + ':Filght Type" value="' + flightType + '" />';
+                + '<input type="hidden" name="' + index + ':Flight Type" value="' + flightType + '" />';
     return result;
 }
 
