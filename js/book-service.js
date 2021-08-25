@@ -82,7 +82,11 @@ function setMGObject() {
 }
 
 function currencyFormat(num) {
-    return 'IDR ' + (num ? num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') : 0);
+    var numAsString = num.toString();
+    const isNegative = numAsString.startsWith("-");
+    numAsString = isNegative ? numAsString.replace("-", "") : numAsString;
+    const currencyCode = (isNegative ? '- ' : '') + 'IDR ';
+    return currencyCode + (num ? numAsString.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') : 0);
 }
 
 function displayVehiclesRequired(itemClass, priceValue) {
