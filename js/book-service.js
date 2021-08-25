@@ -41,7 +41,6 @@ const defaultDeparture = 'Departure';
 const defaultArrival = 'Arrival';
 const defaultPickUpLocation = 'Pick-up location';
 const defaultDropOffLocation = 'Drop-off Location';
-var countInputIndex = 0;
 var currentSelectedTab = '';
 const maxNumberOfPassengers = 8;
 const productLoyaltyPointClass = '.product-loyalty-point';
@@ -760,7 +759,6 @@ function convertCurrencyToNumber(value) {
 }
 
 function addAllProductsToCart() {
-    countInputIndex = 0;
     var mgObject = getMGObject();
     const numberOfPassengers = mgObject.traveler;
     var outgoingForm = window.localStorage.getItem("outgoing");
@@ -768,8 +766,7 @@ function addAllProductsToCart() {
     addProductsForSection(outgoingForm.departure, numberOfPassengers, 'Outgoing Departure', 'dep');
     addProductsForSection(outgoingForm.arrival, numberOfPassengers, 'Outgoing Arrival', 'arr');
     if (outgoingForm.transfer) {
-        countInputIndex ++;
-        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, outgoingForm.transfer.name, outgoingForm.transfer.price, numberOfPassengers, 'Outgoing Transfer', outgoingForm.transfer.loyaltyPoint, '', outgoingForm.transfer.sku, '', 'arr'));
+        addProductToCart(outgoingForm.transfer.name, outgoingForm.transfer.price, numberOfPassengers, 'Outgoing Transfer', outgoingForm.transfer.loyaltyPoint, '', outgoingForm.transfer.sku, '', 'arr');
     }
     
     var returnForm = window.localStorage.getItem("return");
@@ -777,17 +774,15 @@ function addAllProductsToCart() {
     addProductsForSection(returnForm.departure, numberOfPassengers, 'Return Departure', 'dep');
     addProductsForSection(returnForm.arrival, numberOfPassengers, 'Return Arrival', 'arr');
     if (returnForm.transfer) {
-        countInputIndex ++;
-        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, returnForm.transfer.name, returnForm.transfer.price, numberOfPassengers, 'Return Transfer', returnForm.transfer.loyaltyPoint, '', returnForm.transfer.sku, '', 'arr'));
+        addProductToCart(returnForm.transfer.name, returnForm.transfer.price, numberOfPassengers, 'Return Transfer', returnForm.transfer.loyaltyPoint, '', returnForm.transfer.sku, '', 'arr');
     }
 
     var additionalServicesForm = window.localStorage.getItem("additional-services");
     additionalServicesForm = additionalServicesForm ? convertJsonToObject(additionalServicesForm) : [];
     if (additionalServicesForm) {
         for(var index = 0; index < additionalServicesForm.length; index ++) {
-            countInputIndex ++;
             const additionalService = additionalServicesForm[index];
-            $("#embed-input-fields").append(getInputsForProduct(countInputIndex, additionalService.name, additionalService.price, numberOfPassengers, 'Additional Service', additionalService.loyaltyPoint, '', additionalService.sku));
+            addProductToCart(additionalService.name, additionalService.price, numberOfPassengers, 'Additional Service', additionalService.loyaltyPoint, '', additionalService.sku);
         }
     }
 }
@@ -797,42 +792,40 @@ function addProductsForSection(data, numberOfPassengers, categoryName, flightTyp
         return;
     }
     if (data.meetGreetService) {
-        countInputIndex ++;
-        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, data.meetGreetService.name, data.meetGreetService.price, numberOfPassengers, categoryName, data.meetGreetService.loyaltyPoint, '', data.meetGreetService.sku, '', flightType));
+        addProductToCart(data.meetGreetService.name, data.meetGreetService.price, numberOfPassengers, categoryName, data.meetGreetService.loyaltyPoint, '', data.meetGreetService.sku, '', flightType);
     }
     if (data.transportSolution) {
-        countInputIndex ++;
         const transportSolution = data.transportSolution;
         const priceVehiclesRequired = transportSolution && transportSolution.isVehiclesRequired == "true" ? 2 : 1;
-        $("#embed-input-fields").append(getInputsForProduct(countInputIndex, transportSolution.name, transportSolution.price, priceVehiclesRequired, categoryName, transportSolution.loyaltyPoint, transportSolution.aiportCode, transportSolution.sku, data.transportLocation ? data.transportLocation : "", flightType));
+        addProductToCart(transportSolution.name, transportSolution.price, priceVehiclesRequired, categoryName, transportSolution.loyaltyPoint, transportSolution.aiportCode, transportSolution.sku, data.transportLocation ? data.transportLocation : "", flightType);
     }
     if (data.covidSafetyServices) {
         for(var index = 0; index < data.covidSafetyServices.length; index ++) {
-            countInputIndex ++;
             const covidSafetyService = data.covidSafetyServices[index];
-            $("#embed-input-fields").append(getInputsForProduct(countInputIndex, covidSafetyService.name, covidSafetyService.price, numberOfPassengers, categoryName, covidSafetyService.loyaltyPoint, '', covidSafetyService.sku, '', flightType));
+            addProductToCart(covidSafetyService.name, covidSafetyService.price, numberOfPassengers, categoryName, covidSafetyService.loyaltyPoint, '', covidSafetyService.sku, '', flightType);
         }
     }
     if (data.totalCares) {
         for(var index = 0; index < data.totalCares.length; index ++) {
-            countInputIndex ++;
             const totalCare = data.totalCares[index];
-            $("#embed-input-fields").append(getInputsForProduct(countInputIndex, totalCare.name, totalCare.price, numberOfPassengers, categoryName, totalCare.loyaltyPoint, '', totalCare.sku, '', flightType));
+            addProductToCart(totalCare.name, totalCare.price, numberOfPassengers, categoryName, totalCare.loyaltyPoint, '', totalCare.sku, '', flightType);
         }
     }
 }
 
-function getInputsForProduct(index, productName, productPrice, quantity, category, loyaltyPoint, airport = '', sku = '', terminal = '', flightType = '') {
-    const result = '<input type="hidden" name="' + index + ':name" value="' + productName + '" />'
-                + '<input type="hidden" name="' + index + ':price" value="' + productPrice+ '" />'
-                + '<input type="hidden" name="' + index + ':code" value="' + sku + '" />'
-                + '<input type="hidden" name="' + index + ':quantity" value="' + quantity + '" />'
-                + '<input type="hidden" name="' + index + ':Journey" value="' + category+ '" />'
-                + '<input type="hidden" name="' + index + ':Loyalty Point" value="' + loyaltyPoint + '" />'
-                + '<input type="hidden" name="' + index + ':Airport" value="' + airport + '" />'
-                + '<input type="hidden" name="' + index + ':Terminal" value="' + terminal + '" />'
-                + '<input type="hidden" name="' + index + ':Flight Type" value="' + flightType + '" />';
-    return result;
+function addProductToCart(productName, productPrice, quantity, category, loyaltyPoint, airport = '', sku = '', terminal = '', flightType = '') {
+    const productVal =
+    '&name=' + productName
+    + '&price=' + productPrice
+    + '&code=' + sku
+    + '&quantity=' + quantity
+    + '&Journey=' + category
+    + '&Loyalty Point=' + loyaltyPoint
+    + '&Airport=' + airport
+    + '&Terminal=' + terminal
+    + '&Flight Type=' + flightType;
+        jQuery.getJSON('https://'+FC.settings.storedomain+'/cart?'+FC.session.get() + productVal + '&output=json&callback=?', function(cart) {
+    });
 }
 
 function displayPassengerDetails() {
