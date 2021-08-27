@@ -522,64 +522,6 @@ function initBookingSteps(isreturnValue, isDocumentReady = false) {
   }
 }
 
-function setDepartureTransportSelect(departureValue) {
-  var isDisplay = false;
-  $(".transport-location-select").append(
-    '<option selected value="" disabled>' + defaultPickUpLocation + "</option>"
-  );
-  $(".transport-airport-item").each(function () {
-    var transportAirportName = $(this).find(".transport-airport-name").text();
-    if (transportAirportName == departureValue) {
-      var transportSolutionName = $(this)
-        .find(".transport-solution-name")
-        .text();
-      var transportAirportCode = $(this).find(".transport-airport-code").text();
-      $(".transport-location-select").append(
-        '<option value="' +
-          transportAirportCode +
-          '">' +
-          transportSolutionName +
-          "</option>"
-      );
-      isDisplay = true;
-    }
-  });
-  if (isDisplay) {
-    $(".transport-solutions-container").show();
-  } else {
-    $(".transport-solutions-container").hide();
-  }
-}
-
-function setArrivalTransportSelect(arrivalValue) {
-  var isDisplay = false;
-  $(".arrival-transport-location-select").append(
-    '<option selected value="" disabled>' + defaultDropOffLocation + "</option>"
-  );
-  $(".transport-airport-item").each(function () {
-    var transportAirportName = $(this).find(".transport-airport-name").text();
-    if (transportAirportName == arrivalValue) {
-      var transportSolutionName = $(this)
-        .find(".transport-solution-name")
-        .text();
-      var transportAirportCode = $(this).find(".transport-airport-code").text();
-      $(".arrival-transport-location-select").append(
-        '<option value="' +
-          transportAirportCode +
-          '">' +
-          transportSolutionName +
-          "</option>"
-      );
-      isDisplay = true;
-    }
-  });
-  if (isDisplay) {
-    $(".arrival-transport-solutions-container").show();
-  } else {
-    $(".arrival-transport-solutions-container").hide();
-  }
-}
-
 function setDeparturesSelect(departureValue) {
   const departureSelected =
     defaultDeparture == departureValue ? 'selected="selected"' : "";
@@ -729,37 +671,6 @@ function initFirstMeetGreetServiceSelected(arrivalClass) {
   });
 }
 
-function initTransportLocationChange(arrivalClass) {
-  $("#" + arrivalClass + "transport-location-select").change(function () {
-    setTimeout(function () {
-      $("." + arrivalClass + "product-button-option").each(function () {
-        if (
-          $(this).text() == "CGK" ||
-          $(this).text() ==
-            $(
-              "#" + arrivalClass + "transport-location-select option:selected"
-            ).text()
-        ) {
-          $(this).trigger("click");
-        }
-      });
-      setTimeout(function () {
-        $(
-          ".service-item-price." +
-            arrivalClass +
-            "transport-solution-product-price"
-        ).each(function () {
-          const text = $(this).text();
-          var price = text ? convertCurrencyToNumber(text) : 0;
-          price = price * 1000;
-          $(this).html(currencyFormat(price));
-        });
-        calTotalPrice();
-      }, 100);
-    }, 500);
-  });
-}
-
 function initAdditionalServicesTab() {
   var additionalServicesForm = window.localStorage.getItem(
     "additional-services"
@@ -858,6 +769,9 @@ function initServices(data, arrivalClass) {
     $("#" + arrivalClass + "transport-location-select")
       .val(transportLocation)
       .niceSelect("update");
+    setTimeout(function () {
+      $("#" + arrivalClass + "transport-location-select").trigger("change");
+    }, 1000);
   }
 }
 
@@ -1444,39 +1358,81 @@ function generateServiceItem(name, price) {
   return result;
 }
 
-function setTransportLocationPrice(arrivalClass) {
-  const transportLocationSelect = $(
-    "#" + arrivalClass + "transport-location-select option:selected"
-  ).text();
-  if (
-    (!arrivalClass && transportLocationSelect != defaultPickUpLocation) ||
-    (arrivalClass && transportLocationSelect != defaultDropOffLocation)
-  ) {
-    $("." + arrivalClass + "product-button-option").each(function () {
-      if (
-        $(this).text() == "CGK" ||
-        $(this).text() ==
-          $(
-            "#" + arrivalClass + "transport-location-select option:selected"
-          ).text()
-      ) {
-        $(this).trigger("click");
+function initTransportSolutionSelect(
+  airportProductButton,
+  locationProductButton,
+  selectedValue,
+  insertSelectClass,
+  transportSolutionContainer
+) {
+  let isDisplay = false;
+  $(airportProductButton).each(function () {
+    const ariaLabel = $(this).parent().attr("aria-label");
+    const text = $(this).text();
+    const ariaChecked = $(this).attr("aria-checked");
+    if (
+      ariaLabel == "Airport" &&
+      text == selectedValue &&
+      ariaChecked != "true"
+    ) {
+      isDisplay = true;
+    }
+  });
+
+  if (isDisplay) {
+    $(locationProductButton).each(function () {
+      const ariaLabel = $(this).parent().attr("aria-label");
+      const text = $(this).text();
+      if (ariaLabel == "Location") {
+        $(insertSelectClass).append(
+          '<option value="' + text + '">' + text + "</option>"
+        );
       }
     });
-    setTimeout(function () {
-      $(
-        ".service-item-price." +
-          arrivalClass +
-          "transport-solution-product-price"
-      ).each(function () {
-        const text = $(this).text();
-        var price = text ? convertCurrencyToNumber(text) : 0;
-        price = price * 1000;
-        $(this).html(currencyFormat(price));
-      });
-      calTotalPrice();
-    }, 1000);
+    $(transportSolutionContainer).show();
   }
+}
+
+function initTransportSolutionSelectChange(
+  cartProductButton,
+  locationSelectClass,
+  transportSolutionProductPriceClass,
+  airportSelectedValue
+) {
+  $(locationSelectClass).change(function () {
+    const currentSelectedValue = $(
+      locationSelectClass + " option:selected"
+    ).val();
+    if (currentSelectedValue) {
+      setTimeout(function () {
+        var isMatchedValue = false;
+        $(cartProductButton).each(function () {
+          const text = $(this).text();
+          const ariaChecked = $(this).attr("aria-checked");
+          if (
+            (text == currentSelectedValue || text == airportSelectedValue) &&
+            ariaChecked != "true"
+          ) {
+            $(transportSolutionProductPriceClass).hide();
+            isMatchedValue = true;
+            $(this).trigger("click");
+          }
+        });
+
+        if (isMatchedValue) {
+          setTimeout(function () {
+            $(transportSolutionProductPriceClass).each(function () {
+              const text = $(this).text();
+              var price = text ? convertCurrencyToNumber(text) : 0;
+              $(this).html(currencyFormat(price * 1000));
+            });
+            calTotalPrice();
+            $(transportSolutionProductPriceClass).show();
+          }, 500);
+        }
+      }, 200);
+    }
+  });
 }
 
 $(document).ready(function () {
