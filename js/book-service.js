@@ -1361,7 +1361,7 @@ function generateServiceItem(name, price) {
 function initTransportSolutionSelect(
   airportProductButton,
   locationProductButton,
-  selectedValue,
+  airportCode,
   insertSelectClass,
   transportSolutionContainer
 ) {
@@ -1372,7 +1372,7 @@ function initTransportSolutionSelect(
     const ariaChecked = $(this).attr("aria-checked");
     if (
       ariaLabel == "Airport" &&
-      text == selectedValue &&
+      text == airportCode &&
       ariaChecked != "true"
     ) {
       isDisplay = true;
@@ -1385,7 +1385,7 @@ function initTransportSolutionSelect(
       const text = $(this).text();
       if (ariaLabel == "Location") {
         $(insertSelectClass).append(
-          '<option value="' + text + '">' + text + "</option>"
+          '<option value="' + airportCode + '">' + text + "</option>"
         );
       }
     });
