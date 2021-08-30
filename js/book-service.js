@@ -1363,8 +1363,7 @@ function initTransportSolutionSelect(
   locationProductButton,
   selectedValue,
   insertSelectClass,
-  transportSolutionContainer,
-  airportCode
+  transportSolutionContainer
 ) {
   let isDisplay = false;
   $(airportProductButton).each(function () {
@@ -1386,7 +1385,7 @@ function initTransportSolutionSelect(
       const text = $(this).text();
       if (ariaLabel == "Location") {
         $(insertSelectClass).append(
-          '<option value="' + airportCode + '">' + text + "</option>"
+          '<option value="' + text + '">' + text + "</option>"
         );
       }
     });
