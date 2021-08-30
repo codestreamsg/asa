@@ -1402,7 +1402,7 @@ function initTransportSolutionSelectChange(
   $(locationSelectClass).change(function () {
     const currentSelectedValue = $(
       locationSelectClass + " option:selected"
-    ).val();
+    ).text();
     if (currentSelectedValue) {
       setTimeout(function () {
         var isMatchedValue = false;
