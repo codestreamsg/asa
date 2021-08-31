@@ -1186,7 +1186,7 @@ function displayAddOnServices() {
     ? convertJsonToObject(additionalServicesForm)
     : [];
   const isShowLLTAService = additionalServicesForm.find(
-    (item) => item.name == "Lost Luggage Tracing Assistance"
+    (item) => item.productType == "LLTA"
   );
   if (isShowLLTAService) {
     $(".add-on-services-container").show();
