@@ -47,7 +47,7 @@ var currentSelectedTab = "";
 const maxNumberOfPassengers = 8;
 const productLoyaltyPointClass = ".product-loyalty-point";
 const productSkuClass = ".product-sku";
-const productTypeClass = ".product-sku";
+const productTypeClass = ".product-type";
 const airportItemClass = ".airport-item";
 const airportCodeItemClass = ".airport-code-item";
 function getMGObject() {
