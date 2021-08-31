@@ -47,11 +47,12 @@ var currentSelectedTab = "";
 const maxNumberOfPassengers = 8;
 const productLoyaltyPointClass = ".product-loyalty-point";
 const productSkuClass = ".product-sku";
+const productTypeClass = ".product-sku";
 const airportItemClass = ".airport-item";
 const airportCodeItemClass = ".airport-code-item";
 function getMGObject() {
-  var departure = $("#mg-departure option:selected").text();
-  var arrival = $("#mg-arrival option:selected").text();
+  var departure = $("#mg-departure option:selected");
+  var arrival = $("#mg-arrival option:selected");
   const travelerText = $("#mg-traveler option:selected").text();
   const travelerAfterSplit = travelerText.split("x");
   const traveler = Number(
@@ -61,8 +62,10 @@ function getMGObject() {
   );
   const isReturn = $("#is-return").val();
   return {
-    departure: departure,
-    arrival: arrival,
+    departure: departure.text(),
+    departureTerminal: departure.data("terminal"),
+    arrival: arrival.text(),
+    arrivalTerminal: arrival.data("terminal"),
     traveler: traveler,
     isReturn: isReturn,
   };
@@ -375,8 +378,8 @@ function initData() {
   }
   $("#is-return").val(isreturnValue);
   initBookingSteps(isreturnValue, true);
-  setDeparturesSelect(departureValue);
-  setArrivalsSelect(arrivalValue);
+  setDeparturesSelect(departureValue, mgForm?.departureTerminal);
+  setArrivalsSelect(arrivalValue, mgForm?.arrivalTerminal);
   setTravelersSelect(travelerValue);
   initBookNowButton();
   initToggleReturnButton();
@@ -522,58 +525,102 @@ function initBookingSteps(isreturnValue, isDocumentReady = false) {
   }
 }
 
-function setDeparturesSelect(departureValue) {
+function setDeparturesSelect(departureValue, departureTerminal) {
   const departureSelected =
     defaultDeparture == departureValue ? 'selected="selected"' : "";
   $(".departures-select").append(
-    "<option " + departureSelected + ' value="" disabled>Departure</option>'
+    "<option data-terminal='' " +
+      departureSelected +
+      ' value="" disabled>Departure</option>'
   );
-  $(".departures-select").append('<option value="" disabled>Domestic</option>');
+  $(".departures-select").append(
+    '<option data-terminal="" value="" disabled>Domestic</option>'
+  );
   $(".domestic-airport-item").each(function () {
     var text = $(this).find(airportItemClass).text();
     var value = $(this).find(airportCodeItemClass).text();
-    const addSelected = text == departureValue ? 'selected="selected"' : "";
+    const addSelected =
+      text == departureValue && departureTerminal == "dom"
+        ? 'selected="selected"'
+        : "";
     $(".departures-select").append(
-      "<option " + addSelected + ' value="' + value + '">' + text + "</option>"
+      "<option data-terminal='dom' " +
+        addSelected +
+        ' value="' +
+        value +
+        '">' +
+        text +
+        "</option>"
     );
   });
   $(".departures-select").append(
-    '<option value="" disabled>International</option>'
+    '<option data-terminal="" value="" disabled>International</option>'
   );
   $(".international-airport-item").each(function () {
     var text = $(this).find(airportItemClass).text();
     var value = $(this).find(airportCodeItemClass).text();
-    const addSelected = text == departureValue ? 'selected="selected"' : "";
+    const addSelected =
+      text == departureValue && departureTerminal == "int"
+        ? 'selected="selected"'
+        : "";
     $(".departures-select").append(
-      "<option " + addSelected + ' value="' + value + '">' + text + "</option>"
+      "<option data-terminal='int' " +
+        addSelected +
+        ' value="' +
+        value +
+        '">' +
+        text +
+        "</option>"
     );
   });
 }
 
-function setArrivalsSelect(arrivalValue) {
+function setArrivalsSelect(arrivalValue, arrivalTerminal) {
   const arrivalSelected =
     defaultArrival == arrivalValue ? 'selected="selected"' : "";
   $(".arrivals-select").append(
-    "<option " + arrivalSelected + ' value="" disabled>Arrival</option>'
+    "<option data-terminal='' " +
+      arrivalSelected +
+      ' value="" disabled>Arrival</option>'
   );
-  $(".arrivals-select").append('<option value="" disabled>Domestic</option>');
+  $(".arrivals-select").append(
+    '<option data-terminal="" value="" disabled>Domestic</option>'
+  );
   $(".domestic-airport-item").each(function () {
     var text = $(this).find(airportItemClass).text();
     var value = $(this).find(airportCodeItemClass).text();
-    const addSelected = text == arrivalValue ? 'selected="selected"' : "";
+    const addSelected =
+      text == arrivalValue && arrivalTerminal == "dom"
+        ? 'selected="selected"'
+        : "";
     $(".arrivals-select").append(
-      "<option " + addSelected + ' value="' + value + '">' + text + "</option>"
+      "<option data-terminal='dom' " +
+        addSelected +
+        ' value="' +
+        value +
+        '">' +
+        text +
+        "</option>"
     );
   });
   $(".arrivals-select").append(
-    '<option value="" disabled>International</option>'
+    '<option data-terminal="" value="" disabled>International</option>'
   );
   $(".international-airport-item").each(function () {
     var text = $(this).find(airportItemClass).text();
     var value = $(this).find(airportCodeItemClass).text();
-    const addSelected = text == arrivalValue ? 'selected="selected"' : "";
+    const addSelected =
+      text == arrivalValue && arrivalTerminal == "int"
+        ? 'selected="selected"'
+        : "";
     $(".arrivals-select").append(
-      "<option " + addSelected + ' value="' + value + '">' + text + "</option>"
+      "<option data-terminal='int' " +
+        addSelected +
+        ' value="' +
+        value +
+        '">' +
+        text +
+        "</option>"
     );
   });
 }
@@ -798,6 +845,7 @@ function getTerminalTransferSelectedServices() {
         price: convertCurrencyToNumber($(this).find(serviceItemPrice).text()),
         loyaltyPoint: $(this).find(productLoyaltyPointClass).text(),
         sku: $(this).find(productSkuClass).text(),
+        productType: $(this).find(productTypeClass).text(),
       };
     }
   });
@@ -813,6 +861,7 @@ function getSelectedAdditionalServices() {
         price: convertCurrencyToNumber($(this).find(serviceItemPrice).text()),
         loyaltyPoint: $(this).find(productLoyaltyPointClass).text(),
         sku: $(this).find(productSkuClass).text(),
+        productType: $(this).find(productTypeClass).text(),
       });
     }
   });
@@ -834,6 +883,7 @@ function getSelectedServices(arrivalClass) {
         price: convertCurrencyToNumber($(this).find(serviceItemPrice).text()),
         loyaltyPoint: $(this).find(productLoyaltyPointClass).text(),
         sku: $(this).find(productSkuClass).text(),
+        productType: $(this).find(productTypeClass).text(),
       };
     }
   });
@@ -857,6 +907,7 @@ function getSelectedServices(arrivalClass) {
         loyaltyPoint: $(this).find(productLoyaltyPointClass).text(),
         aiportCode: transportLocationVal,
         sku: $(this).find(productSkuClass).text(),
+        productType: $(this).find(productTypeClass).text(),
       };
     }
   });
@@ -877,6 +928,7 @@ function getSelectedServices(arrivalClass) {
         price: convertCurrencyToNumber($(this).find(serviceItemPrice).text()),
         loyaltyPoint: $(this).find(productLoyaltyPointClass).text(),
         sku: $(this).find(productSkuClass).text(),
+        productType: $(this).find(productTypeClass).text(),
       });
     }
   });
@@ -903,13 +955,15 @@ function addAllProductsToCart() {
     outgoingForm.departure,
     numberOfPassengers,
     "Outgoing Departure",
-    "dep"
+    "dep",
+    mgObject.departureTerminal
   );
   addProductsForSection(
     outgoingForm.arrival,
     numberOfPassengers,
     "Outgoing Arrival",
-    "arr"
+    "arr",
+    mgObject.arrivalTerminal
   );
   if (outgoingForm.transfer) {
     addProductToCart(
@@ -921,7 +975,8 @@ function addAllProductsToCart() {
       "",
       outgoingForm.transfer.sku,
       "",
-      "arr"
+      "arr",
+      outgoingForm.transfer.productType
     );
   }
 
@@ -931,13 +986,15 @@ function addAllProductsToCart() {
     returnForm.departure,
     numberOfPassengers,
     "Return Departure",
-    "dep"
+    "dep",
+    mgObject.departureTerminal
   );
   addProductsForSection(
     returnForm.arrival,
     numberOfPassengers,
     "Return Arrival",
-    "arr"
+    "arr",
+    mgObject.arrivalTerminal
   );
   if (returnForm.transfer) {
     addProductToCart(
@@ -949,7 +1006,8 @@ function addAllProductsToCart() {
       "",
       returnForm.transfer.sku,
       "",
-      "arr"
+      "arr",
+      returnForm.transfer.productType
     );
   }
 
@@ -969,7 +1027,10 @@ function addAllProductsToCart() {
         "Additional Service",
         additionalService.loyaltyPoint,
         "",
-        additionalService.sku
+        additionalService.sku,
+        "",
+        "",
+        additionalService.productType
       );
     }
   }
@@ -979,7 +1040,8 @@ function addProductsForSection(
   data,
   numberOfPassengers,
   categoryName,
-  flightType
+  flightType,
+  terminal
 ) {
   if (!data) {
     return;
@@ -993,8 +1055,9 @@ function addProductsForSection(
       data.meetGreetService.loyaltyPoint,
       "",
       data.meetGreetService.sku,
-      "",
-      flightType
+      terminal,
+      flightType,
+      data.meetGreetService.productType
     );
   }
   if (data.transportSolution) {
@@ -1011,8 +1074,9 @@ function addProductsForSection(
       transportSolution.loyaltyPoint,
       transportSolution.aiportCode,
       transportSolution.sku,
-      data.transportLocation ? data.transportLocation : "",
-      flightType
+      terminal,
+      flightType,
+      transportSolution.productType
     );
   }
   if (data.covidSafetyServices) {
@@ -1026,8 +1090,9 @@ function addProductsForSection(
         covidSafetyService.loyaltyPoint,
         "",
         covidSafetyService.sku,
-        "",
-        flightType
+        terminal,
+        flightType,
+        covidSafetyService.productType
       );
     }
   }
@@ -1042,8 +1107,9 @@ function addProductsForSection(
         totalCare.loyaltyPoint,
         "",
         totalCare.sku,
-        "",
-        flightType
+        terminal,
+        flightType,
+        totalCare.productType
       );
     }
   }
@@ -1058,7 +1124,8 @@ function addProductToCart(
   airport = "",
   sku = "",
   terminal = "",
-  flightType = ""
+  flightType = "",
+  productType = ""
 ) {
   const productVal =
     "&name=" +
@@ -1078,7 +1145,9 @@ function addProductToCart(
     "&Terminal=" +
     terminal +
     "&Flight Type=" +
-    flightType;
+    flightType +
+    "&Product Type=" +
+    productType;
   jQuery.getJSON(
     "https://" +
       FC.settings.storedomain +
