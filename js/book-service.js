@@ -1076,7 +1076,8 @@ function addProductsForSection(
       transportSolution.sku,
       terminal,
       flightType,
-      transportSolution.productType
+      transportSolution.productType,
+      data.transportLocation
     );
   }
   if (data.covidSafetyServices) {
@@ -1125,7 +1126,8 @@ function addProductToCart(
   sku = "",
   terminal = "",
   flightType = "",
-  productType = ""
+  productType = "",
+  transportLocation = ""
 ) {
   const productVal =
     "&name=" +
@@ -1147,7 +1149,9 @@ function addProductToCart(
     "&Flight Type=" +
     flightType +
     "&Product Type=" +
-    productType;
+    productType +
+    "&Transport Location=" +
+    transportLocation;
   jQuery.getJSON(
     "https://" +
       FC.settings.storedomain +
