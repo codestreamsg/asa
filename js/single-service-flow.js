@@ -76,6 +76,9 @@ function displayProductPrice() {
       initTransportSolutionsPage();
       break;
   }
+  setTimeout(function () {
+    displayProductPrice();
+  }, 1500);
 })();
 
 function initHotelQuarantinePage() {
@@ -450,15 +453,14 @@ function submit() {
         airport: airport.text(),
         airportCode: airport.val(),
         traveler: getCurrentTraveler(".luggage-delivery-traveler-select"),
-        services: []
+        services: [],
       };
-      const flightTypeVal = $(".dropoff-luggage-select").val();
       $(".luggage-delievery-product-item").each(function () {
         const serviceItem = {
           name: $("#current-product-name").val(),
           loyaltyPoint: $("#current-product-loyal-point").val(),
           sku: $("#current-product-sku").val(),
-          flightType: flightTypeVal,
+          flightType: $(".dropoff-luggage-select").val(),
           productType: $("#current-product-type").val(),
           price: convertCurrencyToNumber(
             $(this).find(productPriceItemClass).text()
@@ -480,14 +482,13 @@ function submit() {
         services: [],
         terminal: $(".location-transport-solutions-select").val(),
       };
-      const flightTypeVal = $(".dropoff-transport-solutions-select").val();
       $(".transport-solution-item").each(function () {
         if ($(this).hasClass(itemSelectedClass)) {
           const serviceItem = {
             name: $(this).find(productNameItemClass).text(),
             loyaltyPoint: $(this).find(loyaltyPointClass).text(),
             sku: $(this).find(skuClass).text(),
-            flightType: flightTypeVal,
+            flightType: $(".dropoff-transport-solutions-select").val(),
             price: convertCurrencyToNumber(
               $(this).find(productPriceItemClass).text()
             ),
