@@ -132,8 +132,6 @@ function initLuggageDeliveryPage() {
     cartAiportOptionButtonClass
   );
   initTravelerSelect(".luggage-delivery-traveler-select");
-  initLocationSelect(".cart-option", "Drop-off", ".dropoff-luggage-select");
-  initLocationSelect(".cart-option", "Pick-up", ".pickup-luggage-select");
 }
 
 function initTransportSolutionsPage() {
@@ -452,18 +450,16 @@ function submit() {
         airport: airport.text(),
         airportCode: airport.val(),
         traveler: getCurrentTraveler(".luggage-delivery-traveler-select"),
-        services: [],
-        dropOff: $(".dropoff-luggage-select").val(),
-        pickUp: $(".pickup-luggage-select").val(),
+        services: []
       };
+      const flightTypeVal = $(".dropoff-luggage-select").val();
       $(".luggage-delievery-product-item").each(function () {
         const serviceItem = {
           name: $("#current-product-name").val(),
           loyaltyPoint: $("#current-product-loyal-point").val(),
           sku: $("#current-product-sku").val(),
-          flightType: "arr",
-          productType:
-            "{{wf {&quot;path&quot;:&quot;product-type&quot;,&quot;type&quot;:&quot;Option&quot;} }}",
+          flightType: flightTypeVal,
+          productType: $("#current-product-type").val(),
           price: convertCurrencyToNumber(
             $(this).find(productPriceItemClass).text()
           ),
@@ -495,7 +491,7 @@ function submit() {
             price: convertCurrencyToNumber(
               $(this).find(productPriceItemClass).text()
             ),
-            productType: $(this).find(productType).text(),
+            productType: $(this).find(productTypeClass).text(),
           };
           singleService.services.push(serviceItem);
         }
