@@ -68,6 +68,8 @@ function getMGObject() {
     arrivalTerminal: arrival.data("terminal"),
     traveler: traveler,
     isReturn: isReturn,
+    departureAirportCode: departure.val(),
+    arrivalAirportCode: arrival.val()
   };
 }
 
@@ -956,14 +958,16 @@ function addAllProductsToCart() {
     numberOfPassengers,
     "Outgoing Departure",
     "dep",
-    mgObject.departureTerminal
+    mgObject.departureTerminal,
+    mgObject.departureAirportCode
   );
   addProductsForSection(
     outgoingForm.arrival,
     numberOfPassengers,
     "Outgoing Arrival",
     "arr",
-    mgObject.arrivalTerminal
+    mgObject.arrivalTerminal,
+    mgObject.arrivalAirportCode
   );
   if (outgoingForm.transfer) {
     addProductToCart(
@@ -987,14 +991,16 @@ function addAllProductsToCart() {
     numberOfPassengers,
     "Return Departure",
     "dep",
-    mgObject.departureTerminal
+    mgObject.departureTerminal,
+    mgObject.departureAirportCode
   );
   addProductsForSection(
     returnForm.arrival,
     numberOfPassengers,
     "Return Arrival",
     "arr",
-    mgObject.arrivalTerminal
+    mgObject.arrivalTerminal,
+    mgObject.arrivalAirportCode
   );
   if (returnForm.transfer) {
     addProductToCart(
@@ -1041,7 +1047,8 @@ function addProductsForSection(
   numberOfPassengers,
   categoryName,
   flightType,
-  terminal
+  terminal,
+  airportCode
 ) {
   if (!data) {
     return;
@@ -1053,7 +1060,7 @@ function addProductsForSection(
       numberOfPassengers,
       categoryName,
       data.meetGreetService.loyaltyPoint,
-      "",
+      airportCode,
       data.meetGreetService.sku,
       terminal,
       flightType,
@@ -1089,7 +1096,7 @@ function addProductsForSection(
         numberOfPassengers,
         categoryName,
         covidSafetyService.loyaltyPoint,
-        "",
+        airportCode,
         covidSafetyService.sku,
         terminal,
         flightType,
@@ -1106,7 +1113,7 @@ function addProductsForSection(
         numberOfPassengers,
         categoryName,
         totalCare.loyaltyPoint,
-        "",
+        airportCode,
         totalCare.sku,
         terminal,
         flightType,
