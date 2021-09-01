@@ -69,7 +69,7 @@ function getMGObject() {
     traveler: traveler,
     isReturn: isReturn,
     departureAirportCode: departure.val(),
-    arrivalAirportCode: arrival.val()
+    arrivalAirportCode: arrival.val(),
   };
 }
 
@@ -1316,7 +1316,7 @@ function initTheCart() {
       $(".outgoing-transfer-cart-service").show();
       const service = outgoingForm.transfer;
       $(".outgoing-transfer-cart-service-list").append(
-        generateServiceItem(service.name, service.price)
+        generateServiceItem(service.name, service.price, getMGObject().traveler)
       );
     } else {
       $(".outgoing-transfer-cart-service").hide();
@@ -1356,10 +1356,7 @@ function initTheCart() {
       $(".return-transfer-cart-service").show();
       const service = returnForm.transfer;
       $(".return-transfer-cart-service-list").append(
-        generateServiceItem(
-          service.name,
-          service.price * getMGObject().traveler
-        )
+        generateServiceItem(service.name, service.price, getMGObject().traveler)
       );
     } else {
       $(".return-transfer-cart-service").hide();
@@ -1380,7 +1377,7 @@ function initTheCart() {
   for (var i = 0; i < additionalServicesForm.length; i++) {
     const service = additionalServicesForm[i];
     $(".additional-services-cart-list").append(
-      generateServiceItem(service.name, service.price * getMGObject().traveler)
+      generateServiceItem(service.name, service.price, getMGObject().traveler)
     );
   }
 }
@@ -1391,17 +1388,14 @@ function displayJourneyServices(data, journeyClass, servicesClass) {
     if (data.meetGreetService) {
       const service = data.meetGreetService;
       $(servicesClass).append(
-        generateServiceItem(
-          service.name,
-          service.price * getMGObject().traveler
-        )
+        generateServiceItem(service.name, service.price, getMGObject().traveler)
       );
     }
     if (data.transportSolution) {
       const service = data.transportSolution;
       const priceVehiclesRequired = getMGObject().traveler > 4 ? 2 : 1;
       $(servicesClass).append(
-        generateServiceItem(service.name, service.price * priceVehiclesRequired)
+        generateServiceItem(service.name, service.price, priceVehiclesRequired)
       );
     }
     if (data.covidSafetyServices) {
@@ -1411,7 +1405,8 @@ function displayJourneyServices(data, journeyClass, servicesClass) {
         $(servicesClass).append(
           generateServiceItem(
             service.name,
-            service.price * getMGObject().traveler
+            service.price,
+            getMGObject().traveler
           )
         );
       }
@@ -1423,7 +1418,8 @@ function displayJourneyServices(data, journeyClass, servicesClass) {
         $(servicesClass).append(
           generateServiceItem(
             service.name,
-            service.price * getMGObject().traveler
+            service.price,
+            getMGObject().traveler
           )
         );
       }
@@ -1433,14 +1429,19 @@ function displayJourneyServices(data, journeyClass, servicesClass) {
   }
 }
 
-function generateServiceItem(name, price) {
+function generateServiceItem(name, price, qty) {
   const result =
     '<div class="cart-service">' +
     "<div>" +
     name +
     "</div>" +
     "<div>" +
+    '<span style="padding-right: 32px;">' +
     currencyFormat(price) +
+    "</span>" +
+    "<span>" +
+    qty +
+    "</span>" +
     "</div>" +
     "</div>";
   return result;
