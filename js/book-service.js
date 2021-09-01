@@ -1220,6 +1220,8 @@ function displayAddOnTransportSolutions(data, transportClass) {
         "required",
         true
       );
+    } else {
+      $(transportClass + "-departure").hide();
     }
     if (isArrivalTransportSolution) {
       $(transportClass + "-arrival").show();
@@ -1227,6 +1229,8 @@ function displayAddOnTransportSolutions(data, transportClass) {
         "required",
         true
       );
+    } else {
+      $(transportClass + "-arrival").hide();
     }
   } else {
     $(transportClass).hide();
@@ -1259,6 +1263,8 @@ function displayAddOnLuggageDeliveries(data, transportClass) {
         "required",
         true
       );
+    } else {
+      $(transportClass + "-departure").hide();
     }
     if (isArrivalTransportSolution) {
       $(transportClass + "-arrival").show();
@@ -1266,6 +1272,8 @@ function displayAddOnLuggageDeliveries(data, transportClass) {
         "required",
         true
       );
+    } else {
+      $(transportClass + "-arrival").hide();
     }
   } else {
     $(transportClass).hide();
