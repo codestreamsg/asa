@@ -308,214 +308,211 @@ function transportAirportLocationChange() {
       }
     }
   });
+}
 
-  function submit() {
-    const currentPage = $("#current-page").val();
-    window.localStorage.removeItem("single-service");
-    var singleService = null;
-    var airport = null;
-    switch (currentPage) {
-      case "Hotel Quarantine":
-        airport = $(".hotel-airport-select option:selected");
-        if (!airport.val()) {
-          alert(requiredSelectAirportMessage);
-          return false;
-        }
-        singleService = {
-          airport: airport.text(),
-          airportCode: airport.val(),
-          traveler: getCurrentTraveler(".hotel-traveler-select"),
-          services: [],
+function submit() {
+  const currentPage = $("#current-page").val();
+  window.localStorage.removeItem("single-service");
+  var singleService = null;
+  var airport = null;
+  switch (currentPage) {
+    case "Hotel Quarantine":
+      airport = $(".hotel-airport-select option:selected");
+      if (!airport.val()) {
+        alert(requiredSelectAirportMessage);
+        return false;
+      }
+      singleService = {
+        airport: airport.text(),
+        airportCode: airport.val(),
+        traveler: getCurrentTraveler(".hotel-traveler-select"),
+        services: [],
+      };
+      $(".hotel-product-item").each(function () {
+        const serviceItem = {
+          name: "{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}",
+          loyaltyPoint:
+            "{{wf {&quot;path&quot;:&quot;loyalty-points&quot;,&quot;type&quot;:&quot;Number&quot;} }}",
+          sku: "{{wf {&quot;path&quot;:&quot;default-sku:sku&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}",
+          flightType: "arr",
+          price: convertCurrencyToNumber(
+            $(this).find(productPriceItemClass).text()
+          ),
         };
-        $(".hotel-product-item").each(function () {
+        singleService.services.push(serviceItem);
+      });
+      break;
+    case "PCR/Swab Antigen Test":
+      airport = $(".pcr-airport-select option:selected");
+      if (!airport.val()) {
+        alert(requiredSelectAirportMessage);
+        return false;
+      }
+      singleService = {
+        airport: airport.text(),
+        airportCode: airport.val(),
+        traveler: getCurrentTraveler(".pcr-traveler-select"),
+        services: [],
+      };
+      $(".pcr-product-item").each(function () {
+        if ($(this).hasClass(itemSelectedClass)) {
           const serviceItem = {
-            name: "{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}",
-            loyaltyPoint:
-              "{{wf {&quot;path&quot;:&quot;loyalty-points&quot;,&quot;type&quot;:&quot;Number&quot;} }}",
-            sku: "{{wf {&quot;path&quot;:&quot;default-sku:sku&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}",
+            name: $(this).find(productNameItemClass).text(),
+            loyaltyPoint: $(this).find(loyaltyPointClass).text(),
+            sku: $(this).find(skuClass).text(),
             flightType: "arr",
             price: convertCurrencyToNumber(
               $(this).find(productPriceItemClass).text()
             ),
           };
           singleService.services.push(serviceItem);
-        });
-        break;
-      case "PCR/Swab Antigen Test":
-        airport = $(".pcr-airport-select option:selected");
-        if (!airport.val()) {
-          alert(requiredSelectAirportMessage);
-          return false;
         }
-        singleService = {
-          airport: airport.text(),
-          airportCode: airport.val(),
-          traveler: getCurrentTraveler(".pcr-traveler-select"),
-          services: [],
+      });
+      if (singleService.services.length == 0) {
+        alert(requiredSelectServiceMessage);
+        return false;
+      }
+      break;
+    case "LLTA":
+      singleService = {
+        traveler: getCurrentTraveler(".llta-traveler-select"),
+        services: [],
+      };
+      $(".llta-product-item").each(function () {
+        const serviceItem = {
+          name: "{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}",
+          loyaltyPoint:
+            "{{wf {&quot;path&quot;:&quot;loyalty-points&quot;,&quot;type&quot;:&quot;Number&quot;} }}",
+          sku: "{{wf {&quot;path&quot;:&quot;default-sku:sku&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}",
+          flightType: "arr",
+          price: convertCurrencyToNumber(
+            $(this).find(productPriceItemClass).text()
+          ),
         };
-        $(".pcr-product-item").each(function () {
-          if ($(this).hasClass(itemSelectedClass)) {
-            const serviceItem = {
-              name: $(this).find(productNameItemClass).text(),
-              loyaltyPoint: $(this).find(loyaltyPointClass).text(),
-              sku: $(this).find(skuClass).text(),
-              flightType: "arr",
-              price: convertCurrencyToNumber(
-                $(this).find(productPriceItemClass).text()
-              ),
-            };
-            singleService.services.push(serviceItem);
-          }
-        });
-        if (singleService.services.length == 0) {
-          alert(requiredSelectServiceMessage);
-          return false;
-        }
-        break;
-      case "LLTA":
-        singleService = {
-          traveler: getCurrentTraveler(".llta-traveler-select"),
-          services: [],
+        singleService.services.push(serviceItem);
+      });
+      break;
+    case "Terminal Transfer":
+      airport = $(".terminal-transfer-airport-select option:selected");
+      if (!airport.val()) {
+        alert(requiredSelectAirportMessage);
+        return false;
+      }
+      singleService = {
+        airport: airport.text(),
+        airportCode: airport.val(),
+        traveler: getCurrentTraveler(".terminal-transfer-traveler-select"),
+        services: [],
+        pickUp: $(".pickup-terminal-select").val(),
+        dropOff: $(".dropoff-terminal-select").val(),
+      };
+      $(".terminal-transfer-product-item").each(function () {
+        const serviceItem = {
+          name: "{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}",
+          loyaltyPoint:
+            "{{wf {&quot;path&quot;:&quot;loyalty-points&quot;,&quot;type&quot;:&quot;Number&quot;} }}",
+          sku: "{{wf {&quot;path&quot;:&quot;default-sku:sku&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}",
+          flightType: "arr",
+          price: convertCurrencyToNumber(
+            $(this).find(productPriceItemClass).text()
+          ),
         };
-        $(".llta-product-item").each(function () {
+        singleService.services.push(serviceItem);
+      });
+      break;
+    case "Airport Delight":
+      airport = $(".airport-delight-select option:selected");
+      if (!airport.val()) {
+        alert(requiredSelectAirportMessage);
+        return false;
+      }
+      singleService = {
+        airport: airport.text(),
+        airportCode: airport.val(),
+        traveler: getCurrentTraveler(".airport-delight-traveler-select"),
+        services: [],
+      };
+      $(".airport-delight-product-item").each(function () {
+        const serviceItem = {
+          name: "{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}",
+          loyaltyPoint:
+            "{{wf {&quot;path&quot;:&quot;loyalty-points&quot;,&quot;type&quot;:&quot;Number&quot;} }}",
+          sku: "{{wf {&quot;path&quot;:&quot;default-sku:sku&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}",
+          flightType: "arr",
+          price: convertCurrencyToNumber(
+            $(this).find(productPriceItemClass).text()
+          ),
+        };
+        singleService.services.push(serviceItem);
+      });
+      break;
+    case "Luggage Delivery":
+      airport = $(".luggage-delivery-airport-select option:selected");
+      if (!airport.val()) {
+        alert(requiredSelectAirportMessage);
+        return false;
+      }
+      singleService = {
+        airport: airport.text(),
+        airportCode: airport.val(),
+        traveler: getCurrentTraveler(".luggage-delivery-traveler-select"),
+        services: [],
+        dropOff: $(".dropoff-luggage-select").val(),
+        pickUp: $(".pickup-luggage-select").val(),
+      };
+      $(".luggage-delievery-product-item").each(function () {
+        const serviceItem = {
+          name: "{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}",
+          loyaltyPoint:
+            "{{wf {&quot;path&quot;:&quot;loyalty-points&quot;,&quot;type&quot;:&quot;Number&quot;} }}",
+          sku: "{{wf {&quot;path&quot;:&quot;default-sku:sku&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}",
+          flightType: "arr",
+          productType:
+            "{{wf {&quot;path&quot;:&quot;product-type&quot;,&quot;type&quot;:&quot;Option&quot;} }}",
+          price: convertCurrencyToNumber(
+            $(this).find(productPriceItemClass).text()
+          ),
+        };
+        singleService.services.push(serviceItem);
+      });
+      break;
+    case "Transport Solutions":
+      airport = $(".transport-solutions-airport-select option:selected");
+      if (!airport.val()) {
+        alert(requiredSelectAirportMessage);
+        return false;
+      }
+      singleService = {
+        airport: airport.text(),
+        airportCode: airport.val(),
+        traveler: getCurrentTraveler(".transport-solutions-traveler-select"),
+        services: [],
+        terminal: $(".location-transport-solutions-select").val(),
+      };
+      const flightTypeVal = $(".dropoff-transport-solutions-select").val();
+      $(".transport-solution-item").each(function () {
+        if ($(this).hasClass(itemSelectedClass)) {
           const serviceItem = {
-            name: "{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}",
-            loyaltyPoint:
-              "{{wf {&quot;path&quot;:&quot;loyalty-points&quot;,&quot;type&quot;:&quot;Number&quot;} }}",
-            sku: "{{wf {&quot;path&quot;:&quot;default-sku:sku&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}",
-            flightType: "arr",
+            name: $(this).find(productNameItemClass).text(),
+            loyaltyPoint: $(this).find(loyaltyPointClass).text(),
+            sku: $(this).find(skuClass).text(),
+            flightType: flightTypeVal,
             price: convertCurrencyToNumber(
               $(this).find(productPriceItemClass).text()
             ),
+            productType: $(this).find(productType).text(),
           };
           singleService.services.push(serviceItem);
-        });
-        break;
-      case "Terminal Transfer":
-        airport = $(".terminal-transfer-airport-select option:selected");
-        if (!airport.val()) {
-          alert(requiredSelectAirportMessage);
-          return false;
         }
-        singleService = {
-          airport: airport.text(),
-          airportCode: airport.val(),
-          traveler: getCurrentTraveler(".terminal-transfer-traveler-select"),
-          services: [],
-          pickUp: $(".pickup-terminal-select").val(),
-          dropOff: $(".dropoff-terminal-select").val(),
-        };
-        $(".terminal-transfer-product-item").each(function () {
-          const serviceItem = {
-            name: "{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}",
-            loyaltyPoint:
-              "{{wf {&quot;path&quot;:&quot;loyalty-points&quot;,&quot;type&quot;:&quot;Number&quot;} }}",
-            sku: "{{wf {&quot;path&quot;:&quot;default-sku:sku&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}",
-            flightType: "arr",
-            price: convertCurrencyToNumber(
-              $(this).find(productPriceItemClass).text()
-            ),
-          };
-          singleService.services.push(serviceItem);
-        });
-        break;
-      case "Airport Delight":
-        airport = $(".airport-delight-select option:selected");
-        if (!airport.val()) {
-          alert(requiredSelectAirportMessage);
-          return false;
-        }
-        singleService = {
-          airport: airport.text(),
-          airportCode: airport.val(),
-          traveler: getCurrentTraveler(".airport-delight-traveler-select"),
-          services: [],
-        };
-        $(".airport-delight-product-item").each(function () {
-          const serviceItem = {
-            name: "{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}",
-            loyaltyPoint:
-              "{{wf {&quot;path&quot;:&quot;loyalty-points&quot;,&quot;type&quot;:&quot;Number&quot;} }}",
-            sku: "{{wf {&quot;path&quot;:&quot;default-sku:sku&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}",
-            flightType: "arr",
-            price: convertCurrencyToNumber(
-              $(this).find(productPriceItemClass).text()
-            ),
-          };
-          singleService.services.push(serviceItem);
-        });
-        break;
-      case "Luggage Delivery":
-        airport = $(".luggage-delivery-airport-select option:selected");
-        if (!airport.val()) {
-          alert(requiredSelectAirportMessage);
-          return false;
-        }
-        singleService = {
-          airport: airport.text(),
-          airportCode: airport.val(),
-          traveler: getCurrentTraveler(".luggage-delivery-traveler-select"),
-          services: [],
-          dropOff: $(".dropoff-luggage-select").val(),
-          pickUp: $(".pickup-luggage-select").val(),
-        };
-        $(".luggage-delievery-product-item").each(function () {
-          const serviceItem = {
-            name: "{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}",
-            loyaltyPoint:
-              "{{wf {&quot;path&quot;:&quot;loyalty-points&quot;,&quot;type&quot;:&quot;Number&quot;} }}",
-            sku: "{{wf {&quot;path&quot;:&quot;default-sku:sku&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}",
-            flightType: "arr",
-            productType:
-              "{{wf {&quot;path&quot;:&quot;product-type&quot;,&quot;type&quot;:&quot;Option&quot;} }}",
-            price: convertCurrencyToNumber(
-              $(this).find(productPriceItemClass).text()
-            ),
-          };
-          singleService.services.push(serviceItem);
-        });
-        break;
-      case "Transport Solutions":
-        airport = $(".transport-solutions-airport-select option:selected");
-        if (!airport.val()) {
-          alert(requiredSelectAirportMessage);
-          return false;
-        }
-        singleService = {
-          airport: airport.text(),
-          airportCode: airport.val(),
-          traveler: getCurrentTraveler(".transport-solutions-traveler-select"),
-          services: [],
-          terminal: $(".location-transport-solutions-select").val(),
-        };
-        const flightTypeVal = $(".dropoff-transport-solutions-select").val();
-        $(".transport-solution-item").each(function () {
-          if ($(this).hasClass(itemSelectedClass)) {
-            const serviceItem = {
-              name: $(this).find(productNameItemClass).text(),
-              loyaltyPoint: $(this).find(loyaltyPointClass).text(),
-              sku: $(this).find(skuClass).text(),
-              flightType: flightTypeVal,
-              price: convertCurrencyToNumber(
-                $(this).find(productPriceItemClass).text()
-              ),
-              productType: $(this).find(productType).text(),
-            };
-            singleService.services.push(serviceItem);
-          }
-        });
-        if (singleService.services.length == 0) {
-          alert(requiredSelectServiceMessage);
-          return false;
-        }
-        break;
-    }
-    singleService.name =
-      "{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}";
-    window.localStorage.setItem(
-      "single-service",
-      JSON.stringify(singleService)
-    );
-    window.location = "/passenger-details-other-services";
+      });
+      if (singleService.services.length == 0) {
+        alert(requiredSelectServiceMessage);
+        return false;
+      }
+      break;
   }
+  singleService.name =
+    "{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}";
+  window.localStorage.setItem("single-service", JSON.stringify(singleService));
+  window.location = "/passenger-details-other-services";
 }
