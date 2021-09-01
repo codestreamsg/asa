@@ -383,6 +383,7 @@ function submit() {
           name: $("#current-product-name").val(),
           loyaltyPoint: $("#current-product-loyal-point").val(),
           sku: $("#current-product-sku").val(),
+          productType: $("#current-product-type").val(),
           flightType: "arr",
           price: convertCurrencyToNumber(
             $(this).find(productPriceItemClass).text()
