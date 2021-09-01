@@ -330,10 +330,9 @@ function submit() {
       };
       $(".hotel-product-item").each(function () {
         const serviceItem = {
-          name: "{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}",
-          loyaltyPoint:
-            "{{wf {&quot;path&quot;:&quot;loyalty-points&quot;,&quot;type&quot;:&quot;Number&quot;} }}",
-          sku: "{{wf {&quot;path&quot;:&quot;default-sku:sku&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}",
+          name: $("#current-product-name").val(),
+          loyaltyPoint: $("#current-product-loyal-point").val(),
+          sku: $("#current-product-sku").val(),
           flightType: "arr",
           price: convertCurrencyToNumber(
             $(this).find(productPriceItemClass).text()
@@ -380,10 +379,9 @@ function submit() {
       };
       $(".llta-product-item").each(function () {
         const serviceItem = {
-          name: "{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}",
-          loyaltyPoint:
-            "{{wf {&quot;path&quot;:&quot;loyalty-points&quot;,&quot;type&quot;:&quot;Number&quot;} }}",
-          sku: "{{wf {&quot;path&quot;:&quot;default-sku:sku&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}",
+          name: $("#current-product-name").val(),
+          loyaltyPoint: $("#current-product-loyal-point").val(),
+          sku: $("#current-product-sku").val(),
           flightType: "arr",
           price: convertCurrencyToNumber(
             $(this).find(productPriceItemClass).text()
@@ -408,10 +406,9 @@ function submit() {
       };
       $(".terminal-transfer-product-item").each(function () {
         const serviceItem = {
-          name: "{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}",
-          loyaltyPoint:
-            "{{wf {&quot;path&quot;:&quot;loyalty-points&quot;,&quot;type&quot;:&quot;Number&quot;} }}",
-          sku: "{{wf {&quot;path&quot;:&quot;default-sku:sku&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}",
+          name: $("#current-product-name").val(),
+          loyaltyPoint: $("#current-product-loyal-point").val(),
+          sku: $("#current-product-sku").val(),
           flightType: "arr",
           price: convertCurrencyToNumber(
             $(this).find(productPriceItemClass).text()
@@ -434,10 +431,9 @@ function submit() {
       };
       $(".airport-delight-product-item").each(function () {
         const serviceItem = {
-          name: "{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}",
-          loyaltyPoint:
-            "{{wf {&quot;path&quot;:&quot;loyalty-points&quot;,&quot;type&quot;:&quot;Number&quot;} }}",
-          sku: "{{wf {&quot;path&quot;:&quot;default-sku:sku&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}",
+          name: $("#current-product-name").val(),
+          loyaltyPoint: $("#current-product-loyal-point").val(),
+          sku: $("#current-product-sku").val(),
           flightType: "arr",
           price: convertCurrencyToNumber(
             $(this).find(productPriceItemClass).text()
@@ -462,10 +458,9 @@ function submit() {
       };
       $(".luggage-delievery-product-item").each(function () {
         const serviceItem = {
-          name: "{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}",
-          loyaltyPoint:
-            "{{wf {&quot;path&quot;:&quot;loyalty-points&quot;,&quot;type&quot;:&quot;Number&quot;} }}",
-          sku: "{{wf {&quot;path&quot;:&quot;default-sku:sku&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}",
+          name: $("#current-product-name").val(),
+          loyaltyPoint: $("#current-product-loyal-point").val(),
+          sku: $("#current-product-sku").val(),
           flightType: "arr",
           productType:
             "{{wf {&quot;path&quot;:&quot;product-type&quot;,&quot;type&quot;:&quot;Option&quot;} }}",
@@ -511,8 +506,7 @@ function submit() {
       }
       break;
   }
-  singleService.name =
-    "{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}";
+  singleService.name = $("#current-product-name").val();
   window.localStorage.setItem("single-service", JSON.stringify(singleService));
   window.location = "/passenger-details-other-services";
 }
