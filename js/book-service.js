@@ -610,9 +610,9 @@ function initBookNowButton() {
   bookNowButton.addEventListener("click", (event) => {
     const mgData = getMGObject();
     if (
-      mgData.departure != "" &&
-      mgData.arrival != "" &&
-      mgData.departure == mgData.arrival
+      mgData.departureValue != "" &&
+      mgData.arrivalValue != "" &&
+      mgData.departureValue == mgData.arrivalValue
     ) {
       alert("Please choose different between Departure and Arrival");
       return false;
@@ -623,7 +623,8 @@ function initBookNowButton() {
     window.localStorage.setItem("meet-greet", JSON.stringify(mgData));
     if (
       mgForm &&
-      (mgForm.departure != mgData.departure || mgForm.arrival != mgData.arrival)
+      (mgForm.departureValue != mgData.departureValue ||
+        mgForm.arrivalValue != mgData.arrivalValue)
     ) {
       this.resetForm();
       window.location = "outgoing-journey-tab";
