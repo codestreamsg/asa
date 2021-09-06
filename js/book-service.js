@@ -1487,6 +1487,48 @@ function initTransportSolutionSelectChange(
   });
 }
 
+function initMeetGreetPlanSelectChange(
+  cartProductButton,
+  productPriceClass,
+  airportSelectedValue,
+  terminalSelectedValue
+) {
+  var isMatchedValue = false;
+  var terminalVal = "";
+  switch (terminalSelectedValue) {
+    case "dom":
+      terminalVal = "Domestic";
+      break;
+    case "int":
+      terminalVal = "International";
+      break;
+  }
+  $(cartProductButton).each(function () {
+    const text = $(this).text();
+    const ariaChecked = $(this).attr("aria-checked");
+    if (
+      (text == terminalVal || text == airportSelectedValue) &&
+      ariaChecked != "true"
+    ) {
+      $(productPriceClass).hide();
+      isMatchedValue = true;
+      $(this).trigger("click");
+    }
+  });
+
+  if (isMatchedValue) {
+    setTimeout(function () {
+      $(productPriceClass).each(function () {
+        const text = $(this).text();
+        var price = text ? convertCurrencyToNumber(text) : 0;
+        $(this).html(currencyFormat(price * 1000));
+      });
+      calTotalPrice();
+      $(productPriceClass).show();
+    }, 500);
+  }
+}
+
 $(document).ready(function () {
   initData();
   $("select").niceSelect();
