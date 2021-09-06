@@ -459,10 +459,16 @@ function initNextPleaseButton() {
           case "outgoing-journey-tab":
             var outgoing = {
               departure: $(".departure-service-wrapper").is(":visible")
-                ? getSelectedServices("")
+                ? getSelectedServices(
+                    "",
+                    $("#departure-transport-solution-code").val()
+                  )
                 : null,
               arrival: $(".arrival-service-wrapper").is(":visible")
-                ? getSelectedServices("arrival-")
+                ? getSelectedServices(
+                    "arrival-",
+                    $("#arrival-transport-solution-code").val()
+                  )
                 : null,
               transfer: getTerminalTransferSelectedServices(),
             };
@@ -471,10 +477,16 @@ function initNextPleaseButton() {
           case "return-journey-tab":
             var returnJourney = {
               departure: $(".departure-service-wrapper").is(":visible")
-                ? getSelectedServices("")
+                ? getSelectedServices(
+                    "",
+                    $("#departure-transport-solution-code").val()
+                  )
                 : null,
               arrival: $(".arrival-service-wrapper").is(":visible")
-                ? getSelectedServices("arrival-")
+                ? getSelectedServices(
+                    "arrival-",
+                    $("#arrival-transport-solution-code").val()
+                  )
                 : null,
               transfer: getTerminalTransferSelectedServices(),
             };
@@ -834,7 +846,7 @@ function getSelectedAdditionalServices() {
   return data;
 }
 
-function getSelectedServices(arrivalClass) {
+function getSelectedServices(arrivalClass, transportLocationVal) {
   var data = {
     meetGreetService: null,
     transportSolution: null,
@@ -856,9 +868,6 @@ function getSelectedServices(arrivalClass) {
   const transportLocationText = $(
     "." + arrivalClass + "transport-location-select option:selected"
   ).text();
-  const transportLocationVal = $(
-    "." + arrivalClass + "transport-location-select option:selected"
-  ).val();
   data.transportLocation =
     transportLocationText != defaultPickUpLocation &&
     transportLocationText != defaultDropOffLocation
@@ -1438,7 +1447,7 @@ function initTransportSolutionSelect(
       const text = $(this).text();
       if (ariaLabel == "Location") {
         $(insertSelectClass).append(
-          '<option value="' + airportCode + '">' + text + "</option>"
+          '<option value="' + text + '">' + text + "</option>"
         );
       }
     });
@@ -1453,9 +1462,7 @@ function initTransportSolutionSelectChange(
   airportSelectedValue
 ) {
   $(locationSelectClass).change(function () {
-    const currentSelectedValue = $(
-      locationSelectClass + " option:selected"
-    ).text();
+    const currentSelectedValue = $(this).val();
     if (currentSelectedValue) {
       setTimeout(function () {
         var isMatchedValue = false;
