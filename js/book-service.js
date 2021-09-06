@@ -50,6 +50,13 @@ const productSkuClass = ".product-sku";
 const productTypeClass = ".product-type";
 const airportItemClass = ".airport-item";
 const airportCodeItemClass = ".airport-code-item";
+function getAirportInfo(value) {
+  const terminal = value.split("-")[0];
+  return {
+    terminal,
+    airportCode: value.replace(terminal + "-", ""),
+  };
+}
 function getMGObject() {
   var departure = $("#mg-departure option:selected");
   var arrival = $("#mg-arrival option:selected");
@@ -63,13 +70,13 @@ function getMGObject() {
   const isReturn = $("#is-return").val();
   return {
     departure: departure.text(),
-    departureTerminal: departure.data("terminal"),
+    departureTerminal: getAirportInfo(departure.val()).terminal,
     arrival: arrival.text(),
-    arrivalTerminal: arrival.data("terminal"),
+    arrivalTerminal: getAirportInfo(arrival.val()).terminal,
     traveler: traveler,
     isReturn: isReturn,
-    departureAirportCode: departure.val(),
-    arrivalAirportCode: arrival.val(),
+    departureAirportCode: getAirportInfo(departure.val()).airportCode,
+    arrivalAirportCode: getAirportInfo(arrival.val()).airportCode,
   };
 }
 
@@ -380,8 +387,8 @@ function initData() {
   }
   $("#is-return").val(isreturnValue);
   initBookingSteps(isreturnValue, true);
-  setDeparturesSelect(departureValue, mgForm?.departureTerminal);
-  setArrivalsSelect(arrivalValue, mgForm?.arrivalTerminal);
+  setDeparturesSelect(mgForm?.departureAirportCode);
+  setArrivalsSelect(mgForm?.arrivalAirportCode);
   setTravelersSelect(travelerValue);
   initBookNowButton();
   initToggleReturnButton();
@@ -527,102 +534,56 @@ function initBookingSteps(isreturnValue, isDocumentReady = false) {
   }
 }
 
-function setDeparturesSelect(departureValue, departureTerminal) {
-  const departureSelected =
-    defaultDeparture == departureValue ? 'selected="selected"' : "";
+function setDeparturesSelect(departureValue) {
+  const departureSelected = !departureValue ? 'selected="selected"' : "";
   $(".departures-select").append(
-    "<option data-terminal='' " +
-      departureSelected +
-      ' value="" disabled>Departure</option>'
+    "<option " + departureSelected + ' value="" disabled>Departure</option>'
   );
-  $(".departures-select").append(
-    '<option data-terminal="" value="" disabled>Domestic</option>'
-  );
+  $(".departures-select").append('<option value="" disabled>Domestic</option>');
   $(".domestic-airport-item").each(function () {
     var text = $(this).find(airportItemClass).text();
-    var value = $(this).find(airportCodeItemClass).text();
-    const addSelected =
-      text == departureValue && departureTerminal == "dom"
-        ? 'selected="selected"'
-        : "";
+    var value = "dom-" + $(this).find(airportCodeItemClass).text();
+    const addSelected = value == departureValue ? 'selected="selected"' : "";
     $(".departures-select").append(
-      "<option data-terminal='dom' " +
-        addSelected +
-        ' value="' +
-        value +
-        '">' +
-        text +
-        "</option>"
+      "<option " + addSelected + ' value="' + value + '">' + text + "</option>"
     );
   });
   $(".departures-select").append(
-    '<option data-terminal="" value="" disabled>International</option>'
+    '<option value="" disabled>International</option>'
   );
   $(".international-airport-item").each(function () {
     var text = $(this).find(airportItemClass).text();
-    var value = $(this).find(airportCodeItemClass).text();
-    const addSelected =
-      text == departureValue && departureTerminal == "int"
-        ? 'selected="selected"'
-        : "";
+    var value = "int-" + $(this).find(airportCodeItemClass).text();
+    const addSelected = value == departureValue ? 'selected="selected"' : "";
     $(".departures-select").append(
-      "<option data-terminal='int' " +
-        addSelected +
-        ' value="' +
-        value +
-        '">' +
-        text +
-        "</option>"
+      "<option " + addSelected + ' value="' + value + '">' + text + "</option>"
     );
   });
 }
 
-function setArrivalsSelect(arrivalValue, arrivalTerminal) {
-  const arrivalSelected =
-    defaultArrival == arrivalValue ? 'selected="selected"' : "";
+function setArrivalsSelect(arrivalValue) {
+  const arrivalSelected = !arrivalValue ? 'selected="selected"' : "";
   $(".arrivals-select").append(
-    "<option data-terminal='' " +
-      arrivalSelected +
-      ' value="" disabled>Arrival</option>'
+    "<option " + arrivalSelected + ' value="" disabled>Arrival</option>'
   );
-  $(".arrivals-select").append(
-    '<option data-terminal="" value="" disabled>Domestic</option>'
-  );
+  $(".arrivals-select").append('<option value="" disabled>Domestic</option>');
   $(".domestic-airport-item").each(function () {
     var text = $(this).find(airportItemClass).text();
-    var value = $(this).find(airportCodeItemClass).text();
-    const addSelected =
-      text == arrivalValue && arrivalTerminal == "dom"
-        ? 'selected="selected"'
-        : "";
+    var value = "dom-" + $(this).find(airportCodeItemClass).text();
+    const addSelected = value == arrivalValue ? 'selected="selected"' : "";
     $(".arrivals-select").append(
-      "<option data-terminal='dom' " +
-        addSelected +
-        ' value="' +
-        value +
-        '">' +
-        text +
-        "</option>"
+      "<option " + addSelected + ' value="' + value + '">' + text + "</option>"
     );
   });
   $(".arrivals-select").append(
-    '<option data-terminal="" value="" disabled>International</option>'
+    '<option value="" disabled>International</option>'
   );
   $(".international-airport-item").each(function () {
     var text = $(this).find(airportItemClass).text();
-    var value = $(this).find(airportCodeItemClass).text();
-    const addSelected =
-      text == arrivalValue && arrivalTerminal == "int"
-        ? 'selected="selected"'
-        : "";
+    var value = "int-" + $(this).find(airportCodeItemClass).text();
+    const addSelected = value == arrivalValue ? 'selected="selected"' : "";
     $(".arrivals-select").append(
-      "<option data-terminal='int' " +
-        addSelected +
-        ' value="' +
-        value +
-        '">' +
-        text +
-        "</option>"
+      "<option " + addSelected + ' value="' + value + '">' + text + "</option>"
     );
   });
 }
