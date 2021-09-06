@@ -70,8 +70,10 @@ function getMGObject() {
   const isReturn = $("#is-return").val();
   return {
     departure: departure.text(),
+    departureValue: departure.val(),
     departureTerminal: getAirportInfo(departure.val()).terminal,
     arrival: arrival.text(),
+    arrivalValue: arrival.val(),
     arrivalTerminal: getAirportInfo(arrival.val()).terminal,
     traveler: traveler,
     isReturn: isReturn,
@@ -387,8 +389,8 @@ function initData() {
   }
   $("#is-return").val(isreturnValue);
   initBookingSteps(isreturnValue, true);
-  setDeparturesSelect(mgForm?.departureAirportCode);
-  setArrivalsSelect(mgForm?.arrivalAirportCode);
+  setDeparturesSelect(mgForm?.departureValue);
+  setArrivalsSelect(mgForm?.arrivalValue);
   setTravelersSelect(travelerValue);
   initBookNowButton();
   initToggleReturnButton();
