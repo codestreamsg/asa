@@ -349,13 +349,27 @@ function initItemSelected(itemClass, itemSelectedClass) {
   });
 }
 
-function setAirportLocationTitle(departureValue, arrivalValue) {
-  $("#departure-title").html(departureValue + " - Departure");
-  $("#arrival-title").html(arrivalValue + " - Arrival");
+function setAirportLocationTitle() {
+  const mgForm = getMGObject();
+  switch (currentSelectedTab) {
+    case "outgoing-journey-tab":
+      $("#departure-title").html(mgForm.departure + " - Departure");
+      $("#arrival-title").html(mgForm.arrival + " - Arrival");
+      break;
+    case "return-journey-tab":
+      if (mgForm.departureValue && mgForm.arrivalValue) {
+        $("#departure-title").html(mgForm.arrival + " - Departure");
+        $("#arrival-title").html(mgForm.departure + " - Arrival");
+      } else {
+        $("#departure-title").html(mgForm.departure + " - Arrival");
+        $("#arrival-title").html(mgForm.arrival + " - Departure");
+      }
+      break;
+  }
 }
 
 function displayDepartureSection(value) {
-  if (value == defaultDeparture) {
+  if (!value) {
     $(".departure-service-wrapper").hide();
   } else {
     $(".departure-service-wrapper").show();
@@ -363,7 +377,7 @@ function displayDepartureSection(value) {
 }
 
 function displayArrivalSection(value) {
-  if (value == defaultArrival) {
+  if (!value) {
     $(".arrival-service-wrapper").hide();
   } else {
     $(".arrival-service-wrapper").show();
@@ -379,8 +393,8 @@ function initData() {
     mgForm && mgForm.arrival ? mgForm.arrival : defaultArrival;
   const travelerValue = mgForm && mgForm.traveler ? Number(mgForm.traveler) : 1;
   const isreturnValue = mgForm && mgForm.isReturn ? mgForm.isReturn : "false";
-  displayDepartureSection(departureValue);
-  displayArrivalSection(arrivalValue);
+  displayDepartureSection(mgForm?.departureValue);
+  displayArrivalSection(mgForm?.arrivalValue);
   $("#departure-header").html(departureValue);
   $("#arrival-header").html(arrivalValue);
   $("#traveler-header").html("x" + travelerValue);
@@ -645,10 +659,10 @@ function initBookNowButton() {
     $("#departure-header").html(mgData.departure);
     $("#arrival-header").html(mgData.arrival);
     $("#traveler-header").html("x" + mgData.traveler);
-    setAirportLocationTitle(mgData.departure, mgData.arrival);
+    setAirportLocationTitle();
     $("#is-vehicles-required").val(mgData.traveler > 4 ? "true" : "false");
-    displayDepartureSection(mgData.departure);
-    displayArrivalSection(mgData.arrival);
+    displayDepartureSection(mgData?.departureValue);
+    displayArrivalSection(mgData?.arrivalValue);
     initBookingSteps(mgData.isReturn);
     calTotalPrice();
     if (mgData.isReturn == "false") {
@@ -1309,10 +1323,10 @@ function initTheCart() {
       );
     } else {
       $(".return-departure-cart-airport-title").html(
-        mgObject.departure + " - Departure"
+        mgObject?.departure + " - Arrival"
       );
-      $(".return-arrival-cart-airport-title").html(
-        mgObject.arrival + " - Arrival"
+      $(".return-departure-cart-airport-title").html(
+        mgObject?.arrival + " - Departure"
       );
     }
     displayJourneyServices(
