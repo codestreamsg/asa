@@ -51,7 +51,7 @@ const productTypeClass = ".product-type";
 const airportItemClass = ".airport-item";
 const airportCodeItemClass = ".airport-code-item";
 function getAirportInfo(value) {
-  const terminal = value.split("-")[0];
+  const terminal = value ? value.split("-")[0] : "";
   return {
     terminal,
     airportCode: value.replace(terminal + "-", ""),
@@ -86,11 +86,11 @@ function setMGObject() {
   var mgForm = window.localStorage.getItem("meet-greet");
   mgForm = mgForm ? convertJsonToObject(mgForm) : {};
   var mgObject = getMGObject();
-  if (mgForm.departure != mgObject.departure) {
-    $("#mg-departure").val(mgForm.departure).niceSelect("update");
+  if (mgForm?.departureValue != mgObject?.departureValue) {
+    $("#mg-departure").val(mgForm?.departureValue).niceSelect("update");
   }
-  if (mgForm.arrival != mgObject.arrival) {
-    $("#mg-arrival").val(mgForm.arrival).niceSelect("update");
+  if (mgForm?.arrivalValue != mgObject?.arrivalValue) {
+    $("#mg-arrival").val(mgForm?.arrivalValue).niceSelect("update");
   }
   if (mgForm.traveler != mgObject.traveler) {
     $("#mg-traveler")
