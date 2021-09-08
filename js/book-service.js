@@ -622,9 +622,9 @@ function initBookNowButton() {
   bookNowButton.addEventListener("click", (event) => {
     const mgData = getMGObject();
     if (
-      mgData.departureValue != "" &&
-      mgData.arrivalValue != "" &&
-      mgData.departureValue == mgData.arrivalValue
+      mgData.departure != "" &&
+      mgData.arrival != "" &&
+      mgData.departure == mgData.arrival
     ) {
       alert("Please choose different between Departure and Arrival");
       return false;
