@@ -571,8 +571,8 @@ function setDeparturesSelect(departureValue) {
   );
   $(".departures-select").append('<option value="" disabled>Domestic</option>');
   $(".domestic-airport-item").each(function () {
-    var text = $(this).find(airportItemClass).text();
-    var value = "dom-" + $(this).find(airportCodeItemClass).text();
+    var text = $.trim($(this).find(airportItemClass).text());
+    var value = "dom-" + $.trim($(this).find(airportCodeItemClass).text());
     const addSelected = value == departureValue ? 'selected="selected"' : "";
     $(".departures-select").append(
       "<option " + addSelected + ' value="' + value + '">' + text + "</option>"
@@ -582,8 +582,8 @@ function setDeparturesSelect(departureValue) {
     '<option value="" disabled>International</option>'
   );
   $(".international-airport-item").each(function () {
-    var text = $(this).find(airportItemClass).text();
-    var value = "int-" + $(this).find(airportCodeItemClass).text();
+    var text = $.trim($(this).find(airportItemClass).text());
+    var value = "int-" + $.trim($(this).find(airportCodeItemClass).text());
     const addSelected = value == departureValue ? 'selected="selected"' : "";
     $(".departures-select").append(
       "<option " + addSelected + ' value="' + value + '">' + text + "</option>"
@@ -598,8 +598,8 @@ function setArrivalsSelect(arrivalValue) {
   );
   $(".arrivals-select").append('<option value="" disabled>Domestic</option>');
   $(".domestic-airport-item").each(function () {
-    var text = $(this).find(airportItemClass).text();
-    var value = "dom-" + $(this).find(airportCodeItemClass).text();
+    var text = $.trim($(this).find(airportItemClass).text());
+    var value = "dom-" + $.trim($(this).find(airportCodeItemClass).text());
     const addSelected = value == arrivalValue ? 'selected="selected"' : "";
     $(".arrivals-select").append(
       "<option " + addSelected + ' value="' + value + '">' + text + "</option>"
@@ -609,8 +609,8 @@ function setArrivalsSelect(arrivalValue) {
     '<option value="" disabled>International</option>'
   );
   $(".international-airport-item").each(function () {
-    var text = $(this).find(airportItemClass).text();
-    var value = "int-" + $(this).find(airportCodeItemClass).text();
+    var text = $.trim($(this).find(airportItemClass).text());
+    var value = "int-" + $.trim($(this).find(airportCodeItemClass).text());
     const addSelected = value == arrivalValue ? 'selected="selected"' : "";
     $(".arrivals-select").append(
       "<option " + addSelected + ' value="' + value + '">' + text + "</option>"
