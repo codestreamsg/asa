@@ -69,11 +69,11 @@ function getMGObject() {
   );
   const isReturn = $("#is-return").val();
   return {
-    departure: departure.text(),
-    departureValue: departure.val(),
+    departure: $.trim(departure.text()),
+    departureValue: $.trim(departure.val()),
     departureTerminal: getAirportInfo(departure.val()).terminal,
-    arrival: arrival.text(),
-    arrivalValue: arrival.val(),
+    arrival: $.trim(arrival.text()),
+    arrivalValue: $.trim(arrival.val()),
     arrivalTerminal: getAirportInfo(arrival.val()).terminal,
     traveler: traveler,
     isReturn: isReturn,
@@ -409,7 +409,6 @@ function initData() {
   initBookNowButton();
   initToggleReturnButton();
   initNextPleaseButton();
-  initAllServiceItemPrice();
   initSelectedTabs();
   initEditMgForm();
   $(".book-service-tab-link").each(function () {
@@ -435,7 +434,10 @@ function initData() {
       }
     }
   });
-  calTotalPrice();
+  setTimeout(function () {
+    initAllServiceItemPrice();
+    calTotalPrice();
+  }, 1000);
 }
 
 function initEditMgForm() {
@@ -1515,7 +1517,6 @@ function initMeetGreetPlanSelectChange(
   airportSelectedValue,
   terminalSelectedValue
 ) {
-  var isMatchedValue = false;
   var terminalVal = "";
   switch (terminalSelectedValue) {
     case "dom":
@@ -1532,23 +1533,9 @@ function initMeetGreetPlanSelectChange(
       (text == terminalVal || text == airportSelectedValue) &&
       ariaChecked != "true"
     ) {
-      $(productPriceClass).hide();
-      isMatchedValue = true;
       $(this).trigger("click");
     }
   });
-
-  if (isMatchedValue) {
-    setTimeout(function () {
-      $(productPriceClass).each(function () {
-        const text = $(this).text();
-        var price = text ? convertCurrencyToNumber(text) : 0;
-        $(this).html(currencyFormat(price * 1000));
-      });
-      calTotalPrice();
-      $(productPriceClass).show();
-    }, 500);
-  }
 }
 
 $(document).ready(function () {
