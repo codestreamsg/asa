@@ -437,7 +437,7 @@ function initData() {
   setTimeout(function () {
     initAllServiceItemPrice();
     calTotalPrice();
-  }, 1000);
+  }, 1500);
 }
 
 function initEditMgForm() {
