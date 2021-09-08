@@ -418,26 +418,36 @@ function initData() {
       switch (currentSelectedTab) {
         case "outgoing-journey-tab":
           initOutgoingTab(departureValue, arrivalValue);
+          setTimeout(function () {
+            initAllServiceItemPrice();
+            calTotalPrice();
+          }, 3000);
           break;
         case "return-journey-tab":
           initReturnTab(departureValue, arrivalValue);
+          setTimeout(function () {
+            initAllServiceItemPrice();
+            calTotalPrice();
+          }, 3000);
           break;
         case "additional-services-tab":
           initAdditionalServicesTab();
+          initAllServiceItemPrice();
+          calTotalPrice();
           break;
         case "passenger-details-tab":
           initPassengerDetailsTab();
+          initAllServiceItemPrice();
+          calTotalPrice();
           break;
         case "checkout-tab":
           initCheckoutTab();
+          initAllServiceItemPrice();
+          calTotalPrice();
           break;
       }
     }
   });
-  setTimeout(function () {
-    initAllServiceItemPrice();
-    calTotalPrice();
-  }, 2500);
 }
 
 function initEditMgForm() {
