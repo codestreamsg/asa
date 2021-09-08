@@ -1325,7 +1325,7 @@ function initTheCart() {
       $(".return-departure-cart-airport-title").html(
         mgObject?.departure + " - Arrival"
       );
-      $(".return-departure-cart-airport-title").html(
+      $(".return-arrival-cart-airport-title").html(
         mgObject?.arrival + " - Departure"
       );
     }
