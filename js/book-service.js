@@ -749,7 +749,12 @@ function convertJsonToObject(string) {
   return string ? jQuery.parseJSON(string) : {};
 }
 
-function initServices(data, arrivalClass, cartProductButton = "") {
+function initServices(
+  data,
+  arrivalClass,
+  cartProductButton = "",
+  airportSelectedValue = ""
+) {
   if (!data) {
     return;
   }
@@ -822,7 +827,8 @@ function initServices(data, arrivalClass, cartProductButton = "") {
       .niceSelect("update");
     setTransportLocation(
       cartProductButton,
-      $("#" + arrivalClass + "transport-location-select").val()
+      $("#" + arrivalClass + "transport-location-select").val(),
+      airportSelectedValue
     );
   }
 }
@@ -1549,11 +1555,18 @@ function initMeetGreetPlanSelectChange(
   });
 }
 
-function setTransportLocation(cartProductButton, currentSelectedValue) {
+function setTransportLocation(
+  cartProductButton,
+  currentSelectedValue,
+  airportSelectedValue
+) {
   $(cartProductButton).each(function () {
     const text = $(this).text();
     const ariaChecked = $(this).attr("aria-checked");
-    if (text == currentSelectedValue && ariaChecked != "true") {
+    if (
+      (text == currentSelectedValue || text == airportSelectedValue) &&
+      ariaChecked != "true"
+    ) {
       $(this).trigger("click");
     }
   });
