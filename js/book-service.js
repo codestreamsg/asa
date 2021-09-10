@@ -1193,9 +1193,9 @@ function displayAddOnServices() {
   returnForm = returnForm ? convertJsonToObject(returnForm) : null;
   $(".add-on-services-container").hide();
   displayAddOnTransportSolutions(outgoingForm, ".transport-outgoing");
-  displayAddOnTransportSolutions(returnForm, ".transport-return");
+  displayAddOnTransportSolutions(returnForm, ".transport-return", true);
   displayAddOnLuggageDeliveries(outgoingForm, ".luggage-delivery-outgoing");
-  displayAddOnLuggageDeliveries(returnForm, ".luggage-delivery-return");
+  displayAddOnLuggageDeliveries(returnForm, ".luggage-delivery-return", true);
   var additionalServicesForm = window.localStorage.getItem(
     "additional-services"
   );
@@ -1212,11 +1212,31 @@ function displayAddOnServices() {
   }
 }
 
-function displayAddOnTransportSolutions(data, transportClass) {
-  const isDepartureTransportSolution =
-    data && data.departure && data.departure.transportSolution ? true : false;
-  const isArrivalTransportSolution =
-    data && data.arrival && data.arrival.transportSolution ? true : false;
+function displayAddOnTransportSolutions(
+  data,
+  transportClass,
+  isReturnJourney = false
+) {
+  var isDepartureTransportSolution = false;
+  var isArrivalTransportSolution = false;
+  if (
+    isReturnJourney &&
+    (!data?.departure?.transportSolution || !data?.arrival?.transportSolution)
+  ) {
+    isDepartureTransportSolution = data?.arrival?.transportSolution
+      ? true
+      : false;
+    isArrivalTransportSolution = data?.departure?.transportSolution
+      ? true
+      : false;
+  } else {
+    isDepartureTransportSolution = data?.departure?.transportSolution
+      ? true
+      : false;
+    isArrivalTransportSolution = data?.arrival?.transportSolution
+      ? true
+      : false;
+  }
   if (isDepartureTransportSolution || isArrivalTransportSolution) {
     $(".add-on-services-container").show();
     $(".add-on-transport-service").show();
@@ -1244,7 +1264,11 @@ function displayAddOnTransportSolutions(data, transportClass) {
   }
 }
 
-function displayAddOnLuggageDeliveries(data, transportClass) {
+function displayAddOnLuggageDeliveries(
+  data,
+  transportClass,
+  isReturnJourney = false
+) {
   const isDepartureTransportSolution =
     data &&
     data.departure &&
