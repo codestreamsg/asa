@@ -1219,23 +1219,17 @@ function displayAddOnTransportSolutions(
 ) {
   var isDepartureTransportSolution = false;
   var isArrivalTransportSolution = false;
+  const departureTransportSolution = data?.departure?.transportSolution;
+  const arrivalTransportSolution = data?.arrival?.transportSolution;
   if (
     isReturnJourney &&
-    (!data?.departure?.transportSolution || !data?.arrival?.transportSolution)
+    (!departureTransportSolution || !arrivalTransportSolution)
   ) {
-    isDepartureTransportSolution = data?.arrival?.transportSolution
-      ? true
-      : false;
-    isArrivalTransportSolution = data?.departure?.transportSolution
-      ? true
-      : false;
+    isDepartureTransportSolution = arrivalTransportSolution ? true : false;
+    isArrivalTransportSolution = departureTransportSolution ? true : false;
   } else {
-    isDepartureTransportSolution = data?.departure?.transportSolution
-      ? true
-      : false;
-    isArrivalTransportSolution = data?.arrival?.transportSolution
-      ? true
-      : false;
+    isDepartureTransportSolution = departureTransportSolution ? true : false;
+    isArrivalTransportSolution = arrivalTransportSolution ? true : false;
   }
   if (isDepartureTransportSolution || isArrivalTransportSolution) {
     $(".add-on-services-container").show();
@@ -1269,25 +1263,41 @@ function displayAddOnLuggageDeliveries(
   transportClass,
   isReturnJourney = false
 ) {
-  const isDepartureTransportSolution =
-    data &&
-    data.departure &&
-    data.departure.totalCares &&
-    data.departure.totalCares.find((x) => x.name === "Luggage Delivery")
-      ? true
-      : false;
-  const isArrivalTransportSolution =
-    data &&
-    data.arrival &&
-    data.arrival.totalCares &&
-    data.arrival.totalCares.find((x) => x.name === "Luggage Delivery")
-      ? true
-      : false;
-  if (isDepartureTransportSolution || isArrivalTransportSolution) {
+  var isDepartureTotalCares = false;
+  var isArrivalTotalCares = false;
+  const departureTotalCares = data?.departure?.totalCares;
+  const arrivalTotalCares = data?.arrival?.totalCares;
+  if (
+    isReturnJourney &&
+    (!departureTotalCares || !arrivalTotalCares)
+  ) {
+    isDepartureTotalCares =
+      arrivalTotalCares &&
+      arrivalTotalCares.find((x) => x.name === "Luggage Delivery")
+        ? true
+        : false;
+    isArrivalTotalCares =
+      departureTotalCares &&
+      departureTotalCares.find((x) => x.name === "Luggage Delivery")
+        ? true
+        : false;
+  } else {
+    isDepartureTotalCares =
+      departureTotalCares &&
+      departureTotalCares.find((x) => x.name === "Luggage Delivery")
+        ? true
+        : false;
+    isArrivalTotalCares =
+      arrivalTotalCares &&
+      arrivalTotalCares.find((x) => x.name === "Luggage Delivery")
+        ? true
+        : false;
+  }
+  if (isDepartureTotalCares || isArrivalTotalCares) {
     $(".add-on-services-container").show();
     $(".add-on-luggage-delivery-service").show();
     $(".input-luggage-details :input.input-can-hide").prop("required", true);
-    if (isDepartureTransportSolution) {
+    if (isDepartureTotalCares) {
       $(transportClass + "-departure").show();
       $(transportClass + "-departure :input.input-can-hide").prop(
         "required",
@@ -1296,7 +1306,7 @@ function displayAddOnLuggageDeliveries(
     } else {
       $(transportClass + "-departure").hide();
     }
-    if (isArrivalTransportSolution) {
+    if (isArrivalTotalCares) {
       $(transportClass + "-arrival").show();
       $(transportClass + "-arrival :input.input-can-hide").prop(
         "required",
