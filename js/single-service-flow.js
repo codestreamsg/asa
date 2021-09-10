@@ -138,7 +138,7 @@ function initLuggageDeliveryPage() {
 }
 
 function initTransportSolutionsPage() {
-  initClickEventsToProductItem();
+  initClickEventsToProductItem(true);
   initAirportsSelect(
     ".transport-solutions-airport-select",
     ".transport-solutions-button"
@@ -150,6 +150,29 @@ function initTransportSolutionsPage() {
     ".location-transport-solutions-select"
   );
   transportAirportLocationChange();
+  const vehiclesRequired =
+    '<div style="display: none;" id="w-node-_38c2e180-8c41-e4b0-445a-b9ec91ebc2eb-ed1cc56e" role="listitem" class="w-dyn-item vehicles-required-container">' +
+    '<div class="product-item transport-solution-item">' +
+    '<div class="transport-solution-vehicles-description">' +
+    "<div>" +
+    '<div class="heading-title padding-vertical-small">2 Vehicles required</div>' +
+    "<div>Each vehicle can seat a maximum of 4 pax, therefore you will require 2 vehicles.</div>" +
+    "</div>" +
+    "<div>" +
+    '<div class="departure-vehicles-required-count"></div>' +
+    '<div class="heading-title departure-vehicles-required-price"></div>' +
+    "</div></div></div></div>";
+  $(".single-transport-solutions-collection-list").append(vehiclesRequired);
+  $(".transport-solutions-traveler-select").change(function () {
+    const numberOfPassengers = getCurrentTraveler(
+      ".transport-solutions-traveler-select"
+    );
+    if (numberOfPassengers > 4) {
+      $(".vehicles-required-container").show();
+    } else {
+      $(".vehicles-required-container").hide();
+    }
+  });
 }
 
 function initTravelerSelect(travelerSelectClass) {
@@ -195,10 +218,14 @@ function airportChange(selectClass, cartAiportOptionButton) {
   });
 }
 
-function initClickEventsToProductItem() {
+function initClickEventsToProductItem(isDisplayVehiclesRequired = false) {
   $(productItemClass).click(function () {
     if ($(this).hasClass(itemSelectedClass)) {
       $(this).removeClass(itemSelectedClass);
+      if (isDisplayVehiclesRequired) {
+        $(".departure-vehicles-required-count").empty();
+        $(".departure-vehicles-required-price").empty();
+      }
     } else {
       if (!$(productItemClass).hasClass(serviceItemMultiple)) {
         $(productItemClass).each(function () {
@@ -206,6 +233,20 @@ function initClickEventsToProductItem() {
         });
       }
       $(this).addClass(itemSelectedClass);
+      if (isDisplayVehiclesRequired) {
+        const currentProductPriceText = $(this)
+          .find(productPriceItemClass)
+          .text();
+        $(".departure-vehicles-required-count").html(
+          "2x " + currentProductPriceText + " ="
+        );
+        const currentProductPrice = convertCurrencyToNumber(
+          currentProductPriceText
+        );
+        $(".departure-vehicles-required-price").html(
+          currencyFormat(currentProductPrice * 2)
+        );
+      }
     }
   });
 }
