@@ -540,3 +540,24 @@ function submit() {
   window.localStorage.setItem("single-service", JSON.stringify(singleService));
   window.location = "/passenger-details-other-services";
 }
+
+function displayPriceForVehiclesRequired() {
+  $(productItemClass).each(function () {
+    if ($(this).hasClass(itemSelectedClass)) {
+      const currentProductPriceText = $(this)
+        .find(productPriceItemClass)
+        .text();
+      if (currentProductPriceText) {
+        $(".departure-vehicles-required-count").html(
+          "2x " + currentProductPriceText + " ="
+        );
+        const currentProductPrice = convertCurrencyToNumber(
+          currentProductPriceText
+        );
+        $(".departure-vehicles-required-price").html(
+          currencyFormat(currentProductPrice * 2, 1)
+        );
+      }
+    }
+  });
+}
