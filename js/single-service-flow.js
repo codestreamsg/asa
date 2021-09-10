@@ -336,6 +336,7 @@ function transportAirportLocationChange() {
         setTimeout(function () {
           displayProductPrice();
           $(productPriceItemClass).show();
+          displayPriceForVehiclesRequired();
         }, 200);
       }
     }
