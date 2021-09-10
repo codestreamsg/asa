@@ -26,8 +26,8 @@ function convertCurrencyToNumber(value) {
     : 0;
 }
 
-function currencyFormat(num) {
-  num = convertCurrencyToNumber(num) * 1000;
+function currencyFormat(num, unitPrice = 1000) {
+  num = convertCurrencyToNumber(num) * unitPrice;
   return (
     "IDR " +
     (num ? num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,") : 0)
@@ -234,18 +234,7 @@ function initClickEventsToProductItem(isDisplayVehiclesRequired = false) {
       }
       $(this).addClass(itemSelectedClass);
       if (isDisplayVehiclesRequired) {
-        const currentProductPriceText = $(this)
-          .find(productPriceItemClass)
-          .text();
-        $(".departure-vehicles-required-count").html(
-          "2x " + currentProductPriceText + " ="
-        );
-        const currentProductPrice = convertCurrencyToNumber(
-          currentProductPriceText
-        );
-        $(".departure-vehicles-required-price").html(
-          currencyFormat(currentProductPrice * 2)
-        );
+        displayPriceForVehiclesRequired();
       }
     }
   });
@@ -318,6 +307,7 @@ function transportAirportLocationChange() {
         setTimeout(function () {
           displayProductPrice();
           $(productPriceItemClass).show();
+          displayPriceForVehiclesRequired();
         }, 200);
       }
     }
