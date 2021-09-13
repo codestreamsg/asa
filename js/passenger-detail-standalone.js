@@ -13,9 +13,6 @@ $(document).ready(function () {
   });
   $(".add-on-services-container").hide();
   $(".add-on-services-content").hide();
-  setTimeout(function () {
-    initTheCart();
-  }, 2000);
   setProducOptions();
   initCheckoutButton();
   $(".success-message-form").remove();
@@ -38,6 +35,7 @@ $(document).ready(function () {
   });
   $(".coupon-container").hide();
   setTimeout(function () {
+    initTheCart();
     jQuery.getJSON(
       "https://" +
         FC.settings.storedomain +
@@ -50,6 +48,8 @@ $(document).ready(function () {
     );
   }, 3000);
   addCouponToCart();
+  $(".cart-service-list").empty();
+  $(".cart-airport-title").empty();
 });
 
 function convertJsonToObject(string) {
@@ -146,7 +146,6 @@ function initTheCart() {
   } else {
     $(".cart-airport-title").empty();
   }
-  $(".cart-service-list").empty();
   const numberOfPassengers = singleService.traveler;
   for (var i = 0; i < singleService.services.length; i++) {
     const service = singleService.services[i];
