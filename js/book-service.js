@@ -50,6 +50,8 @@ const productSkuClass = ".product-sku";
 const productTypeClass = ".product-type";
 const airportItemClass = ".airport-item";
 const airportCodeItemClass = ".airport-code-item";
+const productPriceHiddenClass = ".product-price-hidden";
+const productItemIDClass = ".product-item-id";
 function getAirportInfo(value) {
   const terminal = value ? value.split("-")[0] : "";
   return {
@@ -303,7 +305,7 @@ function getPriceForSection(
     $(items[index]).each(function () {
       if ($(this).hasClass(serviceItemSelectedClass)) {
         var priceValue = convertCurrencyToNumber(
-          $(this).find(serviceItemPrice).text()
+          $(this).find(productPriceHiddenClass).text()
         );
         if (isVehiclesRequired == "true") {
           displayVehiclesRequired(items[index], priceValue);
@@ -459,7 +461,7 @@ function initEditMgForm() {
 }
 
 function initAllServiceItemPrice() {
-  $(".service-item-price").each(function () {
+  $(serviceItemPrice).each(function () {
     const text = $(this).text();
     var price = text ? convertCurrencyToNumber(text) : 0;
     price = price * 1000;
@@ -738,7 +740,8 @@ function initAdditionalServicesTab() {
       $(this).addClass(serviceItemSelectedClass);
       currentTotalPrice =
         currentTotalPrice +
-        convertCurrencyToNumber($(this).find(serviceItemPrice).text());
+        convertCurrencyToNumber($(this).find(productPriceHiddenClass).text()) *
+          1000;
     }
   });
 }
@@ -766,7 +769,10 @@ function initServices(
         $(this).addClass(serviceItemSelectedClass);
         currentTotalPrice =
           currentTotalPrice +
-          convertCurrencyToNumber($(this).find(serviceItemPrice).text());
+          convertCurrencyToNumber(
+            $(this).find(productPriceHiddenClass).text()
+          ) *
+            1000;
       }
     });
   }
@@ -783,7 +789,11 @@ function initServices(
           );
           currentTotalPrice =
             currentTotalPrice +
-            convertCurrencyToNumber($(this).find(serviceItemPrice).text()) * 2;
+            convertCurrencyToNumber(
+              $(this).find(productPriceHiddenClass).text()
+            ) *
+              1000 *
+              2;
         }
       }
     });
@@ -799,7 +809,10 @@ function initServices(
         $(this).addClass(serviceItemSelectedClass);
         currentTotalPrice =
           currentTotalPrice +
-          convertCurrencyToNumber($(this).find(serviceItemPrice).text());
+          convertCurrencyToNumber(
+            $(this).find(productPriceHiddenClass).text()
+          ) *
+            1000;
       }
     });
   }
@@ -812,7 +825,10 @@ function initServices(
         $(this).addClass(serviceItemSelectedClass);
         currentTotalPrice =
           currentTotalPrice +
-          convertCurrencyToNumber($(this).find(serviceItemPrice).text());
+          convertCurrencyToNumber(
+            $(this).find(productPriceHiddenClass).text()
+          ) *
+            1000;
       }
     });
   }
@@ -841,7 +857,10 @@ function initTerminalTransferServices(data) {
         $(this).addClass(serviceItemSelectedClass);
         currentTotalPrice =
           currentTotalPrice +
-          convertCurrencyToNumber($(this).find(serviceItemPrice).text());
+          convertCurrencyToNumber(
+            $(this).find(productPriceHiddenClass).text()
+          ) *
+            1000;
       }
     });
   }
@@ -853,10 +872,14 @@ function getTerminalTransferSelectedServices() {
     if ($(this).hasClass(serviceItemSelectedClass)) {
       data = {
         name: $(this).find(productNameClass).text(),
-        price: convertCurrencyToNumber($(this).find(serviceItemPrice).text()),
+        price:
+          convertCurrencyToNumber(
+            $(this).find(productPriceHiddenClass).text()
+          ) * 1000,
         loyaltyPoint: $(this).find(productLoyaltyPointClass).text(),
         sku: $(this).find(productSkuClass).text(),
         productType: $(this).find(productTypeClass).text(),
+        id: $(this).find(productItemIDClass).text(),
       };
     }
   });
@@ -869,10 +892,14 @@ function getSelectedAdditionalServices() {
     if ($(this).hasClass(serviceItemSelectedClass)) {
       data.push({
         name: $(this).find(productNameClass).text(),
-        price: convertCurrencyToNumber($(this).find(serviceItemPrice).text()),
+        price:
+          convertCurrencyToNumber(
+            $(this).find(productPriceHiddenClass).text()
+          ) * 1000,
         loyaltyPoint: $(this).find(productLoyaltyPointClass).text(),
         sku: $(this).find(productSkuClass).text(),
         productType: $(this).find(productTypeClass).text(),
+        id: $(this).find(productItemIDClass).text(),
       });
     }
   });
@@ -891,10 +918,14 @@ function getSelectedServices(arrivalClass, transportLocationVal) {
     if ($(this).hasClass(serviceItemSelectedClass)) {
       data.meetGreetService = {
         name: $(this).find(productNameClass).text(),
-        price: convertCurrencyToNumber($(this).find(serviceItemPrice).text()),
+        price:
+          convertCurrencyToNumber(
+            $(this).find(productPriceHiddenClass).text()
+          ) * 1000,
         loyaltyPoint: $(this).find(productLoyaltyPointClass).text(),
         sku: $(this).find(productSkuClass).text(),
         productType: $(this).find(productTypeClass).text(),
+        id: $(this).find(productItemIDClass).text(),
       };
     }
   });
@@ -910,12 +941,16 @@ function getSelectedServices(arrivalClass, transportLocationVal) {
     if ($(this).hasClass(serviceItemSelectedClass)) {
       data.transportSolution = {
         name: $(this).find(productNameClass).text(),
-        price: convertCurrencyToNumber($(this).find(serviceItemPrice).text()),
+        price:
+          convertCurrencyToNumber(
+            $(this).find(productPriceHiddenClass).text()
+          ) * 1000,
         isVehiclesRequired: $("#is-vehicles-required").val(),
         loyaltyPoint: $(this).find(productLoyaltyPointClass).text(),
         aiportCode: transportLocationVal,
         sku: $(this).find(productSkuClass).text(),
         productType: $(this).find(productTypeClass).text(),
+        id: $(this).find(productItemIDClass).text(),
       };
     }
   });
@@ -923,9 +958,13 @@ function getSelectedServices(arrivalClass, transportLocationVal) {
     if ($(this).hasClass(serviceItemSelectedClass)) {
       data.covidSafetyServices.push({
         name: $(this).find(productNameClass).text(),
-        price: convertCurrencyToNumber($(this).find(serviceItemPrice).text()),
+        price:
+          convertCurrencyToNumber(
+            $(this).find(productPriceHiddenClass).text()
+          ) * 1000,
         loyaltyPoint: $(this).find(productLoyaltyPointClass).text(),
         sku: $(this).find(productSkuClass).text(),
+        id: $(this).find(productItemIDClass).text(),
       });
     }
   });
@@ -933,10 +972,14 @@ function getSelectedServices(arrivalClass, transportLocationVal) {
     if ($(this).hasClass(serviceItemSelectedClass)) {
       data.totalCares.push({
         name: $(this).find(productNameClass).text(),
-        price: convertCurrencyToNumber($(this).find(serviceItemPrice).text()),
+        price:
+          convertCurrencyToNumber(
+            $(this).find(productPriceHiddenClass).text()
+          ) * 1000,
         loyaltyPoint: $(this).find(productLoyaltyPointClass).text(),
         sku: $(this).find(productSkuClass).text(),
         productType: $(this).find(productTypeClass).text(),
+        id: $(this).find(productItemIDClass).text(),
       });
     }
   });
@@ -1267,10 +1310,7 @@ function displayAddOnLuggageDeliveries(
   var isArrivalTotalCares = false;
   const departureTotalCares = data?.departure?.totalCares;
   const arrivalTotalCares = data?.arrival?.totalCares;
-  if (
-    isReturnJourney &&
-    (!departureTotalCares || !arrivalTotalCares)
-  ) {
+  if (isReturnJourney && (!departureTotalCares || !arrivalTotalCares)) {
     isDepartureTotalCares =
       arrivalTotalCares &&
       arrivalTotalCares.find((x) => x.name === "Luggage Delivery")
