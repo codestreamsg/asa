@@ -15,6 +15,8 @@ const requiredSelectServiceMessage = "Please select a service";
 const loyaltyPointClass = ".product-loyalty-point";
 const skuClass = ".product-sku";
 const productTypeClass = ".product-type";
+const productPriceHiddenClass = ".product-price-hidden";
+const productItemIDClass = ".product-item-id";
 function convertCurrencyToNumber(value) {
   return value
     ? Number(
@@ -361,18 +363,15 @@ function submit() {
         traveler: getCurrentTraveler(".hotel-traveler-select"),
         services: [],
       };
-      $(".hotel-product-item").each(function () {
-        const serviceItem = {
-          name: $("#current-product-name").val(),
-          loyaltyPoint: $("#current-product-loyal-point").val(),
-          sku: $("#current-product-sku").val(),
-          flightType: "arr",
-          price: convertCurrencyToNumber(
-            $(this).find(productPriceItemClass).text()
-          ),
-        };
-        singleService.services.push(serviceItem);
-      });
+      const serviceItem = {
+        name: $("#current-product-name").val(),
+        loyaltyPoint: $("#current-product-loyal-point").val(),
+        sku: $("#current-product-sku").val(),
+        flightType: "arr",
+        price: convertCurrencyToNumber($("#current-product-price").val()),
+        id: $("#current-product-item-id").val(),
+      };
+      singleService.services.push(serviceItem);
       break;
     case "PCR/Swab Antigen Test":
       airport = $(".pcr-airport-select option:selected");
@@ -394,8 +393,9 @@ function submit() {
             sku: $(this).find(skuClass).text(),
             flightType: "arr",
             price: convertCurrencyToNumber(
-              $(this).find(productPriceItemClass).text()
+              $(this).find(productPriceHiddenClass).text()
             ),
+            id: $(this).find(productItemIDClass).text(),
           };
           singleService.services.push(serviceItem);
         }
@@ -410,19 +410,16 @@ function submit() {
         traveler: getCurrentTraveler(".llta-traveler-select"),
         services: [],
       };
-      $(".llta-product-item").each(function () {
-        const serviceItem = {
-          name: $("#current-product-name").val(),
-          loyaltyPoint: $("#current-product-loyal-point").val(),
-          sku: $("#current-product-sku").val(),
-          productType: $("#current-product-type").val(),
-          flightType: "arr",
-          price: convertCurrencyToNumber(
-            $(this).find(productPriceItemClass).text()
-          ),
-        };
-        singleService.services.push(serviceItem);
-      });
+      const serviceItem = {
+        name: $("#current-product-name").val(),
+        loyaltyPoint: $("#current-product-loyal-point").val(),
+        sku: $("#current-product-sku").val(),
+        productType: $("#current-product-type").val(),
+        flightType: "arr",
+        price: convertCurrencyToNumber($("#current-product-price").val()),
+        id: $("#current-product-item-id").val(),
+      };
+      singleService.services.push(serviceItem);
       break;
     case "Terminal Transfer":
       airport = $(".terminal-transfer-airport-select option:selected");
@@ -438,18 +435,15 @@ function submit() {
         pickUp: $(".pickup-terminal-select").val(),
         dropOff: $(".dropoff-terminal-select").val(),
       };
-      $(".terminal-transfer-product-item").each(function () {
-        const serviceItem = {
-          name: $("#current-product-name").val(),
-          loyaltyPoint: $("#current-product-loyal-point").val(),
-          sku: $("#current-product-sku").val(),
-          flightType: "arr",
-          price: convertCurrencyToNumber(
-            $(this).find(productPriceItemClass).text()
-          ),
-        };
-        singleService.services.push(serviceItem);
-      });
+      const serviceItem = {
+        name: $("#current-product-name").val(),
+        loyaltyPoint: $("#current-product-loyal-point").val(),
+        sku: $("#current-product-sku").val(),
+        flightType: "arr",
+        price: convertCurrencyToNumber($("#current-product-price").val()),
+        id: $("#current-product-item-id").val(),
+      };
+      singleService.services.push(serviceItem);
       break;
     case "Airport Delight":
       airport = $(".airport-delight-select option:selected");
@@ -463,18 +457,15 @@ function submit() {
         traveler: getCurrentTraveler(".airport-delight-traveler-select"),
         services: [],
       };
-      $(".airport-delight-product-item").each(function () {
-        const serviceItem = {
-          name: $("#current-product-name").val(),
-          loyaltyPoint: $("#current-product-loyal-point").val(),
-          sku: $("#current-product-sku").val(),
-          flightType: "arr",
-          price: convertCurrencyToNumber(
-            $(this).find(productPriceItemClass).text()
-          ),
-        };
-        singleService.services.push(serviceItem);
-      });
+      const serviceItem = {
+        name: $("#current-product-name").val(),
+        loyaltyPoint: $("#current-product-loyal-point").val(),
+        sku: $("#current-product-sku").val(),
+        flightType: "arr",
+        price: convertCurrencyToNumber($("#current-product-price").val()),
+        id: $("#current-product-item-id").val(),
+      };
+      singleService.services.push(serviceItem);
       break;
     case "Luggage Delivery":
       airport = $(".luggage-delivery-airport-select option:selected");
@@ -488,19 +479,16 @@ function submit() {
         traveler: getCurrentTraveler(".luggage-delivery-traveler-select"),
         services: [],
       };
-      $(".luggage-delievery-product-item").each(function () {
-        const serviceItem = {
-          name: $("#current-product-name").val(),
-          loyaltyPoint: $("#current-product-loyal-point").val(),
-          sku: $("#current-product-sku").val(),
-          flightType: $(".dropoff-luggage-select").val(),
-          productType: $("#current-product-type").val(),
-          price: convertCurrencyToNumber(
-            $(this).find(productPriceItemClass).text()
-          ),
-        };
-        singleService.services.push(serviceItem);
-      });
+      const serviceItem = {
+        name: $("#current-product-name").val(),
+        loyaltyPoint: $("#current-product-loyal-point").val(),
+        sku: $("#current-product-sku").val(),
+        flightType: $(".dropoff-luggage-select").val(),
+        productType: $("#current-product-type").val(),
+        price: convertCurrencyToNumber($("#current-product-price").val()),
+        id: $("#current-product-item-id").val(),
+      };
+      singleService.services.push(serviceItem);
       break;
     case "Transport Solutions":
       airport = $(".transport-solutions-airport-select option:selected");
@@ -523,8 +511,9 @@ function submit() {
             sku: $(this).find(skuClass).text(),
             flightType: $(".dropoff-transport-solutions-select").val(),
             price: convertCurrencyToNumber(
-              $(this).find(productPriceItemClass).text()
+              $(this).find(productPriceHiddenClass).text()
             ),
+            id: $(this).find(productItemIDClass).text(),
             productType: $(this).find(productTypeClass).text(),
           };
           singleService.services.push(serviceItem);
