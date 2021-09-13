@@ -15,7 +15,7 @@ $(document).ready(function () {
   $(".add-on-services-content").hide();
   setTimeout(function () {
     initTheCart();
-  }, 1000);
+  }, 2000);
   setProducOptions();
   initCheckoutButton();
   $(".success-message-form").remove();
