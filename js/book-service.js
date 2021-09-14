@@ -304,9 +304,10 @@ function getPriceForSection(
   for (var index = 0; index < items.length; index++) {
     $(items[index]).each(function () {
       if ($(this).hasClass(serviceItemSelectedClass)) {
-        var priceValue = convertCurrencyToNumber(
-          $(this).find(productPriceHiddenClass).text()
-        );
+        var priceValue =
+          convertCurrencyToNumber(
+            $(this).find(productPriceHiddenClass).text()
+          ) * 1000;
         if (isVehiclesRequired == "true") {
           displayVehiclesRequired(items[index], priceValue);
         } else {
