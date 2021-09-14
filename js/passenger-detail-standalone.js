@@ -113,11 +113,9 @@ function addProductsToFoxy() {
     if (service.productType == "Transport Solution") {
       qty = numberOfPassengers > 4 ? 2 : 1;
     }
-    const productPrice = service.price * qty;
     const productDetail = getProductById(service?.id);
     if (productDetail) {
       getInputsForProduct(
-        i + 1,
         productDetail.name,
         productDetail.price,
         "Outgoing Departure",
@@ -253,7 +251,6 @@ function currencyFormat(num) {
 }
 
 function getInputsForProduct(
-  index,
   productName,
   productPrice,
   category,

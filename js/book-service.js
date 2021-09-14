@@ -489,13 +489,17 @@ function initNextPleaseButton() {
               departure: $(".departure-service-wrapper").is(":visible")
                 ? getSelectedServices(
                     "",
-                    $("#departure-transport-solution-code").val()
+                    $("#departure-transport-solution-code").val(),
+                    $("#departure-mg-airport-code").val(),
+                    $("#departure-mg-airport-terminal").val()
                   )
                 : null,
               arrival: $(".arrival-service-wrapper").is(":visible")
                 ? getSelectedServices(
                     "arrival-",
-                    $("#arrival-transport-solution-code").val()
+                    $("#arrival-transport-solution-code").val(),
+                    $("#arrival-mg-airport-code").val(),
+                    $("#arrival-mg-airport-terminal").val()
                   )
                 : null,
               transfer: getTerminalTransferSelectedServices(),
@@ -507,13 +511,17 @@ function initNextPleaseButton() {
               departure: $(".departure-service-wrapper").is(":visible")
                 ? getSelectedServices(
                     "",
-                    $("#departure-transport-solution-code").val()
+                    $("#departure-transport-solution-code").val(),
+                    $("#departure-mg-airport-code").val(),
+                    $("#departure-mg-airport-terminal").val()
                   )
                 : null,
               arrival: $(".arrival-service-wrapper").is(":visible")
                 ? getSelectedServices(
                     "arrival-",
-                    $("#arrival-transport-solution-code").val()
+                    $("#arrival-transport-solution-code").val(),
+                    $("#arrival-mg-airport-code").val(),
+                    $("#arrival-mg-airport-terminal").val()
                   )
                 : null,
               transfer: getTerminalTransferSelectedServices(),
@@ -906,7 +914,12 @@ function getSelectedAdditionalServices() {
   return data;
 }
 
-function getSelectedServices(arrivalClass, transportLocationVal) {
+function getSelectedServices(
+  arrivalClass,
+  transportLocationVal,
+  airportCode,
+  terminalSelectedValue
+) {
   var data = {
     meetGreetService: null,
     transportSolution: null,
@@ -916,6 +929,15 @@ function getSelectedServices(arrivalClass, transportLocationVal) {
   };
   $("." + arrivalClass + "meet-greet-service-item").each(function () {
     if ($(this).hasClass(serviceItemSelectedClass)) {
+      var terminalValue = "";
+      switch (terminalSelectedValue) {
+        case "dom":
+          terminalValue = "Domestic";
+          break;
+        case "int":
+          terminalValue = "International";
+          break;
+      }
       data.meetGreetService = {
         name: $(this).find(productNameClass).text(),
         price:
@@ -926,6 +948,7 @@ function getSelectedServices(arrivalClass, transportLocationVal) {
         sku: $(this).find(productSkuClass).text(),
         productType: $(this).find(productTypeClass).text(),
         id: $(this).find(productItemIDClass).text(),
+        optionValues: [airportCode, terminalValue],
       };
     }
   });
@@ -951,6 +974,7 @@ function getSelectedServices(arrivalClass, transportLocationVal) {
         sku: $(this).find(productSkuClass).text(),
         productType: $(this).find(productTypeClass).text(),
         id: $(this).find(productItemIDClass).text(),
+        optionValues: [transportLocationVal, data.transportLocation],
       };
     }
   });
@@ -1394,7 +1418,7 @@ function initTheCart() {
     );
     if (outgoingForm.transfer) {
       $(".outgoing-transfer-cart-service").show();
-      const service = outgoingForm.transfer;
+      const service = getProductById(outgoingForm.transfer?.id);
       $(".outgoing-transfer-cart-service-list").append(
         generateServiceItem(service.name, service.price, getMGObject().traveler)
       );
@@ -1434,7 +1458,7 @@ function initTheCart() {
     );
     if (returnForm.transfer) {
       $(".return-transfer-cart-service").show();
-      const service = returnForm.transfer;
+      const service = getProductById(returnForm.transfer?.id);
       $(".return-transfer-cart-service-list").append(
         generateServiceItem(service.name, service.price, getMGObject().traveler)
       );
@@ -1455,7 +1479,7 @@ function initTheCart() {
     $(".additional-services-cart-journey").hide();
   }
   for (var i = 0; i < additionalServicesForm.length; i++) {
-    const service = additionalServicesForm[i];
+    const service = getProductById(additionalServicesForm[i]?.id);
     $(".additional-services-cart-list").append(
       generateServiceItem(service.name, service.price, getMGObject().traveler)
     );
@@ -1466,13 +1490,21 @@ function displayJourneyServices(data, journeyClass, servicesClass) {
   if (data) {
     $(journeyClass).show();
     if (data.meetGreetService) {
-      const service = data.meetGreetService;
+      setProducOptions(
+        data.meetGreetService?.id,
+        data.meetGreetService?.optionValues
+      );
+      const service = getProductById(data.meetGreetService?.id);
       $(servicesClass).append(
         generateServiceItem(service.name, service.price, getMGObject().traveler)
       );
     }
     if (data.transportSolution) {
-      const service = data.transportSolution;
+      setProducOptions(
+        data.transportSolution?.id,
+        data.transportSolution?.optionValues
+      );
+      const service = getProductById(data.transportSolution?.id);
       const priceVehiclesRequired = getMGObject().traveler > 4 ? 2 : 1;
       $(servicesClass).append(
         generateServiceItem(service.name, service.price, priceVehiclesRequired)
@@ -1481,7 +1513,7 @@ function displayJourneyServices(data, journeyClass, servicesClass) {
     if (data.covidSafetyServices) {
       const services = data.covidSafetyServices;
       for (var i = 0; i < services.length; i++) {
-        const service = services[i];
+        const service = getProductById(services[i]?.id);
         $(servicesClass).append(
           generateServiceItem(
             service.name,
@@ -1494,7 +1526,7 @@ function displayJourneyServices(data, journeyClass, servicesClass) {
     if (data.totalCares) {
       const services = data.totalCares;
       for (var i = 0; i < services.length; i++) {
-        const service = services[i];
+        const service = getProductById(services[i]?.id);
         $(servicesClass).append(
           generateServiceItem(
             service.name,
@@ -1642,6 +1674,41 @@ function setTransportLocation(
       ariaChecked != "true"
     ) {
       $(this).trigger("click");
+    }
+  });
+}
+
+function getProductById(productId) {
+  var data = null;
+  $(".collection-product-item").each(function () {
+    if ($(this).find(".collection-product-item-id").text() == productId) {
+      data = {
+        id: $(this).find(".collection-product-item-id").text(),
+        price:
+          convertCurrencyToNumber(
+            $(this).find(".collection-product-price").text()
+          ) * 1000,
+        name: $(this).find(".collection-product-name").text(),
+      };
+      return false;
+    }
+  });
+  return data;
+}
+
+function setProducOptions(id, selectedValues) {
+  $(".collection-product-item").each(function () {
+    if (id == $(this).find(".collection-product-item-id").text()) {
+      $(this)
+        .find(".collection-product-button")
+        .each(function () {
+          const text = $(this).text();
+          const ariaChecked = $(this).attr("aria-checked");
+          if (selectedValues.indexOf(text) > -1 && ariaChecked != "true") {
+            $(this).trigger("click");
+          }
+        });
+      return false;
     }
   });
 }
