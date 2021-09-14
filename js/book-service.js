@@ -52,6 +52,7 @@ const airportItemClass = ".airport-item";
 const airportCodeItemClass = ".airport-code-item";
 const productPriceHiddenClass = ".product-price-hidden";
 const productItemIDClass = ".product-item-id";
+var isLoading = false;
 function getAirportInfo(value) {
   const terminal = value ? value.split("-")[0] : "";
   return {
@@ -424,6 +425,7 @@ function initData() {
           setTimeout(function () {
             initAllServiceItemPrice();
             calTotalPrice();
+            isLoading = false;
           }, 3000);
           break;
         case "return-journey-tab":
@@ -431,19 +433,21 @@ function initData() {
           setTimeout(function () {
             initAllServiceItemPrice();
             calTotalPrice();
+            isLoading = false;
           }, 3000);
           break;
         case "additional-services-tab":
           initAdditionalServicesTab();
           initAllServiceItemPrice();
           calTotalPrice();
+          isLoading = false;
           break;
         case "passenger-details-tab":
           initPassengerDetailsTab();
           setTimeout(function () {
             initAllServiceItemPrice();
             calTotalPrice();
-          }, 2000);
+          }, 3000);
           break;
         case "checkout-tab":
           initCheckoutTab();
@@ -1513,7 +1517,7 @@ function displayJourneyServices(data, journeyClass, servicesClass) {
             getMGObject().traveler
           )
         );
-      }, 1000);
+      }, 3000);
     }
     if (data.transportSolution) {
       setProducOptions(
@@ -1530,7 +1534,7 @@ function displayJourneyServices(data, journeyClass, servicesClass) {
             priceVehiclesRequired
           )
         );
-      }, 1000);
+      }, 3000);
     }
     if (data.covidSafetyServices) {
       const services = data.covidSafetyServices;
@@ -1736,6 +1740,7 @@ function setProducOptions(id, selectedValues) {
 }
 
 $(document).ready(function () {
+  isLoading = true;
   initData();
   $("select").niceSelect();
   for (var index = 0; index < listItemsSelected.length; index++) {
