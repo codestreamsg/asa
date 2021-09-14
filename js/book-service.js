@@ -52,6 +52,7 @@ const airportItemClass = ".airport-item";
 const airportCodeItemClass = ".airport-code-item";
 const productPriceHiddenClass = ".product-price-hidden";
 const productItemIDClass = ".product-item-id";
+const disabledNextButtonClass = "disabled-button";
 function getAirportInfo(value) {
   const terminal = value ? value.split("-")[0] : "";
   return {
@@ -420,17 +421,21 @@ function initData() {
       currentSelectedTab = tabSelectedElement.attr(dataWTabAttr);
       switch (currentSelectedTab) {
         case "outgoing-journey-tab":
+          $(".next-please-button").addClass(disabledNextButtonClass);
           initOutgoingTab(departureValue, arrivalValue);
           setTimeout(function () {
             initAllServiceItemPrice();
             calTotalPrice();
+            $(".next-please-button").removeClass(disabledNextButtonClass);
           }, 3000);
           break;
         case "return-journey-tab":
+          $(".next-please-button").addClass(disabledNextButtonClass);
           initReturnTab(departureValue, arrivalValue);
           setTimeout(function () {
             initAllServiceItemPrice();
-            calTotalPrice();            
+            calTotalPrice();
+            $(".next-please-button").removeClass(disabledNextButtonClass);
           }, 3000);
           break;
         case "additional-services-tab":
@@ -439,10 +444,12 @@ function initData() {
           calTotalPrice();
           break;
         case "passenger-details-tab":
+          $(".checkout-button").addClass(disabledNextButtonClass);
           initPassengerDetailsTab();
           setTimeout(function () {
             initAllServiceItemPrice();
             calTotalPrice();
+            $(".checkout-button").removeClass(disabledNextButtonClass);
           }, 3000);
           break;
         case "checkout-tab":
