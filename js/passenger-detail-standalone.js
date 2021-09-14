@@ -6,7 +6,9 @@ Generator.prototype.getId = function () {
   return this.rand++;
 };
 const priceTextReplace = "IDR";
+const disabledNextButtonClass = "disabled-button";
 $(document).ready(function () {
+  $(".checkout-button").addClass(disabledNextButtonClass);
   $(".passenger-details-content").hide();
   $(".input-can-hide").each(function () {
     $(this).prop("required", false);
@@ -44,6 +46,7 @@ $(document).ready(function () {
         "&empty=true&output=json&callback=?",
       function (cart) {
         addProductsToFoxy();
+        $(".checkout-button").removeClass(disabledNextButtonClass);
       }
     );
   }, 3000);
