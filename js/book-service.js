@@ -1045,9 +1045,10 @@ function addAllProductsToCart() {
     mgObject.arrivalAirportCode
   );
   if (outgoingForm.transfer) {
+    const service = getProductById(outgoingForm.transfer?.id);
     addProductToCart(
-      outgoingForm.transfer.name,
-      outgoingForm.transfer.price,
+      service.name,
+      service.price,
       numberOfPassengers,
       "Outgoing Transfer",
       outgoingForm.transfer.loyaltyPoint,
@@ -1078,9 +1079,10 @@ function addAllProductsToCart() {
     mgObject.arrivalAirportCode
   );
   if (returnForm.transfer) {
+    const service = getProductById(returnForm.transfer?.id);
     addProductToCart(
-      returnForm.transfer.name,
-      returnForm.transfer.price,
+      service.name,
+      service.price,
       numberOfPassengers,
       "Return Transfer",
       returnForm.transfer.loyaltyPoint,
@@ -1101,9 +1103,10 @@ function addAllProductsToCart() {
   if (additionalServicesForm) {
     for (var index = 0; index < additionalServicesForm.length; index++) {
       const additionalService = additionalServicesForm[index];
+      const service = getProductById(additionalService?.id);
       addProductToCart(
-        additionalService.name,
-        additionalService.price,
+        service.name,
+        service.price,
         numberOfPassengers,
         "Additional Service",
         additionalService.loyaltyPoint,
@@ -1129,9 +1132,10 @@ function addProductsForSection(
     return;
   }
   if (data.meetGreetService) {
+    const service = getProductById(data.meetGreetService?.id);
     addProductToCart(
-      data.meetGreetService.name,
-      data.meetGreetService.price,
+      service.name,
+      service.price,
       numberOfPassengers,
       categoryName,
       data.meetGreetService.loyaltyPoint,
@@ -1144,13 +1148,14 @@ function addProductsForSection(
   }
   if (data.transportSolution) {
     const transportSolution = data.transportSolution;
+    const service = getProductById(transportSolution?.id);
     const priceVehiclesRequired =
       transportSolution && transportSolution.isVehiclesRequired == "true"
         ? 2
         : 1;
     addProductToCart(
-      transportSolution.name,
-      transportSolution.price,
+      service.name,
+      service.price,
       priceVehiclesRequired,
       categoryName,
       transportSolution.loyaltyPoint,
@@ -1165,9 +1170,10 @@ function addProductsForSection(
   if (data.covidSafetyServices) {
     for (var index = 0; index < data.covidSafetyServices.length; index++) {
       const covidSafetyService = data.covidSafetyServices[index];
+      const service = getProductById(covidSafetyService?.id);
       addProductToCart(
-        covidSafetyService.name,
-        covidSafetyService.price,
+        service.name,
+        service.price,
         numberOfPassengers,
         categoryName,
         covidSafetyService.loyaltyPoint,
@@ -1182,9 +1188,10 @@ function addProductsForSection(
   if (data.totalCares) {
     for (var index = 0; index < data.totalCares.length; index++) {
       const totalCare = data.totalCares[index];
+      const service = getProductById(totalCare?.id);
       addProductToCart(
-        totalCare.name,
-        totalCare.price,
+        service.name,
+        service.price,
         numberOfPassengers,
         categoryName,
         totalCare.loyaltyPoint,
