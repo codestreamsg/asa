@@ -52,7 +52,6 @@ const airportItemClass = ".airport-item";
 const airportCodeItemClass = ".airport-code-item";
 const productPriceHiddenClass = ".product-price-hidden";
 const productItemIDClass = ".product-item-id";
-var isLoading = false;
 function getAirportInfo(value) {
   const terminal = value ? value.split("-")[0] : "";
   return {
@@ -425,22 +424,19 @@ function initData() {
           setTimeout(function () {
             initAllServiceItemPrice();
             calTotalPrice();
-            isLoading = false;
           }, 3000);
           break;
         case "return-journey-tab":
           initReturnTab(departureValue, arrivalValue);
           setTimeout(function () {
             initAllServiceItemPrice();
-            calTotalPrice();
-            isLoading = false;
+            calTotalPrice();            
           }, 3000);
           break;
         case "additional-services-tab":
           initAdditionalServicesTab();
           initAllServiceItemPrice();
           calTotalPrice();
-          isLoading = false;
           break;
         case "passenger-details-tab":
           initPassengerDetailsTab();
@@ -1740,7 +1736,6 @@ function setProducOptions(id, selectedValues) {
 }
 
 $(document).ready(function () {
-  isLoading = true;
   initData();
   $("select").niceSelect();
   for (var index = 0; index < listItemsSelected.length; index++) {
