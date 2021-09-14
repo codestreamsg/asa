@@ -439,8 +439,10 @@ function initData() {
           break;
         case "passenger-details-tab":
           initPassengerDetailsTab();
-          initAllServiceItemPrice();
-          calTotalPrice();
+          setTimeout(function () {
+            initAllServiceItemPrice();
+            calTotalPrice();
+          }, 2000);
           break;
         case "checkout-tab":
           initCheckoutTab();
@@ -1494,21 +1496,33 @@ function displayJourneyServices(data, journeyClass, servicesClass) {
         data.meetGreetService?.id,
         data.meetGreetService?.optionValues
       );
-      const service = getProductById(data.meetGreetService?.id);
-      $(servicesClass).append(
-        generateServiceItem(service.name, service.price, getMGObject().traveler)
-      );
+      setTimeout(function () {
+        const service = getProductById(data.meetGreetService?.id);
+        $(servicesClass).append(
+          generateServiceItem(
+            service.name,
+            service.price,
+            getMGObject().traveler
+          )
+        );
+      }, 1000);
     }
     if (data.transportSolution) {
       setProducOptions(
         data.transportSolution?.id,
         data.transportSolution?.optionValues
       );
-      const service = getProductById(data.transportSolution?.id);
-      const priceVehiclesRequired = getMGObject().traveler > 4 ? 2 : 1;
-      $(servicesClass).append(
-        generateServiceItem(service.name, service.price, priceVehiclesRequired)
-      );
+      setTimeout(function () {
+        const service = getProductById(data.transportSolution?.id);
+        const priceVehiclesRequired = getMGObject().traveler > 4 ? 2 : 1;
+        $(servicesClass).append(
+          generateServiceItem(
+            service.name,
+            service.price,
+            priceVehiclesRequired
+          )
+        );
+      }, 1000);
     }
     if (data.covidSafetyServices) {
       const services = data.covidSafetyServices;
