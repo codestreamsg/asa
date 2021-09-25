@@ -1076,6 +1076,8 @@ function addAllProductsToCart() {
   let arrivalTerminalValue = "";
   let departureReturnFormData = null;
   let arrivalReturnFormData = null;
+  let departureFlightTypeValue = "";
+  let arrivalFlightTypeValue = "";
   if (mgObject.departureValue && mgObject.arrivalValue) {
       departureCodeValue = mgObject.arrivalAirportCode;
       departureTerminalValue = mgObject.arrivalTerminal;
@@ -1083,6 +1085,8 @@ function addAllProductsToCart() {
       arrivalTerminalValue = mgObject.departureTerminal;
       departureReturnFormData = returnForm.arrival;
       arrivalReturnFormData = returnForm.departure;
+      departureFlightTypeValue = "dep";
+      arrivalFlightTypeValue = "arr";
   } else {
       departureCodeValue = mgObject.departureAirportCode;
       departureTerminalValue = mgObject.departureTerminal;
@@ -1090,12 +1094,14 @@ function addAllProductsToCart() {
       arrivalTerminalValue = mgObject.arrivalTerminal;
       departureReturnFormData = returnForm.departure;
       arrivalReturnFormData = returnForm.arrival;
+      departureFlightTypeValue = "arr";
+      arrivalFlightTypeValue = "dep";
   }
   addProductsForSection(
     departureReturnFormData,
     numberOfPassengers,
     "Return Departure",
-    "dep",
+    departureFlightTypeValue,
     departureTerminalValue,
     departureCodeValue
   );
@@ -1103,7 +1109,7 @@ function addAllProductsToCart() {
     arrivalReturnFormData,
     numberOfPassengers,
     "Return Arrival",
-    "arr",
+    arrivalFlightTypeValue,
     arrivalTerminalValue,
     arrivalCodeValue
   );
