@@ -53,6 +53,7 @@ const airportCodeItemClass = ".airport-code-item";
 const productPriceHiddenClass = ".product-price-hidden";
 const productItemIDClass = ".product-item-id";
 const disabledNextButtonClass = "disabled-button";
+var totalPriceForCart = 0;
 function getAirportInfo(value) {
   const terminal = value ? value.split("-")[0] : "";
   return {
@@ -444,13 +445,7 @@ function initData() {
           calTotalPrice();
           break;
         case "passenger-details-tab":
-          $(".checkout-button").addClass(disabledNextButtonClass);
           initPassengerDetailsTab();
-          setTimeout(function () {
-            initAllServiceItemPrice();
-            calTotalPrice();
-            $(".checkout-button").removeClass(disabledNextButtonClass);
-          }, 3000);
           break;
         case "checkout-tab":
           initCheckoutTab();
@@ -1253,6 +1248,7 @@ function addProductToCart(
   productType = "",
   transportLocation = ""
 ) {
+  totalPriceForCart = totalPriceForCart + productPrice;
   const productVal =
     "&name=" +
     productName +
