@@ -426,6 +426,7 @@ function initData() {
           setTimeout(function () {
             initAllServiceItemPrice();
             addClickEventsToElements();
+            calTotalPrice();
             $(".next-please-button").removeClass(disabledNextButtonClass);
           }, 3000);
           break;
@@ -435,6 +436,7 @@ function initData() {
           setTimeout(function () {
             initAllServiceItemPrice();
             addClickEventsToElements();
+            calTotalPrice();
             $(".next-please-button").removeClass(disabledNextButtonClass);
           }, 3000);
           break;
@@ -442,6 +444,7 @@ function initData() {
           initAdditionalServicesTab();
           initAllServiceItemPrice();
           addClickEventsToElements();
+          calTotalPrice();
           break;
         case "passenger-details-tab":
           initPassengerDetailsTab();
