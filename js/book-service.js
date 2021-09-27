@@ -1250,7 +1250,7 @@ function addProductToCart(
   productType = "",
   transportLocation = ""
 ) {
-  totalPriceForCart = totalPriceForCart + productPrice;
+  totalPriceForCart = totalPriceForCart + productPrice*quantity;
   const productVal =
     "&name=" +
     productName +
