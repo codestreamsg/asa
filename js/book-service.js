@@ -349,8 +349,6 @@ function initItemSelected(itemClass, itemSelectedClass) {
         $(this).addClass(itemSelectedClass);
       }
     }
-
-    calTotalPrice();
   });
 }
 
