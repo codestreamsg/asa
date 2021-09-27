@@ -349,6 +349,7 @@ function initItemSelected(itemClass, itemSelectedClass) {
         $(this).addClass(itemSelectedClass);
       }
     }
+    calTotalPrice();
   });
 }
 
@@ -424,7 +425,7 @@ function initData() {
           initOutgoingTab(departureValue, arrivalValue);
           setTimeout(function () {
             initAllServiceItemPrice();
-            calTotalPrice();
+            addClickEventsToElements();
             $(".next-please-button").removeClass(disabledNextButtonClass);
           }, 3000);
           break;
@@ -433,14 +434,14 @@ function initData() {
           initReturnTab(departureValue, arrivalValue);
           setTimeout(function () {
             initAllServiceItemPrice();
-            calTotalPrice();
+            addClickEventsToElements();
             $(".next-please-button").removeClass(disabledNextButtonClass);
           }, 3000);
           break;
         case "additional-services-tab":
           initAdditionalServicesTab();
           initAllServiceItemPrice();
-          calTotalPrice();
+          addClickEventsToElements();
           break;
         case "passenger-details-tab":
           initPassengerDetailsTab();
@@ -1763,10 +1764,13 @@ function setProducOptions(id, selectedValues) {
   });
 }
 
-$(document).ready(function () {
-  initData();
-  $("select").niceSelect();
+function addClickEventsToElements() {
   for (var index = 0; index < listItemsSelected.length; index++) {
     initItemSelected(listItemsSelected[index], serviceItemSelectedClass);
   }
+}
+
+$(document).ready(function () {
+  initData();
+  $("select").niceSelect();
 });
