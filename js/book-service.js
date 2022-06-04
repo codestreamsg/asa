@@ -439,9 +439,9 @@ function initData() {
           setTimeout(function () {
             initAllServiceItemPrice();
             addClickEventsToElements();
+            hideLoadingPage();
             calTotalPrice();
             $(".next-please-button").removeClass(disabledNextButtonClass);
-            hideLoadingPage();
           }, 3000);
           break;
         case "return-journey-tab":
@@ -451,8 +451,8 @@ function initData() {
           setTimeout(function () {
             initAllServiceItemPrice();
             addClickEventsToElements();
-            calTotalPrice();
             hideLoadingPage();
+            calTotalPrice();
             $(".next-please-button").removeClass(disabledNextButtonClass);
           }, 3000);
           break;
