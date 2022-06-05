@@ -53,8 +53,6 @@ const airportCodeItemClass = ".airport-code-item";
 const productPriceHiddenClass = ".product-price-hidden";
 const productItemIDClass = ".product-item-id";
 const disabledNextButtonClass = "disabled-button";
-const loadingContainer = ".loading-container";
-const bookServiceTabsContent = ".book-service-tabs-content";
 var totalPriceForCart = 0;
 function getAirportInfo(value) {
   const terminal = value ? value.split("-")[0] : "";
@@ -390,16 +388,6 @@ function displayArrivalSection(value) {
   }
 }
 
-function showLoadingPage() {
-  $(loadingContainer).show();
-  $(bookServiceTabsContent).hide();
-}
-
-function hideLoadingPage() {
-  $(loadingContainer).hide();
-  $(bookServiceTabsContent).show();
-}
-
 function initData() {
   var mgForm = window.localStorage.getItem("meet-greet");
   mgForm = mgForm ? convertJsonToObject(mgForm) : {};
@@ -434,24 +422,20 @@ function initData() {
       switch (currentSelectedTab) {
         case "outgoing-journey-tab":
           $(".next-please-button").addClass(disabledNextButtonClass);
-          showLoadingPage();
           initOutgoingTab(departureValue, arrivalValue);
           setTimeout(function () {
             initAllServiceItemPrice();
             addClickEventsToElements();
-            hideLoadingPage();
             calTotalPrice();
             $(".next-please-button").removeClass(disabledNextButtonClass);
           }, 3000);
           break;
         case "return-journey-tab":
           $(".next-please-button").addClass(disabledNextButtonClass);
-          showLoadingPage();
           initReturnTab(departureValue, arrivalValue);
           setTimeout(function () {
             initAllServiceItemPrice();
             addClickEventsToElements();
-            hideLoadingPage();
             calTotalPrice();
             $(".next-please-button").removeClass(disabledNextButtonClass);
           }, 3000);
