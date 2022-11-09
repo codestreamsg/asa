@@ -23,6 +23,8 @@ $(document).ready(function () {
   $("#customer_passenger_detail_id").val($("#passenger_detail_id").val());
   $(".flight-date").prop("type", "date");
   $(".flight-time").prop("type", "time");
+  $("#Outbound-Departure-Flight-Time").prop('min', '08:00');
+  $("#Return-Departure-Flight-Time").prop('min', '08:00');
   $("#Full-Name").focusout(function () {
     if ($("#Is-Passenger").is(":checked")) {
       $(".passenger-full-name-first").val($("#Full-Name").val());
