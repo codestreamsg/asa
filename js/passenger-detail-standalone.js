@@ -21,10 +21,7 @@ $(document).ready(function () {
   const passengerDetailId = new Generator();
   $("#passenger_detail_id").val(passengerDetailId.getId());
   $("#customer_passenger_detail_id").val($("#passenger_detail_id").val());
-  $(".flight-date").prop("type", "date");
-  $(".flight-time").prop("type", "time");
-  $("#Outbound-Departure-Flight-Time").prop('min', '08:00');
-  $("#Return-Departure-Flight-Time").prop('min', '08:00');
+  initInputDateTime();
   $("#Full-Name").focusout(function () {
     if ($("#Is-Passenger").is(":checked")) {
       $(".passenger-full-name-first").val($("#Full-Name").val());
@@ -56,6 +53,33 @@ $(document).ready(function () {
   $(".cart-service-list").empty();
   $(".cart-airport-title").empty();
 });
+
+function initInputDateTime() {
+	$(".flight-date").prop('type', 'date');
+  $(".flight-time").prop('type', 'time');
+  const minDepartureErrorMessage = "If your booking is less than 8 hours from your departure time, please contact customer service.";
+  const minTime = '08:00';
+  $("#meet-greet-service-form").validate({
+    rules: {
+      "Outbound-Departure-Flight-Time": {
+        required: true,
+        min: minTime
+      },     
+      "Return-Departure-Flight-Time": {
+        required: true,
+        min: minTime
+      }
+    },
+    messages: {
+      "Outbound-Departure-Flight-Time": {
+        min: minDepartureErrorMessage
+      },
+      "Return-Departure-Flight-Time": {
+        min: minDepartureErrorMessage
+      }
+    }
+  });
+}
 
 function convertJsonToObject(string) {
   return string ? jQuery.parseJSON(string) : {};
