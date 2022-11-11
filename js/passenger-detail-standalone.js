@@ -59,7 +59,7 @@ $(".flight-date").prop('type', 'date');
   $(".flight-time").prop('type', 'time');
   const minDepartureErrorMessage = "If your booking is less than 8 hours from your departure time, please contact customer service.";
   const minTime = '08:00';
-  $("#meet-greet-service-form").validate({
+  $("#wf-form-booking-form").validate({
     rules: {
       "Outbound-Departure-Flight-Time": {
         required: true,
