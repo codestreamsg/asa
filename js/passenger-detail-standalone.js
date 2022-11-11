@@ -55,7 +55,7 @@ $(document).ready(function () {
 });
 
 function initInputDateTime() {
-	$(".flight-date").prop('type', 'date');
+$(".flight-date").prop('type', 'date');
   $(".flight-time").prop('type', 'time');
   const minDepartureErrorMessage = "If your booking is less than 8 hours from your departure time, please contact customer service.";
   const minTime = '08:00';
@@ -64,17 +64,10 @@ function initInputDateTime() {
       "Outbound-Departure-Flight-Time": {
         required: true,
         min: minTime
-      },     
-      "Return-Departure-Flight-Time": {
-        required: true,
-        min: minTime
       }
     },
     messages: {
       "Outbound-Departure-Flight-Time": {
-        min: minDepartureErrorMessage
-      },
-      "Return-Departure-Flight-Time": {
         min: minDepartureErrorMessage
       }
     }
