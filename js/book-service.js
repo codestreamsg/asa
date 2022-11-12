@@ -62,6 +62,8 @@ function getAirportInfo(value) {
   };
 }
 function getMGObject() {
+  var mgForm = window.localStorage.getItem("meet-greet");
+  mgForm = mgForm ? convertJsonToObject(mgForm) : {};
   var departure = $("#mg-departure option:selected");
   var arrival = $("#mg-arrival option:selected");
   const travelerText = $("#mg-traveler option:selected").text();
@@ -83,6 +85,7 @@ function getMGObject() {
     isReturn: isReturn,
     departureAirportCode: getAirportInfo(departure.val()).airportCode,
     arrivalAirportCode: getAirportInfo(arrival.val()).airportCode,
+    selectedService: mgForm && mgForm.selectedService ? mgForm.selectedService : ''
   };
 }
 
