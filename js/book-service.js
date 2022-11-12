@@ -732,10 +732,16 @@ function initToggleReturnButton() {
   });
 }
 
-function initFirstMeetGreetServiceSelected(arrivalClass) {
+function initFirstMeetGreetServiceSelected(arrivalClass, selectedService = '') {
   $("." + arrivalClass + "meet-greet-service-item").each(function () {
-    $(this).addClass(serviceItemSelectedClass);
-    return false;
+    if (!selectedService) {
+      $(this).addClass(serviceItemSelectedClass);
+      return false;
+    }
+    if ($(this).find(productNameClass).text() == selectedService) {
+      $(this).addClass(serviceItemSelectedClass);
+      return false;
+    }
   });
 }
 
